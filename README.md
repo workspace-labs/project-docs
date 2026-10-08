@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.1.0** · 94 tests · reviewed over 7 rounds by a second AI · [how it was tested](TESTING.md)
+**Version 0.1.1** · 101 tests · tested on Windows, Chrome and Edge · [how it was tested](TESTING.md)
 
 ---
 
@@ -62,7 +62,7 @@ The skill needs nothing but your AI tool. The preview page needs only a browser.
 npx skills add workspace-labs/project-docs -g
 ```
 
-Or by hand, for Claude Code:
+Or by hand, for Claude Code on macOS or Linux:
 
 ```bash
 git clone https://github.com/workspace-labs/project-docs.git
@@ -70,12 +70,34 @@ mkdir -p ~/.claude/skills
 cp -R project-docs/skills/project-docs ~/.claude/skills/
 ```
 
+On Windows, use PowerShell (choose your agent's destination):
+
+```powershell
+git clone https://github.com/workspace-labs/project-docs.git
+# Claude Code:
+$skillsDir = Join-Path $env:USERPROFILE '.claude\skills'
+# For Codex, use this destination instead:
+# $skillsDir = Join-Path $env:USERPROFILE '.codex\skills'
+New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
+Copy-Item -LiteralPath '.\project-docs\skills\project-docs' -Destination $skillsDir -Recurse
+```
+
 **Claude app (chat and Cowork)**: make the zip, then upload it in **Customize → Skills**.
+
+On macOS or Linux:
 
 ```bash
 cd project-docs
 rm -f dist/project-docs.zip && mkdir -p dist
 (cd skills && zip -r -X ../dist/project-docs.zip project-docs -x '*.DS_Store')
+```
+
+On Windows, in PowerShell:
+
+```powershell
+Set-Location project-docs
+New-Item -ItemType Directory -Path '.\dist' -Force | Out-Null
+Compress-Archive -LiteralPath '.\skills\project-docs' -DestinationPath '.\dist\project-docs.zip' -Force
 ```
 
 **GitHub Copilot, Cursor and ChatGPT**: where your tool supports agent skills, install the same folder.
@@ -97,9 +119,10 @@ To see the look preview without an agent, copy
 
 ## How it was tested
 
-94 automated tests (Node.js 18, 20 and 22), 38 planted bugs all caught, two blind dry runs by fresh agents,
-and 7 rounds of independent review by a second AI (OpenAI Codex) that found 9 problems, all fixed before
-release. The full record, and what has not been tried yet, is in [`TESTING.md`](TESTING.md).
+The original 94 tests passed on Node.js 18, 20 and 22. Windows testing added regressions for line endings
+and font coverage, plus offline Chrome and Edge checks of the English and Arabic previews. The earlier
+release also caught 38 planted bugs, completed two blind dry runs, and passed 7 rounds of independent
+review. The current test count, full record and remaining limits are in [`TESTING.md`](TESTING.md).
 
 ## Limits
 

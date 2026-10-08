@@ -87,6 +87,14 @@ If the TRD's data storage is still TBD, write only:
 "Waits: the TRD's data storage is still TBD.">
 ````
 
+When an approved database choice changes or reopens, preserve the exact superseded generated ready block
+in a collapsed `<details data-project-docs-history>` record at the end of **How the sheets link**, outside
+the active **Ready block**.
+Label it as historical, with the superseding date and "do not build from this" (translate the label in an
+Arabic document), and add a dated `Changed` line saying why it was superseded. The active **Ready block**
+holds only the current code, or exactly the waiting sentence above while storage is TBD. Raise the
+version and return to Draft. Keep the sheets, columns, marks and links unless the decision affects them.
+
 Examples in the tables are always made up: never a real person's name, phone number or email.
 
 ## In Arabic

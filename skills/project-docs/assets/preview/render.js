@@ -246,7 +246,7 @@
         });
       }, function () { return false; }).then(function (ok) {
         return ok ? null : label + ': the font "' + name + '" (' + (weight === 700 ? 'bold' : 'regular') + ') did not load for the text it shows. ' +
-          (check.isBundled(name) ? 'Keep the fonts folder next to preview.html, with every file in it.' : 'It loads from the internet: check the connection, or pick a font inside the preview.');
+          (check.isBundled(name) ? 'Keep the fonts folder next to preview.html, with every file in it. If the files are there, pick a font containing every character in the sample.' : 'It loads from the internet: check the connection, or pick a font inside the preview.');
       });
     })).then(function (list) {
       return list.filter(Boolean).filter(function (p, i, all) { return all.indexOf(p) === i; });

@@ -15,7 +15,8 @@ Gather first · How to make the steps · The status of a step · The read-back �
   TRD's **Brain** that is not `None`) adds one step: write the API guide, `docs/api.md`, during the build.
 - **Design, Data, Security:** the look is used from the first screen; tables and secrets go in the step
   that first needs them.
-- An existing `docs/plan.md`: keep its steps and their status, and add only what is missing.
+- An existing `docs/plan.md`: keep its steps and progress history; update only statuses and checks affected
+  by a changed decision, and add only what is missing.
 
 ## How to make the steps
 
@@ -25,7 +26,7 @@ Gather first · How to make the steps · The status of a step · The read-back �
   written".
 - **Each step names what it covers:** the PRD lines (`M1, M4`), or the TRD rule (`TRD: Languages`).
 - **Each step has its check:** "How we know it works", a test the person can do themselves.
-- A step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
+- An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
   the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
   needs more than one, name the first; the step's check says what else it waits for. A step that itself
   settles the TBD (signing up for a host decides the account) is not blocked: it says so in its check.
@@ -53,8 +54,14 @@ Exactly one of these, on the step's **Status** line:
 **The builder never marks its own homework.** Never write `✅` because the code looks right or the tests
 pass. If the person says it does not work, set the step back to `not started` with one line saying why.
 
-Changing a status is progress, not a change to the plan: the version and the stamp stay. Adding, removing
-or reordering steps is a change, and follows the stamp rule in SKILL.md.
+When a choice reopens, keep already checked steps as historical progress; they do not approve the revised
+choice. Block affected unchecked steps, including ones waiting for the person's check. Keep any earlier
+run and its date as historical text beneath the step's check, with only one current Status line. When
+several choices block a step, keep its existing open TBD label first and name the others in its check.
+
+Ordinary execution progress changes the status without changing the version or stamp. Changes caused by
+a revised approved decision (including new blockers or revised checks), or adding, removing or reordering
+steps, follow SKILL.md: preserve the decision history, raise the version, and return the plan to Draft.
 
 ## The read-back
 

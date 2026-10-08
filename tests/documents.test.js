@@ -83,7 +83,9 @@ const PROJECTS = [
   { folder: 'study-timer', lang: 'en', showcase: false },
 ];
 
-const read = (example) => fs.readFileSync(path.join(EXAMPLES, example), 'utf8');
+// Git's default Windows checkout uses CRLF. Markdown has the same meaning with either line ending.
+const readMarkdown = (file) => fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+const read = (example) => readMarkdown(path.join(EXAMPLES, example));
 const exists = (example) => fs.existsSync(path.join(EXAMPLES, example));
 const section = (text, heading) => (text.split(`\n## ${heading}\n`)[1] || '').split('\n## ')[0];
 const headings = (lines) => lines.filter((l) => l.startsWith('## ')).map((l) => l.trim());
@@ -134,7 +136,8 @@ function designProblems(design, picked, L) {
 // latest value is TBD (a TBD line never settled, or settled and then reopened, or a choice changed back to
 // TBD). Its name is what the TBD line says is open, never the "Decided when" condition.
 function openTbds(text, L) {
-  const lines = text.split('\n');
+  // Superseded choices stay readable, but only the current named record can block future work.
+  const lines = text.replace(/<details data-project-docs-history>[\s\S]*?<\/details>/g, '').split('\n');
   const open = [];
   lines.forEach((line, i) => {
     if (!line.startsWith('- ')) return;
@@ -167,7 +170,7 @@ function readyBlockProblems(storage, ready, L) {
 }
 
 function template(referenceFile, heading) {
-  const text = fs.readFileSync(path.join(SKILL, 'references', referenceFile), 'utf8');
+  const text = readMarkdown(path.join(SKILL, 'references', referenceFile));
   const after = text.split(new RegExp(`^## ${heading}$`, 'm'))[1];
   assert.ok(after, `${referenceFile}: no "## ${heading}" section`);
   // The template sits in a ```markdown block, or a ````markdown block when it holds a code block itself.
@@ -448,6 +451,34 @@ test('a reopened choice is open again, and a waiting step must name the choice, 
     assert.strictEqual(openTbds(c.changedBack, L).length, 1, `${lang}: a choice changed back to TBD is open`);
     assert.deepStrictEqual(waitingProblems(c.plan(c.name), [c.reopened], L), [], `${lang}: waiting on the choice name`);
     assert.strictEqual(waitingProblems(c.plan(c.condition), [c.reopened], L).length, 1, `${lang}: the condition is not a name`);
+  }
+});
+
+test('a reopened choice with archived history has one current TBD and can be settled again', () => {
+  const cases = {
+    en: {
+      history: '- SQLite, because it is one file.\n  - Changed 2026-10-09: SQLite → TBD, because the clinic may expand.',
+      current: '- TBD: the database. Decided when TBD.', name: 'the database',
+      settled: '  - Changed 2026-10-10: TBD → PostgreSQL, because the owner chose it.',
+    },
+    ar: {
+      history: '- SQLite، لأنها ملف واحد.\n  - تغيّر في 2026-10-09: من SQLite إلى لم يُحسم بعد، لأن العيادة قد تتوسع.',
+      current: '- لم يُحسم بعد: قاعدة البيانات. يُحسم عندما TBD.', name: 'قاعدة البيانات',
+      settled: '  - تغيّر في 2026-10-10: من لم يُحسم بعد إلى PostgreSQL، لأن المالك اختارها.',
+    },
+  };
+  const sql = '```sql\nCREATE TABLE visits (id bigint PRIMARY KEY);\n```';
+  for (const [lang, c] of Object.entries(cases)) {
+    const L = LANGS[lang];
+    const storage = `<details data-project-docs-history>\n<summary>History</summary>\n\n${c.history}\n\n</details>\n\n${c.current}`;
+    assert.deepStrictEqual(openTbds(storage, L).map(t => t.name), [c.name], `${lang}: only the named current choice is open`);
+    assert.deepStrictEqual(readyBlockProblems(storage, L.waits, L), []);
+    const settled = `${storage}\n${c.settled}`;
+    assert.deepStrictEqual(openTbds(settled, L), [], `${lang}: old history must not leave a ghost blocker`);
+    assert.deepStrictEqual(readyBlockProblems(settled, sql, L), []);
+    assert.strictEqual(readyBlockProblems(settled, L.waits, L).length, 1);
+    const ordinaryDetails = storage.replace(' data-project-docs-history', '');
+    assert.strictEqual(openTbds(ordinaryDetails, L).length, 2, `${lang}: unmarked collapsed content is still current`);
   }
 });
 

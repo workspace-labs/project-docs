@@ -7,9 +7,9 @@ const path = require('node:path');
 const vm = require('node:vm');
 const check = require('../skills/project-docs/assets/preview/check.js');
 
-function exampleLooks() {
+function exampleLooks(example = 'cedar-clinic') {
   const window = {};
-  const file = path.join(__dirname, '..', 'skills/project-docs/examples/cedar-clinic/docs/design-preview/looks.js');
+  const file = path.join(__dirname, '..', 'skills/project-docs/examples', example, 'docs/design-preview/looks.js');
   new Function('window', require('node:fs').readFileSync(file, 'utf8'))(window);
   return JSON.parse(JSON.stringify(window.PROJECT_DOCS_LOOKS));
 }
@@ -198,9 +198,19 @@ const looksFile = (looks) => `window.PROJECT_DOCS_LOOKS = ${JSON.stringify(looks
 // The faces preview.css declares, each marked missing when its file is not in the fonts folder.
 function bundledFaces() {
   const css = fs.readFileSync(path.join(PREVIEW, 'preview.css'), 'utf8');
-  return [...css.matchAll(/@font-face \{ font-family: '([^']+)'; src: url\('([^']+)'\); font-weight: (\d+); \}/g)]
-    .map(([, family, file, weight]) => ({ family, file, weight, missing: !fs.existsSync(path.join(PREVIEW, file)) }));
+  return [...css.matchAll(/@font-face \{ font-family: '([^']+)'; src: url\('([^']+)'\); font-weight: (\d+);(?: unicode-range: ([^;]+);)? \}/g)]
+    .map(([, family, file, weight, unicodeRange]) => ({ family, file, weight, unicodeRange, missing: !fs.existsSync(path.join(PREVIEW, file)) }));
 }
+
+test('every bundled font declares its actual glyph coverage, never a universal range', () => {
+  const { unicodeRange } = require('../tools/font-ranges.js');
+  const faces = bundledFaces();
+  assert.strictEqual(faces.length, 12, 'all six font families in both weights are checked');
+  for (const face of faces) {
+    assert.strictEqual(face.unicodeRange, unicodeRange(fs.readFileSync(path.join(PREVIEW, face.file))), face.file);
+    assert.notStrictEqual(face.unicodeRange, 'U+0-10FFFF', face.file);
+  }
+});
 
 // document.fonts.load(font, text): the family's faces nearest the weight asked for (CSS Fonts 4: bold looks up,
 // then down; regular looks up to 500, then down, then above 500), keeping those with a letter of the text.
@@ -302,6 +312,17 @@ test('the page: the example is ready when every font it draws really loaded', as
   assert.deepStrictEqual(page.fixes, []);
 });
 
+test('the page refuses bundled Latin fonts for Arabic text, and accepts the actual Arabic example', async () => {
+  const looks = exampleLooks();
+  looks.project.name = 'Cedar عيادة';
+  const refused = await openPage(looksFile(looks));
+  assert.strictEqual(refused.state, 'refused');
+  assert.match(refused.fixes.join(' '), /the font "Lora" \(bold\) did not load for the text it shows/);
+  const ready = await openPage(looksFile(exampleLooks('cedar-clinic-ar')));
+  assert.strictEqual(ready.state, 'ready');
+  assert.deepStrictEqual(ready.fixes, []);
+});
+
 test('the page: a variable font whose weight range holds bold is ready', async () => {
   const page = await openPage(onlineHeading('Review Online'), { online: { 'Review Online': [{ weight: '100 900' }] } });
   assert.strictEqual(page.state, 'ready');
@@ -319,7 +340,10 @@ test('the page refuses a bold that is really a regular face standing in', async 
 
 test('the page refuses a font that lacks letters it shows, even when nothing failed to load', async () => {
   const latin = { weight: '700', unicodeRange: 'U+0000-00FF' };
-  const cyrillicName = onlineHeading('Review Subset', (looks) => { looks.project.name = 'Cedar Клиника'; });
+  const cyrillicName = onlineHeading('Review Subset', (looks) => {
+    looks.project.name = 'Cedar Клиника';
+    for (const look of looks.looks.slice(1)) look.fonts.heading = 'Lora'; // actually contains Cyrillic
+  });
   const cyrillic = { weight: '700', unicodeRange: 'U+0400-04FF' };
   for (const faces of [[latin], [latin, { ...cyrillic, missing: true }]]) {
     const page = await openPage(cyrillicName, { online: { 'Review Subset': faces } });
@@ -327,12 +351,12 @@ test('the page refuses a font that lacks letters it shows, even when nothing fai
     assert.match(page.fixes.join(' '), /the font "Review Subset" \(bold\) did not load for the text it shows/);
   }
   assert.strictEqual((await openPage(cyrillicName, { online: { 'Review Subset': [latin, cyrillic] } })).state, 'ready', 'every letter has its face');
-  // An Arabic preview: a Latin project name is covered, but not its letter أ.
-  const arabicLetter = onlineHeading('Review Subset', (looks) => {
-    looks.project.language = 'ar';
-    for (const look of looks.looks.slice(1)) look.fonts = { heading: 'Noto Naskh Arabic', body: 'Noto Naskh Arabic' };
-    looks.looks[0].fonts.body = 'Noto Naskh Arabic';
-  });
+  // An Arabic preview: the ASCII project name is covered, but not its letter أ.
+  const arabicLooks = exampleLooks('cedar-clinic-ar');
+  arabicLooks.project.name = '123';
+  arabicLooks.onlineFonts = ['Review Subset'];
+  arabicLooks.looks[0].fonts.heading = 'Review Subset';
+  const arabicLetter = looksFile(arabicLooks);
   const page = await openPage(arabicLetter, { online: { 'Review Subset': [latin] } });
   assert.strictEqual(page.state, 'refused');
   assert.match(page.fixes.join(' '), /the font "Review Subset" \(bold\) did not load/);

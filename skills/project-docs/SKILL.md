@@ -80,7 +80,8 @@ The line right under each document's title is its stamp. Nothing else goes on th
 
 - In Arabic the stamp is `> الإصدار 1 · مسودة` or `> الإصدار 2 · معتمد 2026-10-08`.
 - `v1` is the first version shown. Each round of changes after someone has seen it raises the version.
-- A changed document is a `Draft` again until it is approved again.
+- A changed document is a `Draft` again until it is approved again; ordinary Plan execution progress is
+  the exception (see its reference).
 - The TRD, Data and the Plan build **only** on an approved PRD. If the PRD changes, say which later
   documents it affects and offer to update them.
 
@@ -95,14 +96,19 @@ them. Never rewrite a locked line: keep it, and add the change under it:
 ```
 
 Then raise the version and set the stamp back to `Draft` until it is approved again. Apply the same rule
-to any approved line in any document. A document that has **never been approved** has nothing locked yet:
-just edit it.
+to any approved line; Plan status lines and generated Data ready blocks preserve history as their
+references say. A document that has **never been approved** has nothing locked yet: just edit it.
 
 **Settling a `TBD` in an approved document is a change too:** keep the `TBD` line and add
 `  - Changed <date>: TBD → <the choice>, because <reason>.` under it. Then update what waited for it (for
 example, Data's ready block once the database is chosen, and the Plan steps it blocked). **Reopening** a
-choice works the same way, `  - Changed <date>: <the choice> → TBD, because <reason>.`: the latest line
-decides, so the choice is open again and what depends on it waits again.
+choice keeps its history and adds `  - Changed <date>: <the choice> → TBD, because <reason>.`. If it already
+has a canonical TBD line, keep that current history and its descriptive name. Otherwise keep the original
+choice and Changed chain together in a labelled, collapsed historical `<details data-project-docs-history>`
+record, then add one current top-level `- TBD: <what is open>. Decided when <…>.` line outside it (for
+example, `the database`).
+Ask for a missing decision trigger, or write `TBD` for it. Only the current history outside historical
+records decides; its latest change wins. Dependent documents wait again; follow their references.
 
 ## Between the TRD and the Design: offer the app flow
 

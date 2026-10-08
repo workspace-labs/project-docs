@@ -2,6 +2,27 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.1.1] - 2026-10-09
+
+Windows testing and portability fixes. No changes to the preview's visual design or contrast thresholds.
+
+### Fixed
+
+- Document checks accept both LF and Windows CRLF line endings. A default Windows Git checkout previously
+  failed 43 of the 94 tests; full document checks now run against both styles in isolated copies.
+- Bundled fonts declare their real character coverage, so mixed-language text cannot silently use a
+  fallback font while the preview reports ready. A builder helper regenerates and verifies the coverage
+  from the shipped font files.
+- Reopening an approved choice as TBD has a named decision record, preserves superseded ready code as
+  history, and distinguishes completed progress from future steps blocked by the revised choice.
+
+### Added
+
+- Tested PowerShell commands for manual installation and making the upload ZIP.
+- Windows validation on Node.js 24, and offline Chrome and Edge preview checks in English and Arabic at
+  desktop and phone widths. `TESTING.md` records the 101-test result, all 22 browser cases, fixes,
+  verified 59-file ZIP, exact environment and remaining limits.
+
 ## [0.1.0] - 2026-10-08
 
 The first version, built from the owner's decisions of 2026-10-08. Codex approved it after seven review
