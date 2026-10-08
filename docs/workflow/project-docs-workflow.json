@@ -1,0 +1,887 @@
+{
+  "project": {
+    "name": "project-docs Skill",
+    "accent": "project-docs",
+    "client": "Everyone (public skill)",
+    "date": "2026-10-08",
+    "version": "0.1",
+    "summary": "project-docs writes the documents a project needs before anyone builds it: what we build and why (PRD), what it is built with (TRD), the look (DESIGN.md), the data, security and the step-by-step plan. The AI asks first and reads it back, and it never picks the technology by itself. Each document is approved with a date. It works on any computer and in any AI tool.",
+    "actors": [
+      {
+        "name": "Developer",
+        "role": "Uses the skill for a project, answers the questions and decides."
+      },
+      {
+        "name": "AI",
+        "role": "Asks, reads back, writes each document and keeps the locks."
+      },
+      {
+        "name": "Client",
+        "role": "Approves each document or asks for changes. Can be the developer."
+      },
+      {
+        "name": "Project files",
+        "role": "The docs/ folder and DESIGN.md: the one place the truth lives."
+      },
+      {
+        "name": "frameflow skill",
+        "role": "Draws the app flow (the screens), if installed."
+      }
+    ],
+    "assumptions": [
+      "Order: PRD, TRD, app flow offer, Design, Data, Security, Plan.",
+      "English by default; full right-to-left Arabic when the developer asks.",
+      "Nothing about Backloop or WorkSpace Labs is inside the skill, so it works anywhere.",
+      "When docs/prd.md exists it counts as the project's scope (replaces docs/scope.md).",
+      "The AI never installs anything and never adds the pointer line without a yes.",
+      "frameflow not installed: the AI mentions it once with its link, then goes on to Design."
+    ],
+    "open_questions": []
+  },
+  "parts": [
+    {
+      "title": "Start the project docs",
+      "summary": "Reads what the project already has, then picks the next document to write.",
+      "lanes": [
+        "Developer",
+        "AI"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Developer",
+          "title": "Wants the project docs"
+        },
+        {
+          "id": "read",
+          "type": "step",
+          "lane": "AI",
+          "title": "Reads the project folder",
+          "detail": "docs/, DESIGN.md, the code",
+          "result": "What already exists"
+        },
+        {
+          "id": "has",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Docs exist?",
+          "branches": [
+            {
+              "label": "No",
+              "to": "prd"
+            },
+            {
+              "label": "Yes",
+              "to": "resume"
+            }
+          ]
+        },
+        {
+          "id": "resume",
+          "type": "step",
+          "lane": "AI",
+          "title": "Finds where it stopped",
+          "detail": "first document not approved",
+          "next": "next"
+        },
+        {
+          "id": "prd",
+          "type": "step",
+          "lane": "AI",
+          "title": "Starts with the PRD",
+          "detail": "what we build and why"
+        },
+        {
+          "id": "next",
+          "type": "end",
+          "lane": "AI",
+          "title": "Document chosen",
+          "to_part": 2
+        }
+      ]
+    },
+    {
+      "title": "Every document, the same way",
+      "summary": "Ask in small rounds, read it back, write it, approve it. Every document goes through this part.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Client",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Document chosen"
+        },
+        {
+          "id": "ask",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks 2 or 3 questions",
+          "detail": "click answers + Other"
+        },
+        {
+          "id": "answer",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Answers",
+          "detail": "clicks or own words"
+        },
+        {
+          "id": "readback",
+          "type": "step",
+          "lane": "AI",
+          "title": "Reads it back",
+          "detail": "in plain words",
+          "result": "A read-back"
+        },
+        {
+          "id": "right",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "That's it?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "write"
+            },
+            {
+              "label": "No",
+              "to": "ask"
+            }
+          ]
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Document written",
+          "detail": "in docs/, marked Draft",
+          "result": "The document"
+        },
+        {
+          "id": "ok",
+          "type": "decision",
+          "lane": "Client",
+          "title": "Approved?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "stamp"
+            },
+            {
+              "label": "Changes",
+              "to": "change"
+            }
+          ]
+        },
+        {
+          "id": "change",
+          "type": "step",
+          "lane": "AI",
+          "title": "Makes the changes",
+          "detail": "next version: v2, v3",
+          "next": "write"
+        },
+        {
+          "id": "stamp",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Marked Approved + date",
+          "result": "An approved document"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Next document"
+        }
+      ]
+    },
+    {
+      "title": "The PRD: what and why",
+      "summary": "The first document. Everything after it builds on the approved PRD.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Developer",
+          "title": "Starts a project"
+        },
+        {
+          "id": "ask",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the 6 parts",
+          "detail": "what, why, who, must do"
+        },
+        {
+          "id": "not",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the limits",
+          "detail": "will NOT do, how we know"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "docs/prd.md approved",
+          "detail": "the Part 2 way",
+          "result": "The approved PRD"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "PRD approved",
+          "to_part": 4
+        }
+      ]
+    },
+    {
+      "title": "The TRD: what it is built with",
+      "summary": "The AI never picks the technology. Work rules come first, and every choice is locked.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "PRD approved"
+        },
+        {
+          "id": "work",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Work or personal?",
+          "branches": [
+            {
+              "label": "Personal",
+              "to": "parts"
+            },
+            {
+              "label": "Work",
+              "to": "rules"
+            }
+          ]
+        },
+        {
+          "id": "rules",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Gives the work rules",
+          "detail": "must use, can't use, security",
+          "next": "parts"
+        },
+        {
+          "id": "parts",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks about each part",
+          "detail": "screen, brain, data, hosting"
+        },
+        {
+          "id": "knows",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Knows the pick?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "lock"
+            },
+            {
+              "label": "No",
+              "to": "options"
+            }
+          ]
+        },
+        {
+          "id": "options",
+          "type": "step",
+          "lane": "AI",
+          "title": "Shows 2 or 3 options",
+          "detail": "pros, cons + its pick"
+        },
+        {
+          "id": "picks",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Picks one?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "lock"
+            },
+            {
+              "label": "Not sure",
+              "to": "tbd"
+            }
+          ]
+        },
+        {
+          "id": "tbd",
+          "type": "step",
+          "lane": "AI",
+          "title": "Writes TBD",
+          "detail": "the Plan waits for it",
+          "next": "lock"
+        },
+        {
+          "id": "lock",
+          "type": "step",
+          "lane": "Project files",
+          "title": "docs/trd.md locked",
+          "detail": "approved the Part 2 way",
+          "result": "The locked TRD"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "TRD approved",
+          "to_part": 5
+        }
+      ]
+    },
+    {
+      "title": "Lock it for every AI",
+      "summary": "One line tells every AI tool to follow the TRD. Only the developer changes a lock.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "TRD approved"
+        },
+        {
+          "id": "offer",
+          "type": "step",
+          "lane": "AI",
+          "title": "Offers the pointer line",
+          "detail": "in AGENTS.md / CLAUDE.md"
+        },
+        {
+          "id": "yes",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Add it?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "add"
+            },
+            {
+              "label": "No",
+              "to": "done"
+            }
+          ]
+        },
+        {
+          "id": "add",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Pointer line added",
+          "detail": "read docs/trd.md first",
+          "result": "Every AI reads the TRD"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Locks in place",
+          "to_part": 6
+        }
+      ]
+    },
+    {
+      "title": "The app flow offer",
+      "summary": "If the project has screens and frameflow is installed, the AI offers it once.",
+      "lanes": [
+        "AI",
+        "Developer",
+        "frameflow skill"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Locks in place"
+        },
+        {
+          "id": "screens",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Has screens?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "installed"
+            },
+            {
+              "label": "No",
+              "to": "skip"
+            }
+          ]
+        },
+        {
+          "id": "skip",
+          "type": "end",
+          "lane": "AI",
+          "title": "No app flow",
+          "detail": "goes to Data",
+          "to_part": 8
+        },
+        {
+          "id": "installed",
+          "type": "decision",
+          "lane": "AI",
+          "title": "frameflow there?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "offer"
+            },
+            {
+              "label": "No",
+              "to": "design"
+            }
+          ],
+          "detail": "No: mentions frameflow once, with its link"
+        },
+        {
+          "id": "offer",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Want the app flow?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "draw"
+            },
+            {
+              "label": "No",
+              "to": "design"
+            }
+          ]
+        },
+        {
+          "id": "draw",
+          "type": "step",
+          "lane": "frameflow skill",
+          "title": "Draws the app flow",
+          "detail": "the screens, approved",
+          "result": "The storyboard"
+        },
+        {
+          "id": "design",
+          "type": "end",
+          "lane": "AI",
+          "title": "On to the look",
+          "to_part": 7
+        }
+      ]
+    },
+    {
+      "title": "The Design brief: the look",
+      "summary": "The developer picks the look by eye. Every option has already passed a readability check.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "On to the look"
+        },
+        {
+          "id": "has",
+          "type": "decision",
+          "lane": "AI",
+          "title": "DESIGN.md exists?",
+          "branches": [
+            {
+              "label": "No",
+              "to": "brand"
+            },
+            {
+              "label": "Yes",
+              "to": "gaps"
+            }
+          ]
+        },
+        {
+          "id": "gaps",
+          "type": "step",
+          "lane": "AI",
+          "title": "Keeps it, asks the gaps",
+          "detail": "the look never changes",
+          "next": "write"
+        },
+        {
+          "id": "brand",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Gives any brand rules",
+          "detail": "work colors, logo, fonts"
+        },
+        {
+          "id": "preview",
+          "type": "step",
+          "lane": "AI",
+          "title": "Makes the preview page",
+          "detail": "2 or 3 looks, real words",
+          "result": "One HTML page"
+        },
+        {
+          "id": "pick",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Picks a look by eye"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "DESIGN.md approved",
+          "detail": "table + ready values",
+          "result": "The locked look"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Look locked",
+          "to_part": 8
+        }
+      ]
+    },
+    {
+      "title": "Data: what it saves",
+      "summary": "Only when the project saves something. Personal and secret columns are marked.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Look locked"
+        },
+        {
+          "id": "saves",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Saves anything?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "propose"
+            },
+            {
+              "label": "No",
+              "to": "skip"
+            }
+          ]
+        },
+        {
+          "id": "skip",
+          "type": "end",
+          "lane": "AI",
+          "title": "No data document",
+          "to_part": 9
+        },
+        {
+          "id": "propose",
+          "type": "step",
+          "lane": "AI",
+          "title": "Proposes the sheets",
+          "detail": "from the PRD's must do"
+        },
+        {
+          "id": "keep",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Keeps or changes them",
+          "detail": "add, remove, rename"
+        },
+        {
+          "id": "cols",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks each sheet",
+          "detail": "columns, personal, secret"
+        },
+        {
+          "id": "db",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Database locked?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "block"
+            },
+            {
+              "label": "TBD",
+              "to": "wait"
+            }
+          ]
+        },
+        {
+          "id": "wait",
+          "type": "step",
+          "lane": "AI",
+          "title": "Ready block waits",
+          "detail": "until the TRD picks",
+          "next": "block"
+        },
+        {
+          "id": "block",
+          "type": "step",
+          "lane": "Project files",
+          "title": "docs/data.md approved",
+          "detail": "tables + ready block",
+          "result": "The data map"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Data done",
+          "to_part": 9
+        }
+      ]
+    },
+    {
+      "title": "Security: one page",
+      "summary": "Always written, short when the project is simple. Most answers come from the TRD and Data.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Data done"
+        },
+        {
+          "id": "gather",
+          "type": "step",
+          "lane": "AI",
+          "title": "Gathers what it knows",
+          "detail": "TRD rules, data marks"
+        },
+        {
+          "id": "ask",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks what is missing",
+          "detail": "logins, secrets, if it breaks"
+        },
+        {
+          "id": "answer",
+          "type": "step",
+          "lane": "Developer",
+          "title": "Answers"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "docs/security.md approved",
+          "detail": "6 parts, the Part 2 way",
+          "result": "The security page"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Security done",
+          "to_part": 10
+        }
+      ]
+    },
+    {
+      "title": "The Plan: small steps",
+      "summary": "Small steps in order, each with a check. Step 1 is the thinnest version that works.",
+      "lanes": [
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Security done"
+        },
+        {
+          "id": "steps",
+          "type": "step",
+          "lane": "AI",
+          "title": "Writes the steps",
+          "detail": "each one you can see work"
+        },
+        {
+          "id": "brain",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Has a back end?",
+          "branches": [
+            {
+              "label": "No",
+              "to": "write"
+            },
+            {
+              "label": "Yes",
+              "to": "api"
+            }
+          ]
+        },
+        {
+          "id": "api",
+          "type": "step",
+          "lane": "AI",
+          "title": "Adds an API guide step",
+          "detail": "docs/api.md, during build",
+          "next": "write"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "docs/plan.md approved",
+          "detail": "the Part 2 way",
+          "result": "The approved plan"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Ready to build",
+          "to_part": 11
+        }
+      ]
+    },
+    {
+      "title": "Build with the plan",
+      "summary": "The builder never marks its own homework: only the developer turns a step done.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Developer",
+          "title": "Says build"
+        },
+        {
+          "id": "tbd",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Step needs a TBD?",
+          "branches": [
+            {
+              "label": "No",
+              "to": "build"
+            },
+            {
+              "label": "Yes",
+              "to": "stop"
+            }
+          ]
+        },
+        {
+          "id": "stop",
+          "type": "stop",
+          "lane": "AI",
+          "title": "Waits",
+          "detail": "asks for the choice first"
+        },
+        {
+          "id": "build",
+          "type": "step",
+          "lane": "AI",
+          "title": "Builds the step",
+          "detail": "follows the locked docs"
+        },
+        {
+          "id": "check",
+          "type": "step",
+          "lane": "AI",
+          "title": "Runs the step's check",
+          "detail": "how we know it works"
+        },
+        {
+          "id": "mark",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Marked waiting",
+          "detail": "with what it ran"
+        },
+        {
+          "id": "ok",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Works?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "tick"
+            },
+            {
+              "label": "No",
+              "to": "build"
+            }
+          ]
+        },
+        {
+          "id": "tick",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Ticked done",
+          "detail": "by the developer only"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Next step"
+        }
+      ]
+    }
+  ]
+}

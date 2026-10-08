@@ -1,0 +1,96 @@
+/* project-docs preview: the page frame stays quiet so the looks are the stars. */
+@font-face { font-family: 'Plus Jakarta Sans'; src: url('fonts/PlusJakartaSans-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url('fonts/PlusJakartaSans-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Instrument Sans'; src: url('fonts/InstrumentSans-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Instrument Sans'; src: url('fonts/InstrumentSans-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Bricolage Grotesque'; src: url('fonts/BricolageGrotesque-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Bricolage Grotesque'; src: url('fonts/BricolageGrotesque-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Lora'; src: url('fonts/Lora-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Lora'; src: url('fonts/Lora-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Crimson Pro'; src: url('fonts/CrimsonPro-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Crimson Pro'; src: url('fonts/CrimsonPro-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Noto Naskh Arabic'; src: url('fonts/NotoNaskhArabic-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Noto Naskh Arabic'; src: url('fonts/NotoNaskhArabic-Bold.ttf'); font-weight: 700; }
+
+:root {
+  --page: #FFFFFF;
+  --ink: #0F172A;
+  --quiet: #475569;
+  --line: #E2E8F0;
+  --faint: #F8FAFC;
+  --blue: #2563EB;
+  --stop: #B91C1C;
+  --frame-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+:root[dir='rtl'] { --frame-font: 'Noto Naskh Arabic', 'Plus Jakarta Sans', serif; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font: 400 15px/1.55 var(--frame-font);
+  border-top: 4px solid var(--blue);
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 40px 24px 32px; }
+
+.eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--quiet); }
+:root[dir='rtl'] .eyebrow { letter-spacing: 0; }
+h1.title { margin: 6px 0 8px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+/* Long words (a 60-letter name) wrap inside the page instead of widening it. */
+.wrap, .looks > * { min-width: 0; overflow-wrap: anywhere; }
+.lead { margin: 0 0 32px; max-width: 62ch; color: var(--quiet); }
+
+.looks { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: start; }
+
+.look { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--page); }
+.letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 84px; height: 84px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 14px;
+  font-size: 60px; line-height: 1; font-weight: 700;
+}
+.look-name { margin: 10px 0 2px; font-size: 18px; font-weight: 700; }
+.look-feel { margin: 0 0 16px; color: var(--quiet); }
+
+/* The sample screen: everything inside is drawn with the look's own values (set inline). */
+.sample { border-radius: 10px; padding: 18px; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.sample h2 { margin: 0 0 6px; font-size: 24px; line-height: 1.2; font-weight: 700; }
+.sample p { margin: 0 0 14px; font-size: 14px; }
+.sample-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.sample-buttons span { display: inline-block; padding: 9px 14px; font-size: 14px; font-weight: 700; border: 1.5px solid transparent; }
+.sample-card { padding: 14px; border: 1px solid; font-size: 14px; }
+.sample-card strong { display: block; margin-bottom: 4px; }
+.sample-card .quiet { display: block; }
+.sample-card .error { display: block; margin-top: 8px; font-weight: 700; }
+
+.facts { margin: 16px 0 0; font-size: 13px; }
+.swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; }
+.swatches li { font-size: 11px; color: var(--quiet); }
+.swatches .chip { display: block; height: 28px; border-radius: 6px; border: 1px solid var(--line); margin-bottom: 4px; }
+.swatches code { display: block; color: var(--ink); font: 11px/1.3 ui-monospace, Menlo, monospace; }
+.facts dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; }
+.facts dt { color: var(--quiet); }
+.facts dd { margin: 0; }
+details.readable { margin-top: 12px; }
+details.readable summary { cursor: pointer; font-weight: 700; color: var(--ink); }
+details.readable summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+details.readable ul { margin: 6px 0 0; padding-inline-start: 18px; color: var(--quiet); }
+
+/* Clean or refused: a problem never reaches the person as a broken look. */
+.fix { border: 1.5px dashed var(--stop); border-radius: 14px; padding: 20px; background: #FEF2F2; }
+.fix h2 { margin: 0 0 8px; font-size: 18px; color: var(--stop); }
+.fix ol { margin: 0; padding-inline-start: 20px; }
+.fix li + li { margin-top: 4px; }
+.page-fix { margin-bottom: 24px; }
+
+.credit { margin: 40px 0 0; font-size: 12px; color: var(--quiet); }
+
+@media (max-width: 520px) {
+  .wrap { padding: 28px 16px 24px; }
+  h1.title { font-size: 24px; }
+}
+@media print {
+  body { border-top: 0; }
+  .look, .fix { break-inside: avoid; }
+}
