@@ -2,6 +2,16 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.1.2] - 2026-10-09
+
+### Added
+
+- Ten real-browser Google Fonts checks in Chrome and Edge: successful Merriweather loading at desktop
+  and phone widths, refusal without consent, and refusal when the stylesheet or font download is blocked.
+- `TESTING.md` now separates the 32 completed browser checks from remaining Firefox and real-user
+  validation. The earlier Codex continuation and agent simulations are distinguished from a complete
+  interactive project run. No skill code changed.
+
 ## [0.1.1] - 2026-10-09
 
 Windows testing and portability fixes. No changes to the preview's visual design or contrast thresholds.

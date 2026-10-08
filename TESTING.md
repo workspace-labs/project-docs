@@ -1,17 +1,18 @@
 # How project-docs was tested
 
-Last verified: **2026-10-09 · version 0.1.1 · 101 passed, 0 failed**.
+Last verified: **2026-10-09 · version 0.1.2 · 101 automated tests passed, 32 browser checks passed**.
 
 project-docs was not just written. It was tested, run blind by fresh agents, and then reviewed by a second
-AI that tried to break it. The first release passed that review; version 0.1.1 adds Windows testing and
-fixes found there. This page lists what was run and found, and what has not been tried yet.
+AI that tried to break it. The first release passed that review; version 0.1.1 added Windows testing and
+fixes, and version 0.1.2 adds live Google Fonts verification. This page lists what was run and found, and
+what still needs validation.
 
 ## At a glance
 
 | What | Result |
 |---|---|
 | Automated tests | **101**, all passing on Windows with Node.js 24.19.0: 73 document checks, 24 preview checks, 2 font-parser checks and 2 complete line-ending runs. The original 94 passed on Node.js 18, 20 and 22 |
-| Windows browsers | **22 offline checks** in installed Chrome 143.0.7499.41 and Edge 143.0.3650.66, with screenshots inspected |
+| Windows browsers | **32 checks** in installed Chrome 143.0.7499.41 and Edge 143.0.3650.66: 22 offline preview checks and 10 live online-font/consent/failure checks, with screenshots inspected |
 | Final skill ZIP | **59 files**, each verified against the source by SHA-256; correct `project-docs/` root, no tests or PDFs |
 | First-release independent review | **7 rounds** by a second AI (OpenAI Codex), which read the code and tried to break it. **Approved** on 2026-10-08 |
 | Problems that review found | **9**: 8 medium, 1 low. **All fixed** |
@@ -77,6 +78,24 @@ Screenshots were inspected at desktop and phone widths. The preview's visual rul
 thresholds were kept; the inspected English desktop and Arabic phone screenshots were byte-identical
 before and after the font metadata repair.
 
+### Live Google Fonts checks
+
+Ten additional cases ran in the same Chrome and Edge versions, using an isolated English clinic preview
+with **Merriweather** as one look's heading font. Successful cases fetched the real stylesheet from
+`fonts.googleapis.com` and a real WOFF2 file from `fonts.gstatic.com`, both with HTTP 200, and the browser
+confirmed the font face loaded. Desktop and phone screenshots were inspected. All cases below passed
+without uncaught page errors.
+
+| Case | Widths (px) | Expected result | Checks across both browsers |
+|---|---|---|---|
+| Merriweather listed in `onlineFonts` | 1280, 390 | `ready`, three looks, actual font loaded | 4 |
+| Merriweather absent from `onlineFonts` | 390 | `refused`, no external request | 2 |
+| Google Fonts stylesheet request blocked | 390 | `refused`, connection/font advice shown | 2 |
+| Stylesheet loads, font-file request blocked | 390 | `refused`, connection/font advice shown | 2 |
+
+This verifies one English font family, not every Google Fonts family or language subset. The normal
+automated suite remains offline; these live checks do not add a network dependency to `node --test`.
+
 ### Problems found and fixed
 
 | Problem | Evidence before the fix | Fix and verification |
@@ -135,13 +154,14 @@ six fixes and was settled by the owner's decision in round 7.
 | F08 | Medium | The example clinic plans left out patient sign-in and the open choice it waits for | Added, and a test checks it |
 | F09 | Medium | Identifying fields were missing from the personal-data map | Added, and a test checks it |
 
-## Not tried yet
+## Remaining validation
 
-These have not been tried yet. If you try one, an issue telling us how it went is welcome.
+Completed checks are recorded above. These gaps remain; a report of a real trial is welcome.
 
-- Firefox (WebKit, Chrome, Edge and the stand-in browser have been checked)
-- Live loading from Google Fonts (all real-browser checks used bundled fonts; automated tests simulate
-  online font faces and failures)
-- A brand-new person using it on a real project of their own
-- A complete interactive project from start to finish in Claude in the browser, Codex, Copilot or Cursor.
-  The Windows Codex check above exercised one continuation scenario, not a complete live user project
+- **Firefox preview behavior:** Firefox was unavailable in this Windows test environment. WebKit,
+  Chrome, Edge and the stand-in browser have been checked.
+- **A real person completing their own project:** the earlier full dry runs were agent simulations,
+  not a new user working on a real project.
+- **A complete interactive workflow in Claude in the browser, Codex, Copilot or Cursor:** Codex has been
+  checked through one isolated continuation scenario. That does not establish an end-to-end live user
+  workflow in any of these tools.
