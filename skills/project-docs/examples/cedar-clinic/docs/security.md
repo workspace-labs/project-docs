@@ -6,6 +6,11 @@
 - **Front desk staff** sign in with their clinic Microsoft 365 account, and see every visit.
 - Nobody else gets past the doctor list and the free times.
 
+## How it's protected
+- **Records:** every request for a visit checks that the signed-in patient owns it; staff are checked as staff. A visit number that is hard to guess is not protection.
+- **Database:** every query uses placeholders; nothing a patient types is glued into a query.
+- **Sign-in:** text-code sends and tries are limited (a 15-minute pause after 5 wrong codes). Staff sign-in checks Microsoft's signed answer before trusting it, and knows each staff member by their Microsoft account ID, never their email.
+
 ## Secrets
 - The database password and the text-message service key live in the server's environment, never in the code or in git.
 - `.env` files are listed in `.gitignore`.

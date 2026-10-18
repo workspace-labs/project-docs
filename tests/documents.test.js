@@ -372,6 +372,22 @@ for (const { folder, lang, showcase } of PROJECTS) {
     assert.ok(tried, 'no step signs in as A and tries to open, change and cancel B\'s data, all refused, B unchanged');
   });
 
+  test(`(${folder}) "How it's protected" has its three lines, each "None" exactly when it does not apply`, () => {
+    const en = lang === 'en';
+    const who = section(doc('docs/security.md'), en ? 'Who can get in' : 'من يستطيع الدخول').split('\n');
+    const applies = {
+      [en ? 'Records' : 'السجلات']: who.some((l) => l.startsWith('- **') && (en ? /only their own/ : /فقط/).test(l)),
+      [en ? 'Database' : 'قاعدة البيانات']: exists(`${folder}/docs/data.md`),
+      [en ? 'Sign-in' : 'الدخول']: who.some((l) => l.startsWith('- **') && (en ? /\bsigns? in\b/i : /يدخل/).test(l)),
+    };
+    const lines = section(doc('docs/security.md'), en ? "How it's protected" : 'كيف يُحمى').split('\n').filter((l) => l.startsWith('- '));
+    assert.deepStrictEqual(lines.map((l) => (l.match(/^- \*\*(.+?):\*\* /) || [])[1]), Object.keys(applies));
+    for (const [label, yes] of Object.entries(applies)) {
+      const none = lines.find((l) => l.startsWith(`- **${label}:**`)).includes(`:** ${en ? 'None:' : 'لا ينطبق:'}`);
+      assert.strictEqual(none, !yes, `${label} ${yes ? 'applies but says None' : 'does not apply but is not None'}`);
+    }
+  });
+
   test(`(${folder}) the plan covers every PRD "must do" line`, () => {
     const must = [...section(doc('docs/prd.md'), L.s.must).matchAll(/\*\*(M\d+)\.\*\*/g)].map((m) => m[1]);
     const covered = steps().flatMap((s) => s.match(new RegExp(`\\*\\*${L.covers}:\\*\\* (.+)`))[1].match(/M\d+/g) || []);

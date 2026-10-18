@@ -6,7 +6,7 @@ from the TRD and Data; only three things are new questions.
 
 ## Contents
 
-Gather first · The questions · The read-back · The document · In Arabic
+Gather first · The questions · How it's protected · The read-back · The document · In Arabic
 
 ## Gather first
 
@@ -30,6 +30,20 @@ Gather first · The questions · The read-back · The document · In Arabic
 3. **If something goes wrong** (a leak, a break-in, a lost laptop): who is told first, what is done first
    (turn it off, change the keys), and who tells the people whose data was involved?
 
+## How it's protected (never asked: the skill writes it)
+
+Three lines a builder must follow, worked out from the answers above, the TRD and Data. They are not
+questions: the person would not know them, and the safe way is the only way. When one does not apply,
+its line says so with **None:** and why.
+
+- **Records:** when anyone sees only their own things, every request for a record checks that the
+  signed-in person owns it. A link or ID that is hard to guess is not protection.
+- **Database:** when the project saves to a database, every query uses placeholders: text people type is
+  never glued into the query.
+- **Sign-in:** when anyone signs in, sign-in, reset and sign-up tries are limited. When they sign in with
+  another company's account ("Sign in with Microsoft"), check that company's signed answer before trusting
+  it, and know the person by that company's account ID, never by their email.
+
 ## The read-back
 
 > Staff sign in with Microsoft 365; patients with a code by text and see only their own visits. Keys live in
@@ -49,6 +63,11 @@ nothing.").
 
 ## Who can get in
 - <…>
+
+## How it's protected
+- **Records:** <…>
+- **Database:** <…>
+- **Sign-in:** <…>
 
 ## Secrets
 - <…>
@@ -71,7 +90,7 @@ nothing.").
 ## In Arabic
 
 When the person asks for Arabic, write the same document in Arabic with these headings. Column names stay
-as they are in the Data document (`patients.phone`), with the Arabic marks `🔒 شخصي` and `🔐 سري`. An empty
+as they are in the Data document (`patients.phone`), with the Arabic marks `🔒 شخصي` and `🔐 سري`. A line that does not apply starts with `لا ينطبق:`. An empty
 heading says so in one line ("لا شيء: لا يحفظ شيئًا.").
 
 ```markdown
@@ -80,6 +99,11 @@ heading says so in one line ("لا شيء: لا يحفظ شيئًا.").
 
 ## من يستطيع الدخول
 - <…>
+
+## كيف يُحمى
+- **السجلات:** <…>
+- **قاعدة البيانات:** <…>
+- **الدخول:** <…>
 
 ## الأسرار
 - <…>

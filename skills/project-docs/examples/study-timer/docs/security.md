@@ -4,6 +4,11 @@
 ## Who can get in
 - Nobody signs in: it runs only on the person's own computer.
 
+## How it's protected
+- **Records:** None: nobody signs in, so there is no one else's data to reach.
+- **Database:** None: it saves nothing.
+- **Sign-in:** None: nobody signs in.
+
 ## Secrets
 - None: it needs no keys or passwords.
 

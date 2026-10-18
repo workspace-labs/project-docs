@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.1.2** · 101 tests · tested on Windows, Chrome and Edge · [how it was tested](TESTING.md)
+**Version 0.2.0** · 104 tests · 0.1.2 tested on Windows, Chrome and Edge · [how it was tested](TESTING.md)
 
 ---
 
@@ -27,7 +27,7 @@ In your project:
 | `docs/trd.md` | **TRD**: what it is built with, the rules it follows, how the code is written, and why each choice | always |
 | `DESIGN.md` | **The look**: colors, fonts, shapes, pieces, must-have rules and ready values every AI copies | when it has screens |
 | `docs/data.md` | **Data**: every table and column, with personal 🔒 and secret 🔐 data marked | when it saves anything |
-| `docs/security.md` | **Security**: who gets in, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
+| `docs/security.md` | **Security**: who gets in, how it's protected, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
 
 Each document carries a stamp under its title: `> v1 · Draft`, then `> v2 · Approved 2026-10-08`.
@@ -111,7 +111,7 @@ website before we build it."
 documents for a made-up clinic booking website, and
 [`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the same in Arabic.
 [`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing, so it
-has no data document, and its security page is six short lines.
+has no data document, and its security page is short, with "None" wherever nothing applies.
 
 To see the look preview without an agent, copy
 [`skills/project-docs/assets/preview/`](skills/project-docs/assets/preview/) somewhere, put an example's

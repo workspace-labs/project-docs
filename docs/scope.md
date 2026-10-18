@@ -11,7 +11,8 @@
      picked by eye from a preview page.
   5. **Data** (`docs/data.md`): only when the project saves something. Sheets, columns, links, with
      personal and secret columns marked.
-  6. **Security** (`docs/security.md`): always, short when simple. Who gets in, secrets, personal data,
+  6. **Security** (`docs/security.md`): always, short when simple. Who gets in, how it's protected (record owner checks, safe
+     database queries, safe sign-in), secrets, personal data,
      outside services, work rules, and what to do if something goes wrong.
   7. **Plan** (`docs/plan.md`): small steps you can see work, each with a check.
 - **Asks first.** Click questions in small rounds of 2–3, then a read-back. It writes only after "yes, that's it".

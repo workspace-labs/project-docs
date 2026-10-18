@@ -2,6 +2,19 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.0] - 2026-10-19
+
+### Added
+
+- The Security page has a new **How it's protected** section with three lines a builder must follow:
+  **Records** (every request checks the signed-in person owns the record; a hard-to-guess ID is not
+  protection), **Database** (placeholders, never typed text glued into a query) and **Sign-in** (tries
+  limited; "Sign in with …" checks the provider's signed answer and knows the person by the provider's
+  account ID, not their email). They are written from the answers, never asked. A line that does not
+  apply says **None:** (Arabic `لا ينطبق:`).
+- All three examples carry the section, and a new test checks each line says None exactly when it does
+  not apply (104 tests). Windows was last verified on 0.1.2; this change adds no code to the preview.
+
 ## [0.1.2] - 2026-10-09
 
 ### Added
