@@ -1,5 +1,5 @@
 # Data: Cedar Clinic Booking
-> v2 · Approved 2026-10-08
+> v3 · Draft
 
 ## What it saves
 Who the patients are, which doctors take visits, every visit, and the staff who use the front desk list.
@@ -51,10 +51,12 @@ One row is one booked visit: who, with which doctor, when.
 
 ### Staff (staff)
 One row is one front desk staff member, from the clinic's Microsoft 365 login.
+  - Changed 2026-10-19: staff without a stored Microsoft account ID → staff with a stored Microsoft account ID, because Security requires the provider's stable identity.
 
 | Column | Holds | Example | Mark |
 |---|---|---|---|
 | id | a number the system gives | 7 | – |
+| microsoft_account_id | the stable account ID from the clinic's verified Microsoft login, never their email | clinic-account-007 | 🔒 personal |
 | work_email | their clinic email, from the login | desk@clinic.example | 🔒 personal |
 | display_name | their name | Front Desk 1 | 🔒 personal |
 
@@ -96,6 +98,7 @@ CREATE UNIQUE INDEX one_visit_per_doctor_time ON visits (doctor_id, starts_at) W
 
 CREATE TABLE staff (
   id           bigserial PRIMARY KEY,
+  microsoft_account_id text NOT NULL UNIQUE, -- personal: stable Microsoft identity, never email
   work_email   text NOT NULL UNIQUE,        -- personal
   display_name text NOT NULL                -- personal
 );

@@ -38,8 +38,8 @@ would you change?"), never before.
    fixes them ("warm", "no dark pages"), vary the fonts, corners and accents instead.
 4. Fonts: use the ones inside the preview: Plus Jakarta Sans, Instrument Sans, Bricolage Grotesque,
    Lora, Crimson Pro, and Noto Naskh Arabic for Arabic. For a brand font that isn't there, ask first:
-   "This font isn't inside the preview. Load it from Google Fonts to show it? That is one internet call when
-   the page opens." Only on yes, add its name to `onlineFonts`.
+   "This font isn't inside the preview. Load it from Google Fonts to show it? Opening the page downloads
+   a Google Fonts stylesheet and font files." Only on yes, add its name to `onlineFonts`.
 5. **Check before showing.** If you can open a browser, open `preview.html` and read
    `document.body.dataset.preview`: `ready`, or `refused` with each problem listed on the page. Without a
    browser but with Node.js, run `node docs/design-preview/check.js docs/design-preview/looks.js`: it prints

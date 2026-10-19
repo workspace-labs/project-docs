@@ -217,8 +217,22 @@
     var p = data.project, list = [];
     list.push([look.fonts.heading, 700, p.name + ' ' + letter]);
     list.push([look.fonts.body, 400, [p.about].concat(p.items.slice(1, 4)).join(' ')]);
-    list.push([look.fonts.body, 700, p.actions.concat(p.items[0], p.error || []).join(' ')]);
+    list.push([look.fonts.body, 700, p.actions.slice(0, 2).concat(p.items[0], p.error || []).join(' ')]);
     return list;
+  }
+
+  // A stalled font file must end in refusal too. Settling this promise once keeps a late
+  // load from changing the result; completed requests release their deadline immediately.
+  function loadFont(font, text) {
+    var loading = document.fonts.load(font, text);
+    return new Promise(function (resolve, reject) {
+      var timer = setTimeout(function () { resolve([]); }, 10000);
+      loading.then(function (faces) {
+        clearTimeout(timer); resolve(faces);
+      }, function (error) {
+        clearTimeout(timer); reject(error);
+      });
+    });
   }
 
   // A look counts as loaded only when, for each font and weight it draws, a loaded face really has that
@@ -231,7 +245,7 @@
     }
     return Promise.all(drawnText(item.look, item.letter).map(function (w) {
       var name = w[0], weight = w[1], text = w[2];
-      return document.fonts.load(weight + ' 16px "' + name + '"', text).then(function (faces) {
+      return loadFont(weight + ' 16px "' + name + '"', text).then(function (faces) {
         var usable = faces.filter(function (f) {
           var r = weightRange(f.weight);
           return f.status === 'loaded' && weight >= r[0] && weight <= r[1];

@@ -263,7 +263,7 @@ const fixTexts = (node) => (/\bfix\b/.test(node.className) ? [node.textContent] 
 // with state null (a page that never decided). `online` holds each online font's stylesheet faces (an empty
 // list is a stylesheet without faces; a family missing from it fails like a blocked connection). `load: null`
 // is a browser without document.fonts.load.
-function openPage(looksJs, { faces = bundledFaces(), online = {}, load } = {}) {
+function openPage(looksJs, { faces = bundledFaces(), online = {}, load, timers } = {}) {
   const loaded = faces.slice();
   const document = {
     documentElement: {}, title: '', head: new Element('head'), body: new Element('body'),
@@ -281,13 +281,17 @@ function openPage(looksJs, { faces = bundledFaces(), online = {}, load } = {}) {
     return link;
   };
   return new Promise((resolve) => {
-    const answer = () => resolve({ state: document.body.getAttribute('data-preview'), fixes: fixTexts(document.body) });
+    const snapshot = () => ({ state: document.body.getAttribute('data-preview'), fixes: fixTexts(document.body) });
+    const answer = () => resolve({ ...snapshot(), snapshot });
     const timer = setTimeout(answer, 2000);
     document.body.setAttribute = (name, value) => {
       document.body.attributes[name] = String(value);
       if (name === 'data-preview') { clearTimeout(timer); answer(); }
     };
-    const context = vm.createContext({ document, setTimeout: (fn, ms) => setTimeout(fn, ms).unref() });
+    const context = vm.createContext({ document,
+      setTimeout: timers ? timers.setTimeout : (fn, ms) => setTimeout(fn, ms).unref(),
+      clearTimeout: timers ? timers.clearTimeout : clearTimeout,
+    });
     context.window = vm.runInContext('this', context);
     const html = fs.readFileSync(path.join(PREVIEW, 'preview.html'), 'utf8');
     for (const [, src] of html.matchAll(/<script src="([^"]+)"><\/script>/g)) {
@@ -295,6 +299,18 @@ function openPage(looksJs, { faces = bundledFaces(), online = {}, load } = {}) {
       try { vm.runInContext(code, context, { filename: src }); } catch (e) { /* the browser goes on to the next script */ }
     }
   });
+}
+
+// Advance the page's deadlines without sleeping or changing the browser-harness watchdog.
+function manualTimers() {
+  const pending = new Map();
+  let next = 0;
+  return {
+    setTimeout(fn) { const id = ++next; pending.set(id, fn); return id; },
+    clearTimeout(id) { pending.delete(id); },
+    fireAll() { const callbacks = [...pending.values()]; pending.clear(); callbacks.forEach((fn) => fn()); },
+    count() { return pending.size; },
+  };
 }
 
 // The example with look 1's heading in an online font the person said yes to.
@@ -310,6 +326,57 @@ test('the page: the example is ready when every font it draws really loaded', as
   const page = await openPage(looksFile(exampleLooks()));
   assert.strictEqual(page.state, 'ready');
   assert.deepStrictEqual(page.fixes, []);
+});
+
+test('the page checks only displayed actions for font coverage', async () => {
+  const looks = exampleLooks();
+  looks.project.actions.push('حفظ'); // not displayed: only the first two actions appear in the sample
+  const ready = await openPage(looksFile(looks));
+  assert.strictEqual(ready.state, 'ready', ready.fixes.join(' '));
+  assert.deepStrictEqual(ready.fixes, []);
+
+  looks.project.actions[0] = 'حفظ';
+  const refused = await openPage(looksFile(looks));
+  assert.strictEqual(refused.state, 'refused');
+  assert.match(refused.fixes.join(' '), /did not load for the text it shows/);
+});
+
+test('the page refuses a stalled font and stays refused when it eventually loads', async () => {
+  const timers = manualTimers();
+  const regularLoad = fontLoader(bundledFaces());
+  let complete, lateFaces;
+  const stalled = new Promise((resolve) => { complete = resolve; });
+  const pagePromise = openPage(looksFile(exampleLooks()), {
+    timers,
+    load: (font, text) => {
+      if (font === '700 16px "Lora"') { lateFaces = regularLoad(font, text); return stalled; }
+      return regularLoad(font, text);
+    },
+  });
+  await new Promise(setImmediate); // settle the other fonts before advancing the deadline
+  timers.fireAll();
+  const page = await pagePromise;
+  const before = page.snapshot();
+  assert.strictEqual(page.state, 'refused');
+  assert.match(page.fixes.join(' '), /the font "Lora" \(bold\) did not load for the text it shows/);
+  assert.strictEqual(timers.count(), 0);
+
+  complete(await lateFaces);
+  await new Promise(setImmediate);
+  assert.deepStrictEqual(page.snapshot(), before, 'a late font cannot change the refusal or restore its card');
+});
+
+test('settled font requests leave no pending deadline after success or rejection', async () => {
+  for (const rejected of [false, true]) {
+    const timers = manualTimers();
+    const regularLoad = fontLoader(bundledFaces());
+    const page = await openPage(looksFile(exampleLooks()), {
+      timers,
+      load: (font, text) => rejected && font === '700 16px "Lora"' ? Promise.reject(new Error('blocked font')) : regularLoad(font, text),
+    });
+    assert.strictEqual(page.state, rejected ? 'refused' : 'ready');
+    assert.strictEqual(timers.count(), 0, 'settled requests must not retain their deadline');
+  }
 });
 
 test('the page refuses bundled Latin fonts for Arabic text, and accepts the actual Arabic example', async () => {

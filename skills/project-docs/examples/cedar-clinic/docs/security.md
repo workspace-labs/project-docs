@@ -1,5 +1,5 @@
 # Security: Cedar Clinic Booking
-> v2 · Approved 2026-10-08
+> v3 · Draft
 
 ## Who can get in
 - **Patients** sign in with a one-time code sent by text, and see only their own visits.
@@ -23,6 +23,7 @@
 - **doctors.display_name** (🔒 personal): everyone, on purpose, so patients can pick a doctor; kept while the doctor works at the clinic.
 - **visits.patient_id** (🔒 personal): front desk, and the patient themself; kept two years, then removed with the visit.
 - **visits.doctor_id** (🔒 personal): front desk, and the patient whose visit it is; kept two years, then removed with the visit.
+- **staff.microsoft_account_id** (🔒 personal): the IT lead; kept until the person leaves.
 - **staff.work_email** (🔒 personal): the IT lead; kept until the person leaves.
 - **staff.display_name** (🔒 personal): the IT lead; kept until the person leaves.
 

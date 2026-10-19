@@ -2,6 +2,27 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.1] - 2026-10-19
+
+### Fixed
+
+- A stalled preview font now ends in a clear refusal after ten seconds; a late result cannot make it
+  ready. Font checks cover the two action labels the preview actually draws, so an unused third label
+  cannot falsely reject an otherwise valid look. Colors, layout, consent and contrast thresholds stay the same.
+- A missing Data document no longer means the project saves nothing. Security-only work uses confirmed
+  project facts, asks about missing details or keeps a TBD. Record checks honor the approved owner,
+  staff and public permissions. Online-font consent describes stylesheet and font-file downloads accurately.
+- The English and Arabic clinic staff models and ready SQL now include the stable Microsoft account ID
+  required by Security, marked personal and included in both inventories. Changed example Data/Security
+  documents return to Draft; the repair does not invent a fresh approval.
+
+### Verification
+
+- 109 automated tests pass on macOS with Node.js 20.20.2, including five new regression tests and the
+  existing LF/CRLF runs. Six repaired-preview cases behave as expected in native WebKit; the normal
+  English/Arabic desktop/phone screenshots are byte-identical to the baseline. See `TESTING.md` for scope
+  and remaining platform/workflow limits.
+
 ## [0.2.0] - 2026-10-19
 
 ### Added

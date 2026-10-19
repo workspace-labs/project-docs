@@ -78,8 +78,8 @@ const DOCUMENTS = [
 // Each example project, checked as a whole. A "showcase" project must show every feature (a TBD, a blocked
 // step, personal data); the small one only has to be right.
 const PROJECTS = [
-  { folder: 'cedar-clinic', lang: 'en', showcase: true },
-  { folder: 'cedar-clinic-ar', lang: 'ar', showcase: true },
+  { folder: 'cedar-clinic', lang: 'en', showcase: true, staffProviderIdentity: true },
+  { folder: 'cedar-clinic-ar', lang: 'ar', showcase: true, staffProviderIdentity: true },
   { folder: 'study-timer', lang: 'en', showcase: false },
 ];
 
@@ -169,6 +169,23 @@ function readyBlockProblems(storage, ready, L) {
   return /^```\w+\n[\s\S]+\n```/m.test(ready) ? [] : ['the data storage is chosen, so the ready block must hold the tables'];
 }
 
+// The clinic's approved sign-in rule uses Microsoft's stable account ID, never email.
+// Check both the readable model and its executable schema, not just a word in Security.
+function staffIdentityProblems(data, L) {
+  const problems = [];
+  const staff = section(data, L.s.sheets).split('\n### ').slice(1)
+    .find((sheet) => /\(staff\)$/.test(sheet.split('\n')[0]));
+  const row = (staff || '').split('\n').find((line) => /^\| microsoft_account_id \|/.test(line));
+  if (!row) problems.push('the staff model has no Microsoft account ID');
+  else if (row.split('|')[4].trim() !== L.marks[0]) problems.push('the Microsoft account ID must be marked personal');
+  const sql = section(data, L.s.readyBlock).match(/CREATE TABLE staff\s*\(([\s\S]*?)\);/i);
+  const column = sql && sql[1].match(/^\s*microsoft_account_id\s+text\b([^\n]*)/im);
+  if (!column || !/\bNOT NULL\b/i.test(column[1]) || !/\bUNIQUE\b/i.test(column[1])) {
+    problems.push('the staff schema needs a required, unique Microsoft account ID');
+  }
+  return problems;
+}
+
 function template(referenceFile, heading) {
   const text = readMarkdown(path.join(SKILL, 'references', referenceFile));
   const after = text.split(new RegExp(`^## ${heading}$`, 'm'))[1];
@@ -195,7 +212,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
   }
 }
 
-for (const { folder, lang, showcase } of PROJECTS) {
+for (const { folder, lang, showcase, staffProviderIdentity } of PROJECTS) {
   const L = LANGS[lang];
   const doc = (name) => read(`${folder}/${name}`);
   const has = (name) => exists(`${folder}/${name}`);
@@ -302,6 +319,23 @@ for (const { folder, lang, showcase } of PROJECTS) {
   }
 
   if (has('docs/data.md')) {
+    if (staffProviderIdentity) test(`(${folder}) staff provider identities are present and unique, matching Security`, () => {
+      const data = doc('docs/data.md');
+      assert.deepStrictEqual(staffIdentityProblems(data, L), []);
+      const noModelIdentity = data.replace(/^\| microsoft_account_id \|.*\n/m, '');
+      assert.notStrictEqual(noModelIdentity, data);
+      assert.ok(staffIdentityProblems(noModelIdentity, L).length > 0, 'a missing readable identity field is caught');
+      const unmarkedIdentity = data.replace(/^(\| microsoft_account_id \|.+\|) [^|]+ \|$/m, '$1 – |');
+      assert.notStrictEqual(unmarkedIdentity, data);
+      assert.ok(staffIdentityProblems(unmarkedIdentity, L).length > 0, 'a provider identity without its personal mark is caught');
+      const noSchemaIdentity = data.replace(/^\s*microsoft_account_id\s+text[^\n]*\n/m, '');
+      assert.notStrictEqual(noSchemaIdentity, data);
+      assert.ok(staffIdentityProblems(noSchemaIdentity, L).length > 0, 'a missing schema identity field is caught');
+      const emailOnly = data.replace(/(microsoft_account_id\s+text\s+)NOT NULL UNIQUE/i, '$1NOT NULL');
+      assert.notStrictEqual(emailOnly, data);
+      assert.ok(staffIdentityProblems(emailOnly, L).length > 0, 'email uniqueness cannot replace provider identity uniqueness');
+    });
+
     test(`(${folder}) data.md marks every column, and every sheet says who sees it and how long it is kept`, () => {
       const marked = markedColumns();
       if (showcase) assert.ok(marked.length >= 1, 'the example must mark personal data');

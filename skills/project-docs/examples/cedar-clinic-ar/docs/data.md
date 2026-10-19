@@ -1,5 +1,5 @@
 # البيانات: حجز عيادة سيدر
-> الإصدار 2 · معتمد 2026-10-08
+> الإصدار 3 · مسودة
 
 ## ما يحفظه
 من هم المرضى، وأي الأطباء يستقبلون المواعيد، وكل موعد، والموظفون الذين يستخدمون قائمة الاستقبال.
@@ -51,10 +51,12 @@
 
 ### الموظفون (staff)
 الصف الواحد هو موظف استقبال واحد، من دخول Microsoft 365 الخاص بالعيادة.
+  - تغيّر في 2026-10-19: من موظف دون معرّف حساب Microsoft محفوظ إلى موظف بمعرّف حساب Microsoft محفوظ، لأن الأمان يتطلب هوية ثابتة من مزوّد الدخول.
 
 | العمود | يحمل | مثال | العلامة |
 |---|---|---|---|
 | id | رقم يعطيه النظام | 7 | – |
+| microsoft_account_id | معرّف الحساب الثابت من دخول Microsoft الخاص بالعيادة بعد التحقق منه، وليس البريد | clinic-account-007 | 🔒 شخصي |
 | work_email | بريده في العيادة، من الدخول | desk@clinic.example | 🔒 شخصي |
 | display_name | اسمه | استقبال 1 | 🔒 شخصي |
 
@@ -96,6 +98,7 @@ CREATE UNIQUE INDEX one_visit_per_doctor_time ON visits (doctor_id, starts_at) W
 
 CREATE TABLE staff (
   id           bigserial PRIMARY KEY,
+  microsoft_account_id text NOT NULL UNIQUE, -- شخصي: هوية Microsoft الثابتة، وليست البريد
   work_email   text NOT NULL UNIQUE,        -- شخصي
   display_name text NOT NULL                -- شخصي
 );

@@ -13,8 +13,10 @@ Gather first · The questions · How it's protected · The read-back · The docu
 - **TRD → Work rules:** every security rule the workplace set.
 - **TRD → Outside services:** everything the project talks to over the internet, and what it sends there.
   When the hosting company keeps personal data (the TRD's "Where it lives"), it is an outside service too.
-- **Data:** every 🔒 personal and 🔐 secret column, with who can see it and how long it's kept. No data
-  document means the project saves nothing.
+- **Data:** every 🔒 personal and 🔐 secret column, with who can see it and how long it's kept. If the data
+  document is missing, use the approved PRD and TRD, and confirm anything found in existing code. A missing
+  document does not mean nothing is saved: ask about missing data facts, or carry them as `TBD`. Write
+  "saves nothing" only when the project's confirmed answers establish that.
 - Any `TBD` in those places: carry it over as `TBD`, never fill it in yourself.
 
 ## The questions (only what is missing: one round, three questions)
@@ -36,8 +38,9 @@ Three lines a builder must follow, worked out from the answers above, the TRD an
 questions: the person would not know them, and the safe way is the only way. When one does not apply,
 its line says so with **None:** and why.
 
-- **Records:** when anyone sees only their own things, every request for a record checks that the
-  signed-in person owns it. A link or ID that is hard to guess is not protection.
+- **Records:** every request for a protected record checks the permissions agreed above: ownership for
+  someone limited to their own things, or the approved staff role. Records agreed to be public stay
+  public. A link or ID that is hard to guess is not protection.
 - **Database:** when the project saves to a database, every query uses placeholders: text people type is
   never glued into the query.
 - **Sign-in:** when anyone signs in, sign-in, reset and sign-up tries are limited. When they sign in with

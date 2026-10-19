@@ -1,5 +1,85 @@
 # How project-docs was tested
 
+Last verified: **2026-10-19 · version 0.2.1 · 109 automated tests passed · six native WebKit cases passed**.
+
+## macOS repair verification — 0.2.1
+
+Baseline: `b45af47e4b18ba4ca5b61032d0cf365fdaafa02f` (0.2.0), initially clean.
+The baseline's 104 automated tests passed before the additional checks exposed the cases below.
+This repair was verified on macOS 27.0.1, arm64, with Node.js 20.20.2. The installed skill folders
+matched that baseline before repair; backups were retained outside the installable package.
+
+### Automated checks
+
+```text
+node --test
+109 tests; 109 pass; 0 fail; 0 cancelled; 0 skipped; 0 todo
+
+node tools/font-ranges.js --check
+Bundled font ranges match every TTF.
+```
+
+The total contains 78 document tests, 27 preview tests, two font-parser tests and two line-ending
+wrapper tests. The wrapper tests additionally run the complete document checks in disposable LF and
+CRLF copies; their child results are not added to the reported 109 top-level tests. No assertion was
+weakened and no test was skipped.
+
+Five new tests cover two English/Arabic provider-identity checks and three preview cases. Negative
+controls remove the readable identity field, its personal-data mark, its SQL column or uniqueness and
+prove the document checks reject each mismatch. The preview cases reproduce the hidden third-action
+false refusal, stalled font loading, stable refusal after a late result, and cleanup of settled deadlines.
+The two preview bug reproductions and both provider-identity checks failed against the original
+behavior before the fixes, then passed afterward. Deadline cleanup is an additional passing control.
+
+The skill-creator package validator, static skill audit, font metadata check and `git diff --check`
+passed. Independent source review and a document-workflow check verify the repairs; those checks are
+not a new end-to-end live-user project trial.
+
+### Native browser checks
+
+The repository's existing `tools/shot-mac.swift` checker was compiled with the installed Xcode tools
+and used on fresh copies of the preview. It opens native WebKit offscreen and reports the page's actual
+`data-preview` result. No dependency was installed and no production project was used.
+
+Six checks of the repaired page produced their expected result:
+
+- English clinic at 1280 px and 390 px: `ready`.
+- Arabic clinic at 1280 px and 390 px: `ready`, with right-to-left layout.
+- English clinic with an unused third action containing Arabic: `ready`; the displayed labels stay English.
+- Font loading deliberately replaced with a never-settling promise: `refused` after the ten-second deadline,
+  with the existing font guidance shown.
+
+The same four ordinary pages were captured before repair. All four before/after PNG pairs are
+byte-identical; desktop and phone screenshots were inspected. The hidden-action baseline instead
+reported a false refusal, and the stalled-font baseline still had no final state when the checker
+reached its twenty-second limit. These failing baseline observations are not counted as successful
+repaired-page checks. No change was made to CSS, colors, layout, fonts or contrast thresholds.
+
+### Document and distribution checks
+
+Security-only work no longer assumes a missing Data document proves there is no saved data. The
+reference distinguishes approved owner/staff/public permissions and accurately discloses Google Fonts
+downloads. Both clinic examples' required, unique Microsoft account IDs agree across the readable
+model, ready SQL, personal-data marks and Security inventories. Their changed Data/Security documents
+are v3 Draft, preserving history without inventing owner approval. The timer's confirmed no-persistence
+case remains unchanged.
+
+All 59 files in the installed Codex and shared Agent Skills copies were verified against the validated
+source by SHA-256 after synchronization; Claude's existing alias still uses the shared copy. Raw logs, before/after
+screenshots, findings and backups are retained outside the repository and installable skill.
+
+### Current limits
+
+The new 109-test result and browser cases establish macOS behavior at this repair only. Windows,
+Chrome, Edge and live Google Fonts were not rerun for 0.2.1; their 0.1.2 results below remain historical.
+Firefox and a real person completing a whole project remain unverified. The earlier blind agent runs,
+review approvals and isolated continuation scenario are not a full fresh live-user workflow for 0.2.1.
+
+## Historical validation — versions 0.1.0 to 0.1.2
+
+The following dated record is retained unchanged apart from heading depth. Its platform, browser,
+release approval and upload-ZIP claims apply to those earlier versions, not automatically to 0.2.1.
+
 Last verified: **2026-10-09 · version 0.1.2 · 101 automated tests passed, 32 browser checks passed**.
 
 project-docs was not just written. It was tested, run blind by fresh agents, and then reviewed by a second
@@ -7,7 +87,7 @@ AI that tried to break it. The first release passed that review; version 0.1.1 a
 fixes, and version 0.1.2 adds live Google Fonts verification. This page lists what was run and found, and
 what still needs validation.
 
-## At a glance
+### At a glance
 
 | What | Result |
 |---|---|
@@ -22,7 +102,7 @@ what still needs validation.
 | Arabic | The clinic example also exists in Arabic, right to left, read and approved by the owner |
 | Skill audit | Static audit of the skill folder: no findings, and no trigger clash with other installed skills |
 
-## The automated tests
+### The automated tests
 
 Run them yourself from the repository root (Node.js 18 or newer, needed for the tests only):
 
@@ -47,7 +127,7 @@ node --test
 
 Every fix from the review left a test behind, so the same bug cannot come back silently.
 
-## Windows verification: 2026-10-09
+### Windows verification: 2026-10-09
 
 The final run passed **101 of 101 automated tests**, with no failures, skipped tests or cancellations.
 
@@ -59,7 +139,7 @@ The final run passed **101 of 101 automated tests**, with no failures, skipped t
 | Chrome | 143.0.7499.41 |
 | Edge | 143.0.3650.66 |
 
-### Browser checks
+#### Browser checks
 
 Every case below ran in **both Chrome and Edge**, directly from local files with the browser offline.
 All 22 cases returned the expected result, with no uncaught page errors.
@@ -78,7 +158,7 @@ Screenshots were inspected at desktop and phone widths. The preview's visual rul
 thresholds were kept; the inspected English desktop and Arabic phone screenshots were byte-identical
 before and after the font metadata repair.
 
-### Live Google Fonts checks
+#### Live Google Fonts checks
 
 Ten additional cases ran in the same Chrome and Edge versions, using an isolated English clinic preview
 with **Merriweather** as one look's heading font. Successful cases fetched the real stylesheet from
@@ -96,7 +176,7 @@ without uncaught page errors.
 This verifies one English font family, not every Google Fonts family or language subset. The normal
 automated suite remains offline; these live checks do not add a network dependency to `node --test`.
 
-### Problems found and fixed
+#### Problems found and fixed
 
 | Problem | Evidence before the fix | Fix and verification |
 |---|---|---|
@@ -108,7 +188,7 @@ automated suite remains offline; these live checks do not add a network dependen
 The independent continuation result changed only TRD, Data and the existing Plan. All three returned to
 Draft, the old SQL stayed intact, and no user approval or completed work was invented.
 
-### Final checks
+#### Final checks
 
 - `node --test`: **101 passed, 0 failed**.
 - `node tools/font-ranges.js --check`: every bundled font descriptor matches its TTF file.
@@ -126,7 +206,7 @@ the expanded suite has not yet been rerun on Node.js 18, 20 or 22, or on macOS.
 After replacing bundled fonts, regenerate their metadata with `node tools/font-ranges.js`, then verify it
 without writing with `node tools/font-ranges.js --check`. Run `node --test` and inspect the real preview.
 
-## The blind dry runs
+### The blind dry runs
 
 Two fresh AI agents, who had never seen the skill's code, played a person with a made-up home-bakery
 website and went through all six documents.
@@ -135,7 +215,7 @@ website and went through all six documents.
 - Run 2, after those fixes: 17 rounds, 36 questions, never more than 3 questions a round. 17 problems found,
   all fixed.
 
-## The independent review
+### The independent review
 
 Codex reviewed the skill as a stranger would. It read the real code, ran the tests, and built its own broken
 copies to see whether the tests noticed. After each round the fixes went back to Codex, and Codex decided
@@ -154,7 +234,7 @@ six fixes and was settled by the owner's decision in round 7.
 | F08 | Medium | The example clinic plans left out patient sign-in and the open choice it waits for | Added, and a test checks it |
 | F09 | Medium | Identifying fields were missing from the personal-data map | Added, and a test checks it |
 
-## Remaining validation
+### Remaining validation
 
 Completed checks are recorded above. These gaps remain; a report of a real trial is welcome.
 
