@@ -1,6 +1,26 @@
 # How project-docs was tested
 
-Last verified: **2026-10-19 · version 0.2.1 · 109 automated tests passed · six native WebKit cases passed**.
+Last verified: **2026-10-21 · version 0.2.2 · 110 automated tests passed · WebKit and Chrome previews ready**.
+
+## Blind dry run and wording repairs — 0.2.2
+
+A fresh agent with no memory of the skill was given a made-up project (a neighbours' book shelf: a few
+pages, two sheets, one keeper password, an existing Express and SQLite start) and a fixed set of answers for
+the person, and told to follow `SKILL.md` to the letter. It wrote all six documents and `AGENTS.md`, ran the
+preview check (`ready`), changed the approved PRD on a clear request, settled a hosting `TBD` after the plan
+was approved, and handed back 24 notes on where the wording made it guess. Nineteen were gaps and are
+settled in the references (the list is in `CHANGELOG.md`); the other five were judgment calls the agent
+made well, or limits of the test itself, and were left alone.
+
+The one defect that mattered: with no format for a step whose wait was settled, the agent wrote a history
+line that repeated the `⛔ waits for TBD:` words, which the document checks read as a step still waiting on
+a choice that no longer exists. The plan reference now gives the fixed line, and a new test proves it is a
+valid `Changed` line that no longer reads as waiting, in both languages, and that the old shape is caught.
+
+Also run on macOS: `node --test` (110 pass), the static skill audit (no findings), the font-range check,
+every Markdown link target, the zip recipe (75 files), and the example previews in native WebKit and in
+Chrome 155, English and Arabic, at 1280 px and 390 px, all `ready`. Windows, Edge, Firefox and live Google
+Fonts were not rerun for 0.2.2.
 
 ## macOS repair verification — 0.2.1
 

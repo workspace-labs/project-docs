@@ -55,14 +55,17 @@ questions and its exact headings.
 4. **Write the document** with the exact headings from its reference file, then show it.
 5. **Approval.** Ask: "Approved, or changes?" The person, or their client, decides.
    - **Approved** → stamp it `Approved` with today's date.
-   - **Changes** → a clear change: make exactly that. A vague change, or one that adds something new or
-     clashes with an earlier answer: ask about it first (same loop: questions, read-back), then change it.
+   - **Changes** → a clear change: make exactly that, and also the lines that only exist because of the old
+     value (a check that quotes the old number), saying so when you show it. A vague change, or one that
+     adds something new or clashes with an earlier answer: ask about it first (same loop: questions,
+     read-back), then change it.
      Either way, raise the version and show it again. As many rounds as needed.
 6. Go on to the next document in the order. If an answer here needs an **approved** earlier document to
    change (a new outside service, a new column), say which one, and change it there the normal way
    (`Changed` line, new version, approved again).
 7. **After the Plan is approved, close with a short summary:** the documents written, every open `TBD` with
-   what will decide it, and the first step to build. If a `TBD` blocks step 1, say so first.
+   what will decide it (a `TBD` with a `Changed` line settling it underneath is closed, not open), and the
+   first step to build. If a `TBD` blocks step 1, say so first.
 
 ## The stamp
 
@@ -100,8 +103,9 @@ to any approved line; Plan status lines and generated Data ready blocks preserve
 references say. A document that has **never been approved** has nothing locked yet: just edit it.
 
 **Settling a `TBD` in an approved document is a change too:** keep the `TBD` line and add
-`  - Changed <date>: TBD → <the choice>, because <reason>.` under it. Then update what waited for it (for
-example, Data's ready block once the database is chosen, and the Plan steps it blocked). **Reopening** a
+`  - Changed <date>: TBD → <the choice>, because <reason>.` under it. Then update what waited for it: Data's
+ready block once the database is chosen, the Security line that carried the `TBD`, and the Plan steps it
+blocked (each the way its reference says). **Reopening** a
 choice keeps its history and adds `  - Changed <date>: <the choice> → TBD, because <reason>.`. If it already
 has a canonical TBD line, keep that current history and its descriptive name. Otherwise keep the original
 choice and Changed chain together in a labelled, collapsed historical `<details data-project-docs-history>`

@@ -14,7 +14,8 @@ Gather first · The questions · TBD: an honest gap · The pointer line · The r
 - The approved PRD: its "must do" lines tell which parts are needed (no saving means no database).
 - The code, if there is any: `package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`,
   `*.csproj`, config files, the folders. Write each finding with `(found in code)` and ask the person to
-  confirm it. Nothing found in code is locked until they do.
+  confirm it; a confirmed finding's reason is that the code already uses it, unless they give a better one.
+  Nothing found in code is locked until they do.
 - Anything the person already said about tools while writing the PRD.
 
 ## The questions
@@ -46,8 +47,8 @@ The parts: **Screen** (what people see and tap) · **Brain** (the back end that 
 internet: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
 languages, speed) · **How the code is written** (language, formatting, checks, names, file size, tests).
 
-**Ask the rules first** (online or offline, languages, which devices): they change which options fit the
-other parts. Write the document in its own order.
+**Ask the rules first** (online or offline, languages, and which devices people will hold, which goes into
+the Speed line): they change which options fit the other parts. Write the document in its own order.
 
 Prices, free plans and limits of hosting and services change often and you cannot look them up: say so,
 and tell the person to check them on the provider's site before they sign up.
@@ -56,7 +57,8 @@ Two parts are smart defaults, not questions, unless the work rules or the person
 
 - **How the code is written:** the usual tools of the chosen language (its standard formatter and checker),
   one job per file, tests beside the code. Show them in the read-back as your picks; the person's "yes,
-  that's it" makes them theirs, and they can change any of them.
+  that's it" makes them theirs, written with "(on the AI's recommendation)" like any pick left to you (the
+  Speed line too), and they can change any of them.
 - **Speed:** "every page or screen opens in under 2 seconds on an ordinary phone or computer", unless the
   PRD says more.
 
@@ -66,10 +68,10 @@ The **Security** rule in the TRD is one line: `see docs/security.md`, plus any s
 
 Write a `TBD` line as `- TBD: <what is open>. Decided when <what will decide it>.` Keep the person's wish
 in it when they gave one ("TBD: cheap or free hosting. Decided when …"). Every TBD stays visible until it
-is picked. A Plan step that needs it cannot start. The screen, the data storage and the hosting of an
-online project are needed by the very first step, so a TBD in any of them blocks everything: say so in the
-read-back, before the TRD is written: "Nothing can be built until this is chosen. Settle it now, or keep it
-open?"
+is picked. A Plan step that needs it cannot start. The screen and the data storage are needed by the very
+first step, so a TBD in either blocks everything: say so in the read-back, before the TRD is written:
+"Nothing can be built until this is chosen. Settle it now, or keep it open?" An open hosting blocks only
+the step that puts it online: until then it runs on the builder's computer.
 
 ## The pointer line (only on the person's yes)
 

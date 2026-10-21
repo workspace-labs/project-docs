@@ -17,7 +17,9 @@ proposed answers, so the person confirms instead of starting from nothing.
 
 Ask at most 3 questions a round. Once the person has said something to build from, offer 2 or 3 short
 drafts built **only from their own words**, plus "Other: type your own". Before that (the very first idea
-and its why), ask openly. Never invent a fact, a number or a user group.
+and its why), ask openly. A `docs/scope.md`, a README or a description they already gave in the conversation
+counts as something to build from: Round 1 then proposes drafts from it, and they confirm or correct. Never
+invent a fact, a number or a user group.
 
 **Round 1: the idea**
 1. **What is it, and what is it called?** In two or three sentences, what does it do and where is it used?

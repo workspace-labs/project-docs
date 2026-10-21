@@ -12,7 +12,8 @@ Gather first · How to make the steps · The status of a step · The read-back �
 
 - **PRD → What it must do:** every `M` line must be covered by at least one step.
 - **Every open `TBD`**, in any document: a step that needs it is blocked. A back end (anything under the
-  TRD's **Brain** that is not `None`) adds one step: write the API guide, `docs/api.md`, during the build.
+  TRD's **Brain** that is not `None`) adds one step of its own, after the steps that build the back end:
+  write the API guide, `docs/api.md` (written during the build, never up front).
 - **Design, Data, Security:** the look is used from the first screen; tables and secrets go in the step
   that first needs them.
 - An existing `docs/plan.md`: keep its steps and progress history; update only statuses and checks affected
@@ -34,7 +35,9 @@ Gather first · How to make the steps · The status of a step · The read-back �
   after, or includes, the sign-in that protects it; until then it runs only on the builder's computer.
 - **Every "only their own" rule gets a try with two people.** When Security says someone sees or changes
   only their own data, the step that builds it checks it with two accounts: signed in as A, try to open,
-  change and delete B's data; each try is refused, and B's data is unchanged.
+  change and delete B's data; each try is refused, and B's data is unchanged. The same when only one role
+  may see or change something: signed out, or signed in as anyone else, each of its pages and actions is
+  refused.
 - **If a `TBD` blocks step 1, nothing can be built.** Say so plainly before asking for approval, and offer to
   settle it now (back in the document it belongs to) or to start with a step that doesn't need it.
 
@@ -58,6 +61,11 @@ When a choice reopens, keep already checked steps as historical progress; they d
 choice. Block affected unchecked steps, including ones waiting for the person's check. Keep any earlier
 run and its date as historical text beneath the step's check, with only one current Status line. When
 several choices block a step, keep its existing open TBD label first and name the others in its check.
+
+When the choice a step waited for is settled, set its Status back to `not started` and keep the wait as one
+line under its check: `  - Changed <date>: waited for <what> → not started, because <the document> settled it
+as <the choice>.` The words `⛔ waits for TBD:` appear only on a Status line, never in a history line: they
+are how a waiting step is found.
 
 Ordinary execution progress changes the status without changing the version or stamp. Changes caused by
 a revised approved decision (including new blockers or revised checks), or adding, removing or reordering
@@ -99,6 +107,7 @@ statuses. Keep `M1`, `M4` and `TRD` as they are.
 | `⛔ waits for TBD: <what>` | `⛔ تنتظر ما لم يُحسم: <ما هو>` |
 | `◐ waiting for your check (ran: <what>, <date>)` | `◐ بانتظار فحصك (نُفّذ: <ما نُفّذ>، <التاريخ>)` |
 | `✅ checked <date>` | `✅ فُحصت <التاريخ>` |
+| `  - Changed <date>: waited for <what> → not started, because <…>.` | `  - تغيّر في <التاريخ>: من انتظار <ما هو> إلى لم تبدأ، لأن <…>.` |
 
 ```markdown
 # خطة التنفيذ: <اسم المشروع>

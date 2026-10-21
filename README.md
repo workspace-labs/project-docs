@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.2.1** · 109 tests · macOS WebKit checked; Windows/Chrome/Edge last checked on 0.1.2 · [how it was tested](TESTING.md)
+**Version 0.2.2** · 110 tests · macOS WebKit and Chrome checked; Windows/Edge last checked on 0.1.2 · [how it was tested](TESTING.md)
 
 ---
 

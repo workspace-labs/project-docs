@@ -474,6 +474,33 @@ test('a settled TBD keeps its history and is no longer open, in both languages',
   }
 });
 
+test('a step whose wait was settled keeps it as a Changed line that no longer reads as waiting, in both languages', () => {
+  const cases = {
+    en: {
+      settled: '- TBD: the hosting. Decided when the nephew answers.\n  - Changed 2026-10-21: TBD → Render, because the nephew uses it.',
+      line: '  - Changed 2026-10-21: waited for the hosting → not started, because the TRD settled it as Render.',
+      wrong: '  - Changed 2026-10-21: was ⛔ waits for TBD: the hosting → not started, because the TRD settled it as Render.',
+      plan: (history) => `### Step 7: Put it online\n- **Covers:** TRD: Where it lives\n- **How we know it works:** open the link on a phone.\n${history}\n- **Status:** not started`,
+    },
+    ar: {
+      settled: '- لم يُحسم بعد: الاستضافة. يُحسم عندما يجيب ابن الأخ.\n  - تغيّر في 2026-10-21: من لم يُحسم بعد إلى Render، لأن ابن الأخ يستخدمها.',
+      line: '  - تغيّر في 2026-10-21: من انتظار الاستضافة إلى لم تبدأ، لأن TRD حسمها Render.',
+      wrong: '  - تغيّر في 2026-10-21: من ⛔ تنتظر ما لم يُحسم: الاستضافة إلى لم تبدأ، لأن TRD حسمها Render.',
+      plan: (history) => `### الخطوة 7: نشره\n- **تغطي:** TRD: أين يعمل\n- **كيف نعرف أنها تعمل:** افتح الرابط على الهاتف.\n${history}\n- **الحالة:** لم تبدأ`,
+    },
+  };
+  for (const [lang, c] of Object.entries(cases)) {
+    const L = LANGS[lang];
+    assert.strictEqual(openTbds(c.settled, L).length, 0, `${lang}: the choice is settled`);
+    assert.match(c.line, L.changed, `${lang}: the history line is a valid Changed line`);
+    const plan = c.plan(c.line);
+    assert.match(plan, L.statusLine, `${lang}: the step has one valid status`);
+    assert.ok(!L.waitingFor.test(plan), `${lang}: the step no longer reads as waiting`);
+    assert.deepStrictEqual(waitingProblems(plan, [c.settled], L), [], `${lang}: nothing waits on the settled choice`);
+    assert.strictEqual(waitingProblems(c.plan(c.wrong), [c.settled], L).length, 1, `${lang}: a history line that repeats the waiting words is caught`);
+  }
+});
+
 test('a reopened choice is open again, and a waiting step must name the choice, not its condition', () => {
   const sql = '```sql\nCREATE TABLE orders (id bigserial PRIMARY KEY);\n```';
   const cases = {

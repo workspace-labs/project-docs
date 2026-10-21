@@ -28,8 +28,8 @@ PRD already answers it (a "must do" line that keeps orders means yes).
 "I see 4 sheets: Patients · Doctors · Visits · Staff. Keep them, add one, remove one, or rename?"
 
 **Then the sheets, 2 or 3 a round, one question each.** For each sheet, show your proposal as a small
-table and ask the person to confirm or change it: what one row is, the columns, the marks, who can see it,
-and how long a row is kept. For example:
+table and ask the person to confirm or change it: what one row is, the columns, the marks, who can see it
+(when that differs by column, say which columns each audience sees), and how long a row is kept. For example:
 
 > **Orders** (one row = one order): customer name 🔒, phone 🔒, items, pickup day. Only you see it; kept until
 > the Saturday after pickup. Right, or change something?
@@ -44,6 +44,8 @@ and how long a row is kept. For example:
   "who can see it" says who may.
 - **How long it's kept:** for a sheet with nothing personal in it (a menu), propose "as long as the project
   runs". If the person doesn't know, write `TBD` and Security will carry it.
+- **Linked rows:** when a sheet points at another (`book_id`), ask what happens to its rows when the row they
+  point at is removed: they go with it, or they stay. Write the answer under **How the sheets link**.
 
 Secrets are never saved as they are: a password or a sign-in code is saved only as a scrambled copy (a hash)
 that cannot be turned back. Say this plainly when you mark a 🔐 column.

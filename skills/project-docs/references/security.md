@@ -17,14 +17,16 @@ Gather first · The questions · How it's protected · The read-back · The docu
   document is missing, use the approved PRD and TRD, and confirm anything found in existing code. A missing
   document does not mean nothing is saved: ask about missing data facts, or carry them as `TBD`. Write
   "saves nothing" only when the project's confirmed answers establish that.
-- Any `TBD` in those places: carry it over as `TBD`, never fill it in yourself.
+- Any `TBD` in those places: carry it over as `TBD`, naming the document that holds it (`- TBD: the hosting,
+  see the TRD's Where it lives.`), never fill it in yourself. Security quotes a `TBD`; it never opens one of
+  its own.
 
 ## The questions (only what is missing: one round, three questions)
 
 1. **Who can get in, and how?** Nobody (it runs on one computer), anyone, or only people who sign in? How do
    they sign in? Are there roles (a patient sees only their own visits; staff see everything)? If someone
-   signs in, how is that sign-in protected, and how do they get back in if they are locked out? Suggest the
-   defaults: a password of at least 12 characters, a 15-minute pause after 5 wrong tries, and a second step
+   signs in, how is that sign-in protected, and how do they get back in if they are locked out (that answer
+   is a line under **Who can get in**)? Suggest the defaults: a password of at least 12 characters, a 15-minute pause after 5 wrong tries, and a second step
    only if the TRD already has the service it needs (otherwise offer it as a TRD change).
 2. **Secrets:** the keys and passwords the project needs (a database password, a service key). Where will
    they live? Suggest the default: never in the code and never in git; in environment variables or the

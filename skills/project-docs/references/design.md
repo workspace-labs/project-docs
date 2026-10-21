@@ -46,7 +46,8 @@ would you change?"), never before.
    `ready`, or `refused` and every problem. With neither, work out each pair in `check.js` yourself (the
    pairs and their minimums are listed there). Fix `looks.js` until it is `ready`, then ask the person to
    open `preview.html`, and look at it yourself if you can, at a computer width and at a phone width (a
-   narrow window, or the browser's device view).
+   narrow window, or the browser's device view). If you could not look at it, say so: their eyes are then
+   the only check of how it looks.
 6. The person answers with a letter, or a mix ("A's colors with C's fonts"). Update `looks.js` and show it
    again until they pick.
 7. **Keep the picked fonts.** Copy the picked look's font files and their license files from
@@ -97,8 +98,9 @@ never shown to the person.
 ## The document
 
 Write exactly these headings, in this order. The colors are the picked look's 8 roles. These are smart
-defaults the person may change: sizes of 28 px for page headings, 20 px for card headings and 16 px for text
-(17 px for Arabic text); buttons at least 44 px tall, a little darker when pressed, grey with quiet text when
+defaults the person may change: sizes of 28 px for page headings, 20 px for card headings (both in the one
+Headings cell: `28 px (page), 20 px (card)`) and 16 px for text (17 px for Arabic text); buttons at least
+44 px tall, a little darker when pressed, grey with quiet text when
 turned off; cards with a 1 px Lines edge and 16 px inside space; error messages in the error color, right
 under what went wrong, saying what to do next. The must-have rules are always there.
 
@@ -160,7 +162,7 @@ from the internet.
   --color-error: <#hex>;
   --font-heading: "<font>", <fallback>;
   --font-text: "<font>", <fallback>;
-  --font-arabic: "Noto Naskh Arabic", serif; /* only when an English project also shows Arabic */
+  --font-arabic: "Noto Naskh Arabic", serif; /* keep only when an English project also shows Arabic; drop the line otherwise */
   --radius: <px>;
   --space-1: 4px;
   --space-2: 8px;

@@ -2,6 +2,33 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.2] - 2026-10-21
+
+### Fixed
+
+- A fresh agent carried a made-up project through all six documents and listed every place the
+  instructions made it guess. The wording now settles each of them: the PRD's first round proposes
+  drafts when a `scope.md` or README exists; a clear change also reaches the lines that quote the old
+  value; smart defaults carry "(on the AI's recommendation)"; devices go into the Speed line; a confirmed
+  "found in code" choice has its reason; only the screen and the data storage block step 1, while an open
+  hosting blocks the step that goes online; settling a TBD also updates the Security line that carried
+  it, and a settled TBD counts as closed in the closing summary; Security quotes a TBD and never opens
+  one; the lock-out answer has its place; Data says who sees which column and asks what happens to
+  linked rows when a parent is removed; DESIGN.md writes both heading sizes in one cell and drops
+  `--font-arabic` unless Arabic is shown; the agent says when it has not seen the preview itself; the
+  API guide is a step of its own; the two-person try also covers "only one role sees it".
+- A plan step whose wait was settled now records it as a fixed `Changed` line under its check
+  (`waited for <what> → not started`), so the `⛔ waits for TBD:` words appear only on a Status line and a
+  settled step can never be read as still waiting. A test guards the line in both languages and catches
+  the old shape (110 tests).
+- All six licence files follow one name, `<Font>-OFL.txt`: `OFL-PlusJakartaSans.txt` and
+  `OFL-NotoNaskhArabic.txt` were renamed in the preview and in both clinic examples.
+
+### Verification
+
+- 110 automated tests pass on macOS with Node.js 20; both example previews report `ready` in native
+  WebKit and in Chrome 155 at computer and phone width. See `TESTING.md`.
+
 ## [0.2.1] - 2026-10-19
 
 ### Fixed
