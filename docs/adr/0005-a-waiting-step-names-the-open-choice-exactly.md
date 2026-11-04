@@ -1,7 +1,7 @@
 # 0005. A waiting step names the open choice exactly
 
-- Status: proposed (records the owner's decision on finding F02 in review round 7; accepted on the
-  owner's word)
+- Status: accepted by the owner on 2026-11-04 (records the owner's decision on finding F02 in review
+  round 7)
 - Date: 2026-11-04 (recorded); decided 2026-10-08
 - Decided by: the owner, as `TESTING.md` records for finding F02
 

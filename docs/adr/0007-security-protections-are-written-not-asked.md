@@ -1,6 +1,6 @@
 # 0007. Security protections are written, not asked
 
-- Status: proposed (records the 0.2.0 "How it's protected" section; accepted on the owner's word)
+- Status: accepted by the owner on 2026-11-04 (records the 0.2.0 "How it's protected" section)
 - Date: 2026-11-04 (recorded); shipped 2026-10-19 in 0.2.0
 - Recorded by: an agent, from `references/security.md` and `CHANGELOG.md`. Who first decided it is not
   asserted here.

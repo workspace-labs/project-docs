@@ -2,6 +2,17 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.6] - 2026-11-04
+
+### Changed
+
+- Decision records 0004–0007 are **Accepted**, on the owner's word of 2026-11-04. Their decisions are
+  unchanged; only their status lines and the index in `docs/adr/README.md` changed.
+
+### Verification
+
+- Documentation only: no skill file, test or example changed, and `node --test` was not rerun.
+
 ## [0.2.5] - 2026-11-04
 
 ### Added

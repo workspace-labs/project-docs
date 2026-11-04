@@ -1,7 +1,7 @@
 # 0004. Approved choices keep their history
 
-- Status: proposed (records the rule shipped since 0.1.0 and extended in 0.1.1 and 0.2.2; accepted on
-  the owner's word)
+- Status: accepted by the owner on 2026-11-04 (records the rule shipped since 0.1.0 and extended in 0.1.1
+  and 0.2.2)
 - Date: 2026-11-04 (recorded); the rule dates from 2026-10-08
 - Recorded by: an agent, from `SKILL.md`, the references and `CHANGELOG.md`. Who first decided it is not
   asserted here.

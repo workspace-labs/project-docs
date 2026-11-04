@@ -1,7 +1,7 @@
 # 0006. The AI never picks the technology
 
-- Status: proposed (records the rule in `docs/scope.md` and the TRD reference since 0.1.0; accepted on
-  the owner's word)
+- Status: accepted by the owner on 2026-11-04 (records the rule in `docs/scope.md` and the TRD reference
+  since 0.1.0)
 - Date: 2026-11-04 (recorded); the rule dates from 2026-10-08
 - Recorded by: an agent, from `docs/scope.md`, `SKILL.md` and `references/trd.md`. Who first decided it is
   not asserted here.
