@@ -2,6 +2,28 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.3] - 2026-11-04
+
+### Added
+
+- The repository documents the agent engineering standard makes due, so a stranger holding only the
+  repository can find how it is built, shipped and kept safe:
+  - `docs/architecture/overview.md`: a map of the repository and how the agent, skill, references,
+    preview page and tests talk to each other.
+  - `docs/architecture/boundaries.md`: one home for each thing, and the rules at the boundaries.
+  - `docs/adr/README.md`: an index of the three decision records.
+  - `docs/operations/release.md`: the release steps used so far and a rollback plan. The tag and
+    GitHub release steps are Proposed and wait for the owner's yes.
+  - `docs/security.md`: what each part runs and touches, the one consented Google Fonts request, how the
+    preview protects itself. Where to report a problem privately is a TBD.
+  - `docs/risks-and-debt.md`: the unverified areas, known debt and deliberate limits as of 0.2.2.
+- No skill file, test or example changed.
+
+### Verification
+
+- Documentation only. The tests read only `skills/project-docs/`, so the 110-test result of 0.2.2 is
+  unaffected; `node --test` was not rerun for this version.
+
 ## [0.2.2] - 2026-10-21
 
 ### Fixed
