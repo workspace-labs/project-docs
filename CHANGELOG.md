@@ -2,6 +2,21 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.4] - 2026-11-04
+
+### Added
+
+- `.gitattributes`: every text file is stored and checked out with LF on every computer, and fonts and
+  pictures are binary. Every text file in the repository was already LF, so no file changed. This closes
+  the line-endings item in `docs/risks-and-debt.md`; the CRLF test runs stay, so a CRLF copy still works.
+- A **Project map** in `README.md`: where the skill, tests, tools, documentation and pictures live.
+  `docs/architecture/overview.md` lists `.gitattributes`.
+
+### Verification
+
+- `git add --renormalize .` changed no file. Documentation and repository settings only: the tests read
+  only `skills/project-docs/`, and `node --test` was not rerun for this version.
+
 ## [0.2.3] - 2026-11-04
 
 ### Added

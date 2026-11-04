@@ -4,7 +4,8 @@ This repository ships one agent skill. It has no server, database, account or ba
 only code that runs for a user is the preview page, in their own browser, from files on their disk.
 
 ```text
-README.md                          what the skill does, install, examples, limits
+README.md                          what the skill does, install, examples, limits, project map
+.gitattributes                     every text file is LF; fonts and pictures are binary
 AGENTS.md                          rules for coding agents changing this repository
 CHANGELOG.md                       dated changes, one entry per version
 TESTING.md                         what was run, what it proved, what is still unverified

@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.2.3** · 110 tests · macOS WebKit and Chrome checked; Windows/Edge last checked on 0.1.2 · [how it was tested](TESTING.md)
+**Version 0.2.4** · 110 tests · macOS WebKit and Chrome checked; Windows/Edge last checked on 0.1.2 · [how it was tested](TESTING.md)
 
 ---
 
@@ -131,6 +131,18 @@ review. The current test count, full record and remaining limits are in [`TESTIN
 - English and Arabic.
 - It writes documents, not code: the only code it writes is the ready values in `DESIGN.md` and the ready
   tables in `docs/data.md`.
+
+## Project map
+
+| Where | What lives there |
+|---|---|
+| [`skills/project-docs/`](skills/project-docs/) | the skill itself, installed as it is: `SKILL.md`, `references/`, the preview in `assets/preview/`, `examples/` |
+| [`tests/`](tests/) | the automated checks (`node --test`): documents, preview, font coverage, line endings |
+| [`tools/`](tools/) | builder-only helpers: font coverage (`font-ranges.js`) and Mac screenshots (`shot-mac.sh`) |
+| [`docs/`](docs/) | scope, decisions ([`adr/`](docs/adr/)), [architecture](docs/architecture/overview.md), [release steps](docs/operations/release.md), [security](docs/security.md), [risks and debt](docs/risks-and-debt.md) |
+| [`media/`](media/) | the picture at the top of this page |
+
+There is no server, database or settings file: the skill needs no configuration.
 
 ## Working on project-docs
 

@@ -1,0 +1,7 @@
+# Every text file is stored and checked out with LF, on every computer. The documents, the preview
+# scripts and shot-mac.sh all expect it; the tests also prove CRLF copies work (line-endings.test.js).
+* text=auto eol=lf
+
+# Fonts and pictures are never touched.
+*.ttf binary
+*.png binary

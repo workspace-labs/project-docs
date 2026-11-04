@@ -21,7 +21,7 @@ What was actually run is in [TESTING.md](../TESTING.md).
 | Item | Risk | Closes when |
 |---|---|---|
 | No CI | the test count in README and CHANGELOG depends on someone running `node --test` by hand | a workflow runs `node --test` and the font check on push, on Linux, macOS and Windows |
-| No `.gitattributes` | a CRLF checkout once failed 43 of 94 tests; the tests now cope, but the repository does not declare its line endings | `.gitattributes` fixes Markdown and scripts to LF |
+| No `.gitattributes` | a CRLF checkout once failed 43 of 94 tests; the tests now cope, but the repository does not declare its line endings | Closed 2026-11-04 (0.2.4): `.gitattributes` stores and checks out every text file with LF |
 | No tags or GitHub releases | users cannot install or roll back to a named version | the tag and release steps in [operations/release.md](operations/release.md) are approved and used |
 | Screenshot helper is macOS-only | Windows and Linux builders have no scripted way to look at the preview | a cross-platform helper, or written manual steps for each platform |
 | `docs/workflow/project-docs-workflow.json` is at 0.1 | it misses the Security page's "How it's protected" section (0.2.0) | it is regenerated for the current version |
