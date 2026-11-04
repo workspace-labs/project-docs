@@ -2,6 +2,24 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.2.5] - 2026-11-04
+
+### Added
+
+- Four decision records for rules already in the shipped skill, so the reason for each lives in the
+  repository and not only in the changelog and test record. All four are **Proposed** until the owner
+  accepts them:
+  - `0004`: approved choices keep their history (`Changed` lines, settling and reopening a TBD, history
+    records, settled plan waits).
+  - `0005`: a waiting plan step names the open choice by its exact words (finding F02).
+  - `0006`: the AI never picks the technology.
+  - `0007`: the Security page's "How it's protected" lines are written, not asked.
+- `docs/adr/README.md` lists them.
+
+### Verification
+
+- Documentation only: no skill file, test or example changed, and `node --test` was not rerun.
+
 ## [0.2.4] - 2026-11-04
 
 ### Added
