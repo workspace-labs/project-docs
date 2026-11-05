@@ -27,6 +27,11 @@ Gather first · How to make the steps · The status of a step · The read-back �
   written".
 - **Each step names what it covers:** the PRD lines (`M1, M4`), or the TRD rule (`TRD: Languages`).
 - **Each step has its check:** "How we know it works", a test the person can do themselves.
+- **Engineering work belongs in these same steps.** When an approved TRD, Data or Security rule needs
+  implementation or verification, cite that rule in **Covers** and put the expected result/evidence in
+  **How we know it works**. Use only checks the project needs; do not add a separate checklist document or
+  invent feature IDs. Later, the builder or reviewer records the real run and outcome beneath that check;
+  proposed checks are not proof. For a handoff after approval, see [engineering-handoff.md](engineering-handoff.md).
 - An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
   the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
   needs more than one, name the first; the step's check says what else it waits for. A step that itself
@@ -100,6 +105,11 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 
 When the person asks for Arabic, write the same document in Arabic with these headings and these exact
 statuses. Keep `M1`, `M4` and `TRD` as they are.
+
+العمل الهندسي الذي تتطلبه قاعدة معتمدة في TRD أو البيانات أو الأمان يبقى في الخطوات نفسها: اذكر
+القاعدة تحت **تغطي** والنتيجة والدليل المطلوبين تحت **كيف نعرف أنها تعمل**، دون وثيقة فحص إضافية أو
+معرّفات متطلبات مخترعة. يسجّل المطوّر أو المراجع التنفيذ الحقيقي ونتيجته تحت الفحص لاحقًا؛ الفحص
+المقترح ليس دليلًا على نجاحه. لا تضف فحصًا لا يحتاجه المشروع.
 
 | English | Arabic |
 |---|---|

@@ -21,10 +21,12 @@ docs/
 skills/project-docs/               the installed skill: copied or zipped exactly as it is
   SKILL.md                         the menu: document order, the shared loop, stamps, locks
   references/<document>.md         one per document: its questions and exact headings
+  references/engineering-handoff.md   optional approved-input summary for a separate builder
   assets/preview/                  the look preview page: preview.html, render.js, check.js,
                                    preview.css, fonts/
   examples/                        cedar-clinic, cedar-clinic-ar, study-timer
-tests/                             node --test: documents, preview, font ranges, line endings
+tests/                             node --test: documents, preview, font ranges, line endings, reference integrity;
+                                   behavioral-cases.md: separate real-agent exercise contracts
 tools/                             builder-only helpers: font-ranges.js, shot-mac.sh/.swift
 media/                             the README picture
 ```
@@ -58,5 +60,8 @@ media/                             the README picture
   ([ADR 0003](../adr/0003-an-html-preview-page-shows-the-looks.md)).
 - The reference headings, the examples and `tests/documents.test.js` form one contract: they change
   together (see `AGENTS.md`).
+- The optional engineering handoff is reachable from the approved-Plan closing step and the Plan
+  reference. It reuses canonical documents and checks, adds no required output file, and never starts
+  implementation. `tests/handoff.test.js` checks that its links remain self-contained in the package.
 
 Who owns what, and what may not cross, is in [boundaries.md](boundaries.md).

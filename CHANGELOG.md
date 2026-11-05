@@ -2,6 +2,36 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.3.0] - 2026-11-05
+
+### Added
+
+- An optional, source-reachable engineering handoff in English and Arabic: approved documents,
+  current decisions/history, PRD IDs, Plan checks, blockers and human-owned checked status pass to a
+  separately authorized builder without a duplicate document or reapproval of unchanged choices.
+- Three package-integrity tests for the reference graph, including missing and out-of-package links,
+  and separate contracts for isolated real-agent behavior exercises.
+
+### Changed
+
+- Existing Plan fields can carry applicable engineering tasks and expected evidence, tied to approved
+  TRD/Data/Security rules. The fixed headings, three fields, approval and TBD history rules are preserved.
+- The TRD reuses already stated platforms, distribution, capabilities and explicit assurance needs in
+  its existing headings without a mandatory new questionnaire or guessed legal/conformance claims.
+- `project-docs` remains document-only. Execution proof belongs to the builder/reviewer; a requested
+  assurance target or proposed check is never reported as achieved.
+
+### Verification
+
+- Baseline `node --test`: 110/110 passed; candidate: 113/113 passed on macOS 27.2, Node.js 22.14.0.
+- Preview assets and existing examples are unchanged. Five coordinated synthetic exercise outcomes
+  passed independent artifact review; 29 retained fixture test methods reran successfully. One raw
+  documentation-hash grader false positive is retained and explained in TESTING.md.
+- No new browser, Windows, Arabic live workflow, automatic-selection, real-release or conformance
+  result is claimed. The optional general YAML validator could not start without PyYAML.
+- The owner accepted both candidates; all six installed paths match the accepted manifests,
+  Claude aliases and recovery copies are preserved, and installed snapshots passed static re-audit.
+
 ## [0.2.6] - 2026-11-04
 
 ### Changed

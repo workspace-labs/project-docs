@@ -65,7 +65,8 @@ questions and its exact headings.
    (`Changed` line, new version, approved again).
 7. **After the Plan is approved, close with a short summary:** the documents written, every open `TBD` with
    what will decide it (a `TBD` with a `Changed` line settling it underneath is closed, not open), and the
-   first step to build. If a `TBD` blocks step 1, say so first.
+   first step to build. If a `TBD` blocks step 1, say so first. For a builder handoff, read
+   [references/engineering-handoff.md](references/engineering-handoff.md); this skill still writes documents only.
 
 ## The stamp
 

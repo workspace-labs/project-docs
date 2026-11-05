@@ -1,6 +1,82 @@
 # How project-docs was tested
 
-Last verified: **2026-10-21 · version 0.2.2 · 110 automated tests passed · WebKit and Chrome previews ready**.
+## 0.3.0 candidate: package checks, 2026-11-05
+
+Verified on **macOS 27.2 · Node.js 22.14.0** with the repository's offline `node --test` command:
+
+- Before edits, commit `25beb27c376af95728386be330376987ed077aa2` passed **110/110** tests.
+- The updated candidate passed **113/113** tests: 0 failures, cancellations, skips or todos.
+- The three added tests check real packaged reference reachability and detect a missing handoff or a
+  link outside the installed bundle. They are integrity tests, not evidence that an agent follows prose.
+- Existing English/Arabic document examples, fixed headings, approval/history/status checks, font
+  coverage, preview script checks and LF/CRLF document runs still pass. Preview assets and existing
+  examples were not changed; no new visual/browser or Windows/platform test is claimed.
+
+### Executed coordinated exercises
+
+Five fresh executor contexts received separate ordinary requests/workspaces and manually supplied
+candidate skill paths, without the private rubric. A separate fixture/probe author independently
+graded their actual outputs, and a separate source reviewer reran the retained fixture suites in
+disposable copies. All five observed artifact/response outcomes passed within their defined scope:
+
+- A tiny typo changed one heading only; no new files or planning process appeared.
+- An already approved notes build reused its stack, canonical documents and IDs. Owned deletion
+  persisted across a fresh load; private probes denied cross-owner access without data changes.
+  Prior owner-checked progress stayed intact and new work waited for the owner's check.
+- A SQLite restore repair proved usable records and preserved useful data on failed recovery.
+- A document-only seven-day policy revision preserved original decisions and checked history,
+  settled the current-versus-historical TBD correctly, left revised documents as Draft, and
+  invalidated the old unchecked run without changing code.
+- A store release assessment correctly left missing artifact/signing/privacy/current-policy proof
+  unverified. It did not turn a source slice or no-collection promise into submission readiness.
+
+The independently rerun fixture suites passed **1/10/16/1/1 methods**, respectively: **29 distinct
+methods**, separate from the 113 package tests. Independent pristine-code controls showed that the
+retained persistence and corrupt-restore regressions detect the original implementation gaps.
+One raw restore grader check remains red because it incorrectly required its operating document
+to stay byte-identical. Both independent reviews accepted the expanded instructions after confirming
+the unchanged SQLite/schema/CLI contract; EVAL-01 and the raw result are retained, not silently erased.
+
+Source/staged packages matched their complete final manifests (23 engineering files, 60 project-docs
+files). Original source repositories and all six user installations remained preserved. Raw fixtures,
+responses, probes, snapshots and independent assessments live outside this repository in the local
+coordinated update workspace's `evidence/` directory. No real installation occurred.
+
+These are one-run synthetic cases, not every contract in
+[behavioral-cases.md](tests/behavioral-cases.md). Arabic live document changes, a complete new-project
+interview, optional-partner absence, repeated reliability, automatic selection, real release and
+assurance/conformance were not established. English/Arabic source parity was reviewed, not live-tested.
+Full executor tool histories and per-read package hashes were not exported; actual outputs/reruns
+are evidence, while reported command history and absence of external actions are not independently
+attested. Exact model-build identifiers were not captured. There was no old-skill/no-skill agent
+control, so no causal improvement score is claimed. Package checks alone prove none of these behaviors.
+
+The skill-creator general YAML validator was attempted but could not start because the current
+Python lacks PyYAML. No dependency was installed; this is an unavailable check, not a pass. Package
+metadata checks and the static audit passed (no project-docs findings). That candidate record
+preceded the required owner acceptance for real installation.
+
+### Subsequent owner acceptance and installed-copy verification
+
+On 2026-11-05 the owner accepted both candidates and authorized committing and pushing them.
+The exact accepted packages were installed across six logical user skill paths: four physical
+directories, with the two existing Claude aliases preserved. Fresh recovery copies and original
+directories were retained. All six paths matched the accepted content/mode manifests: 60 files
+for project-docs and 23 for engineering. No project-docs instruction bytes were changed;
+the engineering guide had one extra EOF blank line removed during staging, with its
+pre-correction copies and original manifests retained alongside final publication identities.
+
+Hash/mode-identical installed snapshots passed the static re-audit with no structural errors or
+project-docs findings; engineering retains its 12 existing nested-tree review warnings. The
+engineering suite also passed 41/41 against the real Codex installed root. This does not add a
+new project-docs behavior, automatic-selection, browser/platform or assurance result. No real
+rollback drill, tag, GitHub Release or store submission was performed for this record.
+
+The historical browser/platform results below belong to their named versions and runs.
+
+## 0.2.2 verification record
+
+Last verified then: **2026-10-21 · version 0.2.2 · 110 automated tests passed · WebKit and Chrome previews ready**.
 
 ## Blind dry run and wording repairs — 0.2.2
 

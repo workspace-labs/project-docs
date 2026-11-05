@@ -17,6 +17,13 @@ Gather first · The questions · TBD: an honest gap · The pointer line · The r
   confirm it; a confirmed finding's reason is that the code already uses it, unless they give a better one.
   Nothing found in code is locked until they do.
 - Anything the person already said about tools while writing the PRD.
+- Reuse any already stated target platforms/devices, distribution channels, capabilities (for example,
+  accounts, payments or other people's data), and explicitly requested assurance needs. Put selected
+  platforms and distribution under **Where it lives**, and applicable constraints under **Work rules** or
+  **Rules it must follow**, without changing the fixed headings. Do not infer a store, a legal duty or a
+  conformance claim from a product name. Ask only when a missing fact changes the current choice; use the
+  existing `TBD` process for an unresolved choice, rather than a new mandatory questionnaire. These are
+  requirements for later builder/reviewer evidence, never proof that a platform or assurance check ran.
 
 ## The questions
 
@@ -139,6 +146,12 @@ the old one (see SKILL.md).
 
 When the person asks for Arabic, write the same document in Arabic with these headings and fixed words.
 Names of tools and code stay as they are (Next.js, PostgreSQL).
+
+استخدم ما ذكره الشخص أصلًا عن المنصات والأجهزة وقنوات التوزيع وقدرات المشروع ومتطلبات الضمان الصريحة.
+ضع المنصات والتوزيع تحت **أين يعمل** والقيود ذات الصلة تحت **قواعد العمل** أو **القواعد التي يلتزم بها**،
+دون عناوين جديدة. لا تفترض متجرًا أو واجبًا قانونيًا أو ادعاء مطابقة. اسأل فقط إذا غيّر المجهول القرار
+الحالي، واستخدم «لم يُحسم بعد» للقرار المفتوح. لا تضف استبيانًا إلزاميًا، ولا تكتب المتطلب كأنه فحص ناجح؛
+دليل التنفيذ مسؤولية المطوّر أو المراجع لاحقًا.
 
 | English | Arabic |
 |---|---|

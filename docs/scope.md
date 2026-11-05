@@ -15,6 +15,9 @@
      database queries, safe sign-in), secrets, personal data,
      outside services, work rules, and what to do if something goes wrong.
   7. **Plan** (`docs/plan.md`): small steps you can see work, each with a check.
+- An optional closing handoff carries approved documents, current decisions, open choices and existing
+  Plan checks to a separately authorized builder. Applicable engineering tasks/evidence belong in the
+  current Plan; this adds no required document or approval round for unchanged decisions.
 - **Asks first.** Click questions in small rounds of 2–3, then a read-back. It writes only after "yes, that's it".
 - **Approval.** Every document is a draft until the person (or their client) approves it: then it is
   stamped **Approved** with the date. Each change makes v2, v3.

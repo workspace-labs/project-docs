@@ -13,7 +13,8 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.2.6** · 110 tests · macOS WebKit and Chrome checked; Windows/Edge last checked on 0.1.2 · [how it was tested](TESTING.md)
+**Version 0.3.0** · 113 package tests passed · five isolated exercise outcomes reviewed.
+Their scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -117,6 +118,15 @@ To see the look preview without an agent, copy
 [`skills/project-docs/assets/preview/`](skills/project-docs/assets/preview/) somewhere, put an example's
 `docs/design-preview/looks.js` next to `preview.html`, and open `preview.html` in a browser.
 
+## Pass approved documents to a builder
+
+The optional [engineering handoff](skills/project-docs/references/engineering-handoff.md) carries the
+same approved choices, PRD IDs, current Plan checks and open decisions forward. Applicable engineering
+tasks and their expected evidence stay in that Plan. Unchanged choices keep their approval; a summary
+does not create another required document or approval round. A separately authorized builder can use
+`software-engineering-build-standard` when available. `project-docs` continues to write documents only;
+the builder/reviewer supplies execution evidence, and only you mark a step checked.
+
 ## How it was tested
 
 The original 94 tests passed on Node.js 18, 20 and 22. Windows testing added regressions for line endings
@@ -137,7 +147,7 @@ review. The current test count, full record and remaining limits are in [`TESTIN
 | Where | What lives there |
 |---|---|
 | [`skills/project-docs/`](skills/project-docs/) | the skill itself, installed as it is: `SKILL.md`, `references/`, the preview in `assets/preview/`, `examples/` |
-| [`tests/`](tests/) | the automated checks (`node --test`): documents, preview, font coverage, line endings |
+| [`tests/`](tests/) | automated package checks (`node --test`): documents, preview, font coverage, line endings, reference integrity; separate [live behavior contracts](tests/behavioral-cases.md) |
 | [`tools/`](tools/) | builder-only helpers: font coverage (`font-ranges.js`) and Mac screenshots (`shot-mac.sh`) |
 | [`docs/`](docs/) | scope, decisions ([`adr/`](docs/adr/)), [architecture](docs/architecture/overview.md), [release steps](docs/operations/release.md), [security](docs/security.md), [risks and debt](docs/risks-and-debt.md) |
 | [`media/`](media/) | the picture at the top of this page |
