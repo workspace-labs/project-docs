@@ -1,5 +1,5 @@
 # Security: Study Timer
-> v1 · Approved 2026-10-08
+> v2 · Draft
 
 ## Who can get in
 - Nobody signs in: it runs only on the person's own computer.
@@ -8,6 +8,8 @@
 - **Records:** None: nobody signs in, so there is no one else's data to reach.
 - **Database:** None: it saves nothing.
 - **Sign-in:** None: nobody signs in.
+- **Connections:** None: it never uses a network.
+- **Audit:** None: it saves nothing and has no access to anyone else's protected records.
 
 ## Secrets
 - None: it needs no keys or passwords.

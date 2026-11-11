@@ -1,5 +1,5 @@
 # Plan: Cedar Clinic Booking
-> v3 · Approved 2026-10-08
+> v4 · Draft
 
 ## How to read it
 Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ built, waiting for your check · ✅ checked by you.
@@ -19,21 +19,25 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 ### Step 3: Staff sign in and manage any visit
 - **Covers:** M5
 - **How we know it works:** sign in with a clinic Microsoft 365 account, add a visit for a caller, move it and cancel it; without that sign-in the front desk list can't be opened.
+  - Changed 2026-11-11: staff sign-in and visit changes → the same check plus failed or unavailable Microsoft login grants no session; opening, moving or cancelling a made-up patient's visit writes the staff actor ID, visit ID, time, action and outcome in audit_events without copied patient details or secrets; only the IT lead can read that record and another role's request is refused; README instructions let another staff user run the local example, because the TRD service contract and Security audit rule must be tried when staff first use it.
 - **Status:** not started
 
 ### Step 4: A patient signs in with a code by text
 - **Covers:** M1, M2
 - **How we know it works:** a patient asks for a code, it arrives by text, and with it they see only their own visits; 5 wrong codes pause sign-in for 15 minutes. With two made-up patients, signed in as patient A, try to open patient B's visit by its link: it is refused. Only after this step and step 3 are checked does the site go online.
+  - Changed 2026-11-11: going online after steps 3 and 4 → going online only after step 9 is also checked; a failed code-service response grants no sign-in and shows the TRD's unavailable message; network connections use HTTPS/TLS with certificate validation, because live collection also needs the owner-supplied notice, recovery and release checks.
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 5: A patient moves or cancels their own visit
 - **Covers:** M2
 - **How we know it works:** signed in (step 4), move a visit to another free time, then cancel it; both work until two hours before, and are refused after that with a clear message. Then, signed in as patient A, try to open, move and cancel another patient's (B's) visit: each try is refused, and B's visit is unchanged.
+  - Changed 2026-11-11: visit changes and ownership check → the same check plus staff process a verified made-up patient's removal request using Data's removal route, and the patient, linked visits and linked audit records disappear while another patient's records remain, because retention and removal must work without deleting someone else's data.
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 6: The reminder the day before
 - **Covers:** M3
 - **How we know it works:** a visit booked for tomorrow gets a text message at 18:00 today, once.
+  - Changed 2026-11-11: successful reminder only → the same check plus a failed service response leaves the saved visit unchanged and shows staff a delivery failure rather than a success, because the TRD defines the service-down behavior.
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 7: Write the API guide
@@ -45,3 +49,8 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Covers:** TRD: Languages
 - **How we know it works:** switch to Arabic; every page reads right to left in Noto Naskh Arabic, with nothing left in English.
 - **Status:** not started
+
+### Step 9: Release safely before collecting real patient data
+- **Covers:** TRD: Where it lives, Work rules, Recovery; Data: How long it's kept; Security: Connections, Audit
+- **How we know it works:** after steps 3 and 4, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and return to the previous working image, including database compatibility; try the rollback on that isolated copy without losing its visits or overwriting live data. Follow the README as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
+- **Status:** ⛔ waits for TBD: the owner-supplied patient notice

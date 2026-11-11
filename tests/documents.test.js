@@ -78,8 +78,8 @@ const DOCUMENTS = [
 // Each example project, checked as a whole. A "showcase" project must show every feature (a TBD, a blocked
 // step, personal data); the small one only has to be right.
 const PROJECTS = [
-  { folder: 'cedar-clinic', lang: 'en', showcase: true, staffProviderIdentity: true },
-  { folder: 'cedar-clinic-ar', lang: 'ar', showcase: true, staffProviderIdentity: true },
+  { folder: 'cedar-clinic', lang: 'en', showcase: true, staffProviderIdentity: true, network: true, audit: true },
+  { folder: 'cedar-clinic-ar', lang: 'ar', showcase: true, staffProviderIdentity: true, network: true, audit: true },
   { folder: 'study-timer', lang: 'en', showcase: false },
 ];
 
@@ -212,7 +212,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
   }
 }
 
-for (const { folder, lang, showcase, staffProviderIdentity } of PROJECTS) {
+for (const { folder, lang, showcase, staffProviderIdentity, network = false, audit = false } of PROJECTS) {
   const L = LANGS[lang];
   const doc = (name) => read(`${folder}/${name}`);
   const has = (name) => exists(`${folder}/${name}`);
@@ -406,13 +406,15 @@ for (const { folder, lang, showcase, staffProviderIdentity } of PROJECTS) {
     assert.ok(tried, 'no step signs in as A and tries to open, change and cancel B\'s data, all refused, B unchanged');
   });
 
-  test(`(${folder}) "How it's protected" has its three lines, each "None" exactly when it does not apply`, () => {
+  test(`(${folder}) each protection applies to this project's actual capabilities, otherwise says None`, () => {
     const en = lang === 'en';
     const who = section(doc('docs/security.md'), en ? 'Who can get in' : 'من يستطيع الدخول').split('\n');
     const applies = {
       [en ? 'Records' : 'السجلات']: who.some((l) => l.startsWith('- **') && (en ? /only their own/ : /فقط/).test(l)),
       [en ? 'Database' : 'قاعدة البيانات']: exists(`${folder}/docs/data.md`),
       [en ? 'Sign-in' : 'الدخول']: who.some((l) => l.startsWith('- **') && (en ? /\bsigns? in\b/i : /يدخل/).test(l)),
+      [en ? 'Connections' : 'الاتصالات']: network,
+      [en ? 'Audit' : 'التدقيق']: audit,
     };
     const lines = section(doc('docs/security.md'), en ? "How it's protected" : 'كيف يُحمى').split('\n').filter((l) => l.startsWith('- '));
     assert.deepStrictEqual(lines.map((l) => (l.match(/^- \*\*(.+?):\*\* /) || [])[1]), Object.keys(applies));
@@ -603,6 +605,7 @@ test('a waiting step names its choice word for word: a shortened name, a piece o
   for (const [lang, c] of Object.entries(cases)) {
     const L = LANGS[lang];
     const trd = read(`${c.folder}/docs/trd.md`), plan = read(`${c.folder}/docs/plan.md`);
+    const waitCount = [...plan.matchAll(new RegExp(L.waitingFor.source, 'gm'))].length;
     // The example's plan with every ⛔ label replaced (what the plan says now is the per-project test's business).
     const waitingOn = (what) => plan.replace(new RegExp(L.waitingFor.source, 'gm'), (line, old) => line.replace(old, what));
     assert.ok(trd.includes(c.name), `${lang}: the example still has its choice`);
@@ -610,11 +613,11 @@ test('a waiting step names its choice word for word: a shortened name, a piece o
     assert.deepStrictEqual(waitingProblems(waitingOn(c.name), [trd], L), [], `${lang}: the whole name`);
     for (const [what, name, named] of c.labels) {
       const problems = waitingProblems(waitingOn(what), [name ? trd.replace(c.name, name) : trd], L);
-      assert.strictEqual(problems.length, named ? 0 : 3, `${lang}: "${what}" for "${name || c.name}" → ${JSON.stringify(problems)}`);
+      assert.strictEqual(problems.length, named ? 0 : waitCount, `${lang}: "${what}" for "${name || c.name}" → ${JSON.stringify(problems)}`);
     }
     // Two open choices that share their first words: each whole name picks its own.
     const two = trd.replace(new RegExp(L.tbdName.source, 'm'), (start) => `${c.second}\n${start}`);
-    assert.strictEqual(openTbds(two, L).length, 2, `${lang}: two open choices`);
+    assert.strictEqual(openTbds(two, L).length, openTbds(trd, L).length + 1, `${lang}: one additional open choice`);
     assert.deepStrictEqual(waitingProblems(waitingOn(c.name), [two], L), [], `${lang}: the whole name names one`);
     assert.deepStrictEqual(waitingProblems(waitingOn(openTbds(two, L)[0].name), [two], L), [], `${lang}: the other whole name names the other`);
   }

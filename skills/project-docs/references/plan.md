@@ -32,6 +32,24 @@ Gather first · How to make the steps · The status of a step · The read-back �
   **How we know it works**. Use only checks the project needs; do not add a separate checklist document or
   invent feature IDs. Later, the builder or reviewer records the real run and outcome beneath that check;
   proposed checks are not proof. For a handoff after approval, see [engineering-handoff.md](engineering-handoff.md).
+- **Add applicable checks to the step that needs them, not new document types.** Reuse the approved
+  answers; if a missing choice affects the check, settle it in its owning document through the normal
+  `TBD` and approval process. Keep these within **Covers** and **How we know it works**:
+  - Saved data that cannot reasonably be recreated: before first entrusting it to the product, restore
+    a backup into a separate safe copy and read the records back; never overwrite live data for a test.
+  - Someone besides the author will run it: when it becomes runnable, write the README how-to and try
+    its instructions as that user.
+  - It is deployed or distributed beyond the builder's computer: that step names how to release it,
+    how to return to the previous working release and what happens to saved data; try the rollback on
+    a safe copy before release.
+  - It collects personal data from its users: the owner supplies the notice shown before collection;
+    check that the product shows the supplied text. Do not draft a legal policy, infer a legal duty,
+    create `docs/privacy.md` or block unrelated work while that text is awaited.
+  - An outside service is used: the step that connects it tries the agreed expected response and
+    failure behavior from the TRD. A Security threat or audit rule gets its corresponding check there.
+  A tiny offline project with no saved data gets no restore, service, notice or deployment check merely
+  because these examples exist. These are proposed checks; actual run results come from the builder or
+  reviewer, and only the person marks them checked.
 - An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
   the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
   needs more than one, name the first; the step's check says what else it waits for. A step that itself
@@ -110,6 +128,22 @@ statuses. Keep `M1`, `M4` and `TRD` as they are.
 القاعدة تحت **تغطي** والنتيجة والدليل المطلوبين تحت **كيف نعرف أنها تعمل**، دون وثيقة فحص إضافية أو
 معرّفات متطلبات مخترعة. يسجّل المطوّر أو المراجع التنفيذ الحقيقي ونتيجته تحت الفحص لاحقًا؛ الفحص
 المقترح ليس دليلًا على نجاحه. لا تضف فحصًا لا يحتاجه المشروع.
+
+أضف الفحوص المشروطة إلى الخطوة التي تحتاجها، داخل **تغطي** و**كيف نعرف أنها تعمل**، دون أنواع وثائق
+جديدة. أعد استخدام الإجابات المعتمدة؛ وإذا غاب قرار يؤثر في الفحص، فاحسمه في وثيقته بالطريقة
+المعتادة مع «لم يُحسم بعد» والاعتماد:
+- بيانات محفوظة لا يمكن إعادة إنشائها عمليًا: قبل الاعتماد على المنتج لحفظها، استعد نسخة احتياطية
+  في نسخة آمنة منفصلة واقرأ السجلات مجددًا؛ لا تستبدل البيانات الحية للاختبار.
+- سيشغّله شخص غير مؤلفه: عند أول نسخة قابلة للتشغيل، اكتب إرشادات README وجرّب اتباعها مثل ذلك المستخدم.
+- سينشر أو يوزّع خارج حاسوب المطوّر: سمِّ طريقة الإصدار والعودة إلى الإصدار السابق الذي يعمل، وما
+  يحدث للبيانات المحفوظة؛ جرّب الرجوع على نسخة آمنة قبل الإصدار.
+- يجمع بيانات شخصية من مستخدميه: يقدّم المالك نص الإشعار الذي يظهر قبل الجمع؛ افحص ظهور النص الذي
+  قدّمه. لا تكتب سياسة قانونية، ولا تفترض واجبًا قانونيًا، ولا تنشئ `docs/privacy.md`، ولا تعطّل العمل
+  المستقل في انتظار النص.
+- يستخدم خدمة خارجية: تفحص الخطوة التي تربطها الرد المتوقع والتصرف عند الفشل كما في TRD؛ وتفحص
+  أيضًا قاعدة التهديد أو سجل التدقيق ذات الصلة في الأمان.
+لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
+هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
 
 | English | Arabic |
 |---|---|

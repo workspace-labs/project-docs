@@ -56,6 +56,28 @@ without new fixed headings or a mandatory questionnaire. Unknown facts stay unkn
 TBD process if they affect the choice. A requested assurance level is recorded as a requirement, never
 as achieved conformance; eventual run proof remains with the builder/reviewer.
 
+## Conditional protection and release checks
+
+Run one offline, single-user timer case and a separate networked booking case, in English and Arabic.
+Use the same six-document routes. Supply confirmed answers for the booking project's access rules,
+outside services, data-removal choices and distribution; leave one service choice genuinely open.
+
+The reviewer checks that the timer gains no accounts, storage, audit table, backup duty or release
+service. Its Connections and Audit rules say None. In the booking case, the existing headings hold
+short threat scenarios tied to protections or Plan checks, verified encrypted connections, and minimal
+audit records for access to other people's protected records. Public doctor listings do not become
+audited access. Audit identities are treated as personal data with access and retention rules, without
+copying patient content or secrets.
+
+For each outside service, the TRD names the expected response and the behavior when it fails; Security
+continues to name what it receives. Data's readable required/unique declarations agree with its ready
+block, and personal-record removal accounts for linked records. The Plan puts restoration and read-back
+on the first step saving irreplaceable data, README instructions on a runnable step for another user,
+release and rollback on the distribution step, and an owner-supplied notice before personal data is
+collected. Missing owner choices remain unresolved in their existing owning documents. A proposed
+check is never described as executed. No seventh planning document, new heading set, legal policy,
+extra approval gate or independently chosen service appears.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,

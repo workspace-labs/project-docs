@@ -54,6 +54,12 @@ The parts: **Screen** (what people see and tap) · **Brain** (the back end that 
 internet: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
 languages, speed) · **How the code is written** (language, formatting, checks, names, file size, tests).
 
+For each **Outside service**, use that same question to confirm what the product sends, what must come
+back, and what the user sees or can still do when the service is down or returns a failure. Keep these
+on the service's existing line; Security reuses what it receives. Do not invent a retry, fallback service
+or new saved data. An unresolved choice follows the existing `TBD` process and blocks only the work
+that needs it. With no outside service, keep `None` and ask nothing about service failures.
+
 **Ask the rules first** (online or offline, languages, and which devices people will hold, which goes into
 the Speed line): they change which options fit the other parts. Write the document in its own order.
 
@@ -125,7 +131,7 @@ the old one (see SKILL.md).
 - <choice>, because <reason>.
 
 ## Outside services
-- <service: what it is for>, because <reason>.
+- <service: what it is for; sends …; expects …; if unavailable …>, because <reason>.
 
 ## Rules it must follow
 - **Online or offline:** <…>
@@ -152,6 +158,11 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 دون عناوين جديدة. لا تفترض متجرًا أو واجبًا قانونيًا أو ادعاء مطابقة. اسأل فقط إذا غيّر المجهول القرار
 الحالي، واستخدم «لم يُحسم بعد» للقرار المفتوح. لا تضف استبيانًا إلزاميًا، ولا تكتب المتطلب كأنه فحص ناجح؛
 دليل التنفيذ مسؤولية المطوّر أو المراجع لاحقًا.
+
+لكل **خدمة خارجية**، أكمل السؤال نفسه بما يرسله المنتج وما يجب أن يعود به، وما يراه المستخدم أو
+يستطيع فعله عند تعطّل الخدمة أو فشل الرد. تبقى هذه التفاصيل في سطر الخدمة الحالي، ويعيد الأمان
+استخدام ما تستقبله. لا تخترع إعادة محاولة أو خدمة بديلة أو بيانات محفوظة جديدة. القرار المفتوح يتبع
+«لم يُحسم بعد» ويعطّل العمل الذي يحتاجه فقط. دون خدمة خارجية، أبقِ «لا شيء» ولا تسأل عن تعطّلها.
 
 | English | Arabic |
 |---|---|
@@ -181,7 +192,7 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 - <الاختيار>، لأن <السبب>.
 
 ## الخدمات الخارجية
-- <الخدمة: الغرض منها>، لأن <السبب>.
+- <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …>، لأن <السبب>.
 
 ## القواعد التي يلتزم بها
 - **متصل أو دون اتصال:** <…>

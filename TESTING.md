@@ -1,5 +1,41 @@
 # How project-docs was tested
 
+## 0.3.1 conditional coverage update, 2026-11-11
+
+- Before edits, accepted source commit `47ee191d2dc98c3e0c8f405db6e655281268b042` had a clean
+  working tree and passed the repository's `node --test`: **113/113** tests.
+- The updated package passes **119/119** tests, with no failures, skips or todos. The six added
+  consistency checks compare English/Arabic readable required/unique declarations with the ready SQL,
+  detect removed phone constraints, and check the audit model's minimal fields and linked deletion.
+- The existing protection test now checks Connections/Audit against each example's actual capabilities.
+  It failed on the original three-line examples, then passed on the coordinated five-line examples.
+  The TBD mutation test now counts the current waiting statuses, so the added notice blocker does not
+  weaken exact-name checks. Existing heading, history, personal-data inventory, LF/CRLF, reference,
+  font and preview-script checks still pass.
+- A separate read-only reviewer ran the document/data checks (**85/85**) and inspected the actual diff.
+  Review found a missing decision-history extension and Arabic wording limited to staff; both were
+  corrected. The dated extension preserves ADR 0007's original decision. The revised Arabic rule
+  covers any authorized user accessing another person's protected personal records.
+- The bounded static skill audit reports **0 findings** for the candidate package. This is structure,
+  reference and compatibility evidence, not proof that an agent follows the instructions.
+- The approved update was synchronized to the existing shared-agent and Codex installations after
+  backups and a concurrency check. All 60 packaged file hashes and modes agree with the candidate;
+  the Claude alias is preserved. Matching installed snapshots and the candidate passed the static
+  audit together with **0 findings**. At verification time, the source changes were uncommitted
+  and unpublished.
+- The general skill-creator YAML validator was attempted but cannot start because this Python lacks
+  PyYAML. No dependency was installed. The package's existing metadata/reference tests and separate
+  static auditor ran; the unavailable general validator is not reported as a pass.
+
+The six-document order, fixed document headings, PRD IDs, approval process, optional Frameflow offer,
+deferred API guide and preview assets are unchanged. Clinic examples remain Draft after changes;
+earlier human-checked Plan progress is preserved as history. The timer has no Design or Data document
+and no invented service, backup, notice or deployment requirement.
+
+These are package checks and source review. No new live-agent exercise, browser/Windows run, actual
+database restore, deployed release, legal review or conformance result is claimed. The additional
+live-agent cases in [behavioral-cases.md](tests/behavioral-cases.md) are exercise contracts, not runs.
+
 ## 0.3.0 candidate: package checks, 2026-11-05
 
 Verified on **macOS 27.2 · Node.js 22.14.0** with the repository's offline `node --test` command:

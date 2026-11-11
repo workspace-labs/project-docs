@@ -42,3 +42,12 @@ A line that does not apply says **None:** (Arabic `لا ينطبق:`) and why.
 - The sign-in rule needed a stable provider account ID in Data, which led to the 0.2.1 clinic example
   repairs.
 - Adding a fourth line is a new decision, not an edit to this one.
+
+Owner-authorized extension, 2026-11-11: the owner approved the concrete four-reference update and
+said "go". This later decision adds **Connections** (HTTPS/TLS with certificate validation when a
+network is used) and **Audit** (minimal accountability when a role accesses another person's protected
+personal records) to the written protection lines. The original three-line decision above remains the
+historical record. The current Security reference now has five lines in English and Arabic, each using
+the existing None pattern when inapplicable; its fixed headings and approval process are unchanged.
+Audit identities follow Data's existing personal-data inventory, access, retention and removal rules.
+Brief applicable threat scenarios remain under the same heading, tied to a protection or Plan check.

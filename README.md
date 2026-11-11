@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.3.0** · 113 package tests passed · five isolated exercise outcomes reviewed.
+**Version 0.3.1** · 119 package tests passed · exercise scope and limits are recorded below.
 Their scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
@@ -32,6 +32,13 @@ In your project:
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
 
 Each document carries a stamp under its title: `> v1 · Draft`, then `> v2 · Approved 2026-10-08`.
+
+The same documents carry the detail a project actually needs: outside-service responses and failures
+in the TRD; required/unique fields and removal rules in Data; brief threat scenarios, encrypted
+connections and applicable audit records in Security. Existing Plan steps carry restore checks for
+irreplaceable data, README instructions for another user, release/rollback checks when distributed,
+and an owner-supplied notice before collecting personal data. A tiny offline tool keeps its short
+None lines. These add no planning document or approval stage.
 
 ## How it works
 

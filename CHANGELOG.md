@@ -2,6 +2,24 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.3.1] - 2026-11-11
+
+### Changed
+
+- Filled conditional coverage gaps inside the four existing TRD, Data, Security and Plan references,
+  without changing the six-document order, fixed headings, approval process or preview.
+- Outside services describe expected replies and failure behavior; sheet proposals describe required
+  and unique fields plus personal-record removal. Readable examples and ready SQL stay coordinated.
+- Security records short threat scenarios tied to protections or Plan checks, verified encrypted
+  connections and minimal audit records where another person's protected records are accessed.
+  Audit identities remain personal data, with visibility and retention rules and no copied secrets
+  or unnecessary personal content. Offline tools keep their None lines.
+- Existing Plan checks conditionally cover restoration/read-back, README instructions, release and
+  rollback, and an owner-supplied notice before personal data is collected. No legal policy is drafted.
+- English and Arabic clinic examples follow the same rules. The small timer still has neither a
+  Design nor a Data document. Package consistency checks and behavioral exercise contracts cover
+  the additions; their execution scope is recorded in TESTING.md.
+
 ## [0.3.0] - 2026-11-05
 
 ### Added

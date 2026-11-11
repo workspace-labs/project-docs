@@ -36,7 +36,7 @@ Gather first · The questions · How it's protected · The read-back · The docu
 
 ## How it's protected (never asked: the skill writes it)
 
-Three lines a builder must follow, worked out from the answers above, the TRD and Data. They are not
+Five lines a builder must follow, worked out from the answers above, the TRD and Data. They are not
 questions: the person would not know them, and the safe way is the only way. When one does not apply,
 its line says so with **None:** and why.
 
@@ -48,6 +48,22 @@ its line says so with **None:** and why.
 - **Sign-in:** when anyone signs in, sign-in, reset and sign-up tries are limited. When they sign in with
   another company's account ("Sign in with Microsoft"), check that company's signed answer before trusting
   it, and know the person by that company's account ID, never by their email.
+- **Connections:** when the product uses a network, use HTTPS/TLS with certificate validation for its
+  pages, API and outside-service connections. Never turn certificate checks off. A fully offline tool
+  says **None:** it has no network connection.
+- **Audit:** when a role can open or change someone else's protected personal records, record the
+  necessary actor and affected-record IDs, time, action and outcome. Do not copy secrets or unnecessary
+  personal content into the record. A deliberately public doctor list does not trigger this rule.
+  These IDs can themselves be personal: Data and **Personal data** must say who sees the audit records,
+  how long they are kept, and how they are removed. If this needs Data to change, use the normal change
+  loop; do not silently add storage.
+
+When someone signs in, personal or secret data is saved, or an outside service is used, add a few plain
+lines under this same heading: what is worth protecting, who is not trusted, and one or two ways it can
+go wrong → the protection above or the Plan check that addresses it. Derive them from the agreed
+project; ask about a missing fact in its owning document rather than inventing it. Keep these lines
+with their protections when a decision changes. No new heading, threat-model file or questionnaire is
+needed. A fully offline tool with no saved data keeps its short **None** lines.
 
 ## The read-back
 
@@ -73,6 +89,10 @@ nothing.").
 - **Records:** <…>
 - **Database:** <…>
 - **Sign-in:** <…>
+- **Connections:** <…>
+- **Audit:** <…>
+
+<When relevant: what is worth protecting; who is not trusted; one or two risks → protection or Plan check.>
 
 ## Secrets
 - <…>
@@ -98,6 +118,15 @@ When the person asks for Arabic, write the same document in Arabic with these he
 as they are in the Data document (`patients.phone`), with the Arabic marks `🔒 شخصي` and `🔐 سري`. A line that does not apply starts with `لا ينطبق:`. An empty
 heading says so in one line ("لا شيء: لا يحفظ شيئًا.").
 
+إذا وُجد دخول أو حفظ لبيانات شخصية أو سرية أو استخدام لخدمة خارجية، أضف تحت **كيف يُحمى** أسطرًا
+قصيرة عمّا يستحق الحماية، ومن لا يُوثق به، وطريقة أو طريقتين لحدوث الضرر ← الحماية أو فحص الخطة.
+تُشتق من القرارات المتفق عليها، ولا تضف عنوانًا أو ملفًا أو استبيانًا. الاتصالات تستخدم HTTPS/TLS
+مع التحقق من الشهادة؛ لا تُعطّل التحقق. عند فتح أي مستخدم مخوّل لبيانات شخصية محمية تخص غيره أو تغييرها، يسجّل
+التدقيق المعرّفات الضرورية للفاعل والسجل والوقت والفعل والنتيجة، دون أسرار أو محتوى شخصي غير لازم.
+المعرّفات قد تكون شخصية أيضًا: تُذكر رؤيتها ومدة حفظها وحذفها في البيانات والأمان عبر دورة التغيير
+المعتادة. عرض أسماء الأطباء للعامة لا يتطلب هذا التدقيق. الأداة غير المتصلة التي لا تحفظ شيئًا تبقى
+على أسطر «لا ينطبق» القصيرة.
+
 ```markdown
 # الأمان: <اسم المشروع>
 > الإصدار 1 · مسودة
@@ -109,6 +138,10 @@ heading says so in one line ("لا شيء: لا يحفظ شيئًا.").
 - **السجلات:** <…>
 - **قاعدة البيانات:** <…>
 - **الدخول:** <…>
+- **الاتصالات:** <…>
+- **التدقيق:** <…>
+
+<عند انطباقه: ما يستحق الحماية؛ من لا يُوثق به؛ خطر أو خطران ← حماية أو فحص في الخطة.>
 
 ## الأسرار
 - <…>

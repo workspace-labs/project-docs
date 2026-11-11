@@ -29,14 +29,24 @@ PRD already answers it (a "must do" line that keeps orders means yes).
 
 **Then the sheets, 2 or 3 a round, one question each.** For each sheet, show your proposal as a small
 table and ask the person to confirm or change it: what one row is, the columns, the marks, who can see it
-(when that differs by column, say which columns each audience sees), and how long a row is kept. For example:
+(when that differs by column, say which columns each audience sees), which columns are required or unique,
+how long a row is kept, and how a personal row is removed. Keep this in the same proposal, not a new round. For example:
 
 > **Orders** (one row = one order): customer name 🔒, phone 🔒, items, pickup day. Only you see it; kept until
 > the Saturday after pickup. Right, or change something?
 
 - **Columns:** propose them from the PRD. Each one must serve a "must do" line, so never add one "just in
   case". Then walk each "must do" line and check it has every column it needs (a total per item needs a
-  price, if the PRD shows money).
+  price, if the PRD shows money). A minimal audit sheet can instead serve the agreed Security rule;
+  do not add one for a project that does not need it.
+- **Required and unique:** propose which columns must be present (including generated IDs) and which
+  cannot repeat. Name the columns in backticks; say **None** when no uniqueness beyond the ID applies.
+  State a combined or conditional uniqueness rule plainly, such as one non-cancelled visit per doctor
+  and start time. The ready block must implement these same constraints, not silently choose them.
+- **Removal:** for a sheet with personal or secret data, say who may remove a row, how the request or
+  expiry is handled, and what happens to linked rows. An agreed retention period needs a removal route,
+  not just a date. Audit IDs are personal too; include their visibility, retention and removal without
+  copying the records they describe. Keep these facts with each sheet; reuse the agreed answers.
 - **Marks:** point out every column that is 🔒 **personal** (a name, a phone number, an email, an ID number,
   a birth date, a location, health or money details, or a link to one person such as `patient_id`) or
   🔐 **secret** (a password, a sign-in code, a key, a token). A name is personal even when it is shown to
@@ -59,7 +69,7 @@ that cannot be turned back. Say this plainly when you mark a 🔐 column.
 ## The document
 
 Write exactly these headings, in this order. Under **Sheets**, give each sheet its own `###` heading with its
-name in the code in brackets (`### Orders (orders)`), its table and its two lines. In the table, the **Mark** column holds `🔒 personal`, `🔐 secret` or `–`.
+name in the code in brackets (`### Orders (orders)`), its table and its lines. In the table, the **Mark** column holds `🔒 personal`, `🔐 secret` or `–`.
 
 ````markdown
 # Data: <Project name>
@@ -79,6 +89,9 @@ One row is <…>.
 
 - **Who can see it:** <…>
 - **How long it's kept:** <…>
+- **Required:** <column names in backticks, including generated IDs>
+- **Unique:** <individual column names, or None beyond the ID; describe combined rules separately>
+- **Removal:** <who removes personal rows and how, including expiry and linked rows; None with a reason when not applicable>
 
 ## How the sheets link
 - <Each Visit belongs to one Patient and one Doctor.>
@@ -105,6 +118,11 @@ When the person asks for Arabic, write the same document in Arabic with these he
 Table and column names stay in English, as they will be in the code: put the table's code name in brackets
 after its Arabic name.
 
+ضمن اقتراح الجدول نفسه، اذكر الأعمدة المطلوبة والفريدة بأسمائها بين علامتي backtick، وكيف يُحذف الصف
+الشخصي أو السري: من يحق له حذفه، وكيف يُنفّذ الطلب أو انتهاء مدة الحفظ، ومصير الصفوف المرتبطة.
+اذكر القيد المركّب أو المشروط بوضوح، وطبّق القيود نفسها في الكود الجاهز. جدول التدقيق الصغير لا يُضاف
+إلا لقاعدة أمان متفق عليها؛ معرّفاته الشخصية لها رؤية ومدة حفظ وطريقة حذف أيضًا. لا تضف جولة أسئلة.
+
 | English | Arabic |
 |---|---|
 | `🔒 personal` | `🔒 شخصي` |
@@ -129,6 +147,9 @@ after its Arabic name.
 
 - **من يستطيع رؤيته:** <…>
 - **مدة الاحتفاظ به:** <…>
+- **مطلوب:** <أسماء الأعمدة بين علامتي backtick، بما فيها المعرّف المولّد>
+- **فريد:** <أسماء الأعمدة المنفردة، أو لا شيء عدا المعرّف؛ اشرح القيود المركّبة منفصلة>
+- **الحذف:** <من يحذف الصفوف الشخصية وكيف، بما في ذلك انتهاء المدة والصفوف المرتبطة؛ لا ينطبق مع السبب عند عدم الحاجة>
 
 ## كيف ترتبط الجداول
 - <كل موعد يخص مريضًا واحدًا وطبيبًا واحدًا.>
