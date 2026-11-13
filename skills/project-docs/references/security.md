@@ -11,7 +11,8 @@ Gather first · The questions · How it's protected · The read-back · The docu
 ## Gather first
 
 - **TRD → Work rules:** every security rule the workplace set.
-- **TRD → Outside services:** everything the project talks to over the internet, and what it sends there.
+- **TRD → Outside services:** everything outside the project it talks to (over the internet or the client's
+  network), and what it sends there.
   When the hosting company keeps personal data (the TRD's "Where it lives"), it is an outside service too.
 - **Data:** every 🔒 personal and 🔐 secret column, with who can see it and how long it's kept. If the data
   document is missing, use the approved PRD and TRD, and confirm anything found in existing code. A missing
@@ -27,7 +28,9 @@ Gather first · The questions · How it's protected · The read-back · The docu
    they sign in? Are there roles (a patient sees only their own visits; staff see everything)? If someone
    signs in, how is that sign-in protected, and how do they get back in if they are locked out (that answer
    is a line under **Who can get in**)? Suggest the defaults: a password of at least 12 characters, a 15-minute pause after 5 wrong tries, and a second step
-   only if the TRD already has the service it needs (otherwise offer it as a TRD change).
+   only if the TRD already has the service it needs (otherwise offer it as a TRD change). When people sign
+   in with the client's own work accounts, the client's rules for passwords, lock-outs and getting back in
+   apply: write them as the client's, or `TBD`.
 2. **Secrets:** the keys and passwords the project needs (a database password, a service key). Where will
    they live? Suggest the default: never in the code and never in git; in environment variables or the
    host's secret store, with `.env` files listed in `.gitignore`. Who can see them, and how is one replaced?
@@ -47,7 +50,8 @@ its line says so with **None:** and why.
   never glued into the query.
 - **Sign-in:** when anyone signs in, sign-in, reset and sign-up tries are limited. When they sign in with
   another company's account ("Sign in with Microsoft"), check that company's signed answer before trusting
-  it, and know the person by that company's account ID, never by their email.
+  it, and know the person by that company's account ID, never by their email. With the client's own
+  directory, check every sign-in with that directory itself, never with a copy of the passwords.
 - **Connections:** when the product uses a network, use HTTPS/TLS with certificate validation for its
   pages, API and outside-service connections. Never turn certificate checks off. A fully offline tool
   says **None:** it has no network connection.

@@ -2,6 +2,74 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.4.0] - 2026-11-13
+
+Built in parallel with the published 0.3.0 and 0.3.1 and merged onto them; its decision records are
+0008 and 0009.
+
+### Added
+
+- **A blank client meeting form** (`references/meeting-form.md` → `docs/meeting-form.md`), English and
+  Arabic: the project, who is involved, the users, what it must do, questions for the later stages (data,
+  where it must run, links, sign-in, security, prototype, testing, handover, running it, announcing it) and
+  signatures. It is printed and filled in the room; afterwards its answers start the PRD as drafts, so the
+  client is never asked twice. It has no stamp: the PRD is still approved on its own.
+- **PRD → Who decides:** five fixed lines (owner, approves the scope, approves the prototype, accepts it
+  (UAT), others to involve), or one `Owner: <who>, alone.` line for a project built for oneself. Also
+  **Later** (wanted, not in this version) and **Dates** (what must be ready by when).
+- **The stamp says who approved:** `> v2 · Approved 2026-10-08 by the clinic manager`. When Who decides
+  names a scope approver, the PRD is approved only on their word, with the date they gave.
+- **A seventh document, Handover** (`docs/handover.md`), for a project handed to someone: what is handed
+  over (and who owns the code), who receives it, announcing it, the first weeks after go-live, running it,
+  maintenance and updates, retiring it.
+- **Plan → delivery steps:** when someone else decides, the plan carries fixed steps with fixed names:
+  Prototype (right after step 1 when there are screens, or step 1 itself on made-up data when step 1 waits
+  for the database), then after the building steps Functional test, Security test, Acceptance test (UAT) on
+  a test copy the testers can reach, Guides and training, Install, Live test, Go-live and Handover. A
+  delivery step may carry a **Target** date. Only the person ticks them.
+- The Cedar Clinic examples carry all of it in English and Arabic, plus a filled meeting form; the study
+  timer shows the "alone" case. 13 new tests (123): the new headings, the delivery steps' order, a missing,
+  swapped, doubled or misplaced step caught, the approver in every stamp of a handed-over project, and the
+  meeting form's shape in both languages.
+
+### Changed (before release): four meetings, not one
+
+- Research into how large organisations work before they build (government digital manuals, published
+  consultancy methods, the requirements standards) found no fixed meeting count but one shared order, and
+  that deciding in the room where needs are first heard is the commonest mistake. The meeting form is now
+  **four meetings**: the goal (dates, whether they are fixed, budget, who only needs to be told, one contact
+  each side); the people and today's work (users with numbers at the busiest time, today's steps, what
+  goes wrong; notes signed); the needs and the new way (the steps with it, each must-do with how it is
+  checked, later-stage questions now including old records, availability, speed, accessibility, policy,
+  training and retiring it; assumptions and risks); and approve the scope, or stop. Stopping is a valid
+  result. ADR 0009.
+- **PRD:** new headings **How it works today**, **How it will work**, **Assumptions and risks**; **Dates**
+  becomes **Dates and budget**; each `M` line carries a `Check:` line (`الفحص:` in Arabic) that the
+  acceptance test tries. Questions in four rounds of at most three.
+- **TRD → Rules it must follow:** **Available** (the client's hours, and what happens when it is down; never
+  a default) and **Accessibility** (a default unless the client says more). **Data** asks about old records.
+- Examples and tests follow: the clinic form is filled over four meetings; 3 new tests (126) check a check
+  under every must-do line, and the form's four-meeting shape in both languages.
+- Codex review round 1 (two findings, fixed): the TRD no longer says an open data storage blocks
+  everything: it blocks the steps that save, and the Prototype on made-up data still goes first (F01).
+  An **approved** document from an older version that lacks today's headings or fixed lines is treated as
+  not approved yet: every line and its history kept, only the gaps asked, no approver, check or approval
+  invented, then approved again the normal way (F02). 2 new tests (128), with the real approved 0.2.2
+  clinic PRD, TRD and Plan kept as fixtures in `tests/fixtures/approved-0.2.2/`.
+
+### Fixed
+
+- A blind dry run (a car park for a city department, run from the meeting form to the closing summary)
+  listed 36 places the wording made it guess. Settled in the wording: a fact about the client (languages,
+  brand, systems, policies, who does what, a "not decided") is never "you pick"; with a filled meeting
+  form the read-back is the confirmation; an answer given under another question is marked `(see …)`;
+  open questions become `TBD`s where they belong; the form asks about devices, users, languages, brand and
+  how long data is kept; a PDF or Word copy is made only on a yes; step 1 is the path the client wants to
+  try first; a step waiting for several `TBD`s names the first in document order; the Handover step waits
+  for the Handover's open `TBD`s; outside services include the client's own network; sign-in with the
+  client's own work accounts follows the client's rules; a column the client named counts when a line uses
+  it; a general "you pick" is not a yes to writing `AGENTS.md`.
+
 ## [0.3.1] - 2026-11-11
 
 ### Changed

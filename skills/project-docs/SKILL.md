@@ -1,12 +1,12 @@
 ---
 name: project-docs
-description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, or a step-by-step build plan. Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build'. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
+description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for the four meetings before building (the goal, today's work, the needs, approve the scope or stop). Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build'. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
 ---
 
 # project-docs
 
-The documents a project needs **before anyone builds it**, written with the person in small rounds of
-questions. Each document is read back, written with fixed headings, and approved with a date. After that,
+The documents a project needs **before anyone builds it**, from the first client meeting to the handover,
+written with the person in small rounds of questions, read back, and approved with a date. After that,
 every AI on every computer builds from the same truth.
 
 ## The documents, in this order
@@ -19,18 +19,30 @@ every AI on every computer builds from the same truth.
 | 3 | **Design brief**: the look | `DESIGN.md` (project root) | when it has screens | [references/design.md](references/design.md) |
 | 4 | **Data**: what it saves | `docs/data.md` | only if it saves anything | [references/data.md](references/data.md) |
 | 5 | **Security**: one page | `docs/security.md` | always (short when simple) | [references/security.md](references/security.md) |
-| 6 | **Plan**: small steps | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
+| 6 | **Handover**: after it is built | `docs/handover.md` | when it is handed to someone (short when simple) | [references/handover.md](references/handover.md) |
+| 7 | **Plan**: small steps, then delivery | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
 
-Load **only** the reference file of the document you are writing. Each one holds that document's
-questions and its exact headings.
+Before the PRD, when the person is meeting a client: the **client meeting form**, `docs/meeting-form.md`,
+a blank form to print and fill in over **four meetings**: the goal, the people and today's work, the needs
+and the new way, then approve the scope or stop. The PRD is drafted after the third and approved, or the
+project stopped, in the fourth ([references/meeting-form.md](references/meeting-form.md)).
+
+Load **only** the reference file of the document you are writing: its questions and its exact headings.
 
 ## Start: where are we?
 
-1. Read the project folder: `docs/`, `DESIGN.md`, `README.md`, and the code if there is any.
+1. Read the project folder: `docs/`, `DESIGN.md`, `README.md`, and the code if there is any. A filled
+   `docs/meeting-form.md` is where the PRD starts (after its meeting 3); a client meeting still ahead →
+   offer the blank form. A form whose meeting 4 says **Stop** ends the work: write nothing more.
 2. Read the **stamp** of each document that exists (see below). Continue from the **first document that is
    not approved**, or the one the person asks for.
 3. A document that exists but has no stamp (the person wrote it before): read it, keep everything in it,
-   ask only about what is missing under the fixed headings, then stamp it.
+   ask only about what is missing under the fixed headings, then stamp it. An **approved** document that
+   lacks headings or fixed lines its reference now has (written by an older version of this skill: a PRD
+   with no **Who decides** or no `Check:` lines, a TRD with no **Available** line): treat it as the first
+   document that is not approved. Keep every line, its stamp history and its `Changed` lines; ask only for the missing parts, or write `TBD`. Never
+   invent an approver, a check or an approval. Then raise the version, set it to `Draft`, and approve it the
+   normal way, before writing anything that needs the new parts (the Handover, the delivery steps).
 4. A project that already has code: write what you find and mark it `(found in code)`. Ask only about the
    gaps. Nothing found in code is approved until the person confirms it.
 5. A project with a `docs/scope.md`: start the PRD from it. Once `docs/prd.md` exists it is the project's
@@ -49,12 +61,14 @@ questions and its exact headings.
    can open a sharper follow-up. If an answer is vague ("old phones", "fast") ask what it means; if it
    clashes with an earlier answer, say so and ask which wins. Never guess a fact the person did not give:
    ask, or write `TBD`. "You pick" or "your recommended one" is the person's choice: write it with its
-   reason, adding "(on the AI's recommendation)".
+   reason, adding "(on the AI's recommendation)". A **fact about the client** (their languages, brand,
+   systems, policies, who does what, or a "not decided") is never "you pick": ask, or write `TBD`.
 3. **Read it back** in plain words, short, in the person's own terms. Write nothing until they say "yes,
    that's it". If they correct it, ask again and read it back again.
 4. **Write the document** with the exact headings from its reference file, then show it.
-5. **Approval.** Ask: "Approved, or changes?" The person, or their client, decides.
-   - **Approved** → stamp it `Approved` with today's date.
+5. **Approval.** Ask: "Approved, or changes?" The person, or their client, decides. When the PRD's **Who
+   decides** names someone to approve the scope, the PRD is approved only on that person's word.
+   - **Approved** → stamp it `Approved` with the date it was given and who gave it (see the stamp).
    - **Changes** → a clear change: make exactly that, and also the lines that only exist because of the old
      value (a check that quotes the old number), saying so when you show it. A vague change, or one that
      adds something new or clashes with an earlier answer: ask about it first (same loop: questions,
@@ -70,23 +84,19 @@ questions and its exact headings.
 
 ## The stamp
 
-The line right under each document's title is its stamp. Nothing else goes on that line:
+The line right under each document's title is its stamp, `> v1 · Draft` at first. Nothing else goes on it:
 
 ```markdown
 # PRD: Clinic Booking
-> v1 · Draft
+> v2 · Approved 2026-10-08 by the clinic manager
 ```
 
-```markdown
-# PRD: Clinic Booking
-> v2 · Approved 2026-10-08
-```
-
-- In Arabic the stamp is `> الإصدار 1 · مسودة` or `> الإصدار 2 · معتمد 2026-10-08`.
+- `by <who>` names who approved, by name or job; leave it out only when the person approved their own project.
+- In Arabic: `> الإصدار 1 · مسودة` or `> الإصدار 2 · معتمد 2026-10-08 من مدير العيادة`.
 - `v1` is the first version shown. Each round of changes after someone has seen it raises the version.
 - A changed document is a `Draft` again until it is approved again; ordinary Plan execution progress is
   the exception (see its reference).
-- The TRD, Data and the Plan build **only** on an approved PRD. If the PRD changes, say which later
+- The TRD, Data, the Handover and the Plan build **only** on an approved PRD. If the PRD changes, say which later
   documents it affects and offer to update them.
 
 ## Locks: approved choices never vanish
@@ -106,12 +116,11 @@ references say. A document that has **never been approved** has nothing locked y
 **Settling a `TBD` in an approved document is a change too:** keep the `TBD` line and add
 `  - Changed <date>: TBD → <the choice>, because <reason>.` under it. Then update what waited for it: Data's
 ready block once the database is chosen, the Security line that carried the `TBD`, and the Plan steps it
-blocked (each the way its reference says). **Reopening** a
-choice keeps its history and adds `  - Changed <date>: <the choice> → TBD, because <reason>.`. If it already
-has a canonical TBD line, keep that current history and its descriptive name. Otherwise keep the original
-choice and Changed chain together in a labelled, collapsed historical `<details data-project-docs-history>`
-record, then add one current top-level `- TBD: <what is open>. Decided when <…>.` line outside it (for
-example, `the database`).
+blocked (each the way its reference says). **Reopening** a choice keeps its history and adds
+`  - Changed <date>: <the choice> → TBD, because <reason>.`. If it already has a canonical TBD line, keep
+that current history and its descriptive name. Otherwise keep the original choice and Changed chain
+together in a labelled, collapsed historical `<details data-project-docs-history>` record, then add one
+current top-level `- TBD: <what is open>. Decided when <…>.` line outside it (for example, `the database`).
 Ask for a missing decision trigger, or write `TBD` for it. Only the current history outside historical
 records decides; its latest change wins. Dependent documents wait again; follow their references.
 
@@ -137,7 +146,7 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
   may load a font online, and only when the person says yes to that font.
 - **Never change an existing look or a locked choice** without the person's yes.
 - **Touch only the project's documents.** The one exception: the TRD's pointer line in `AGENTS.md` or
-  `CLAUDE.md`, and only on the person's yes.
+  `CLAUDE.md`, only on a yes to that file (a general "you pick" is not one).
 - **Smart defaults, the person decides.** Always suggest the best way and say why. The person can always
   say "no, do it my way". Only real limits cannot be overruled, and you explain them plainly.
 
@@ -146,5 +155,6 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 | File | What it is |
 |---|---|
 | `references/prd.md` … `references/plan.md` | one per document: its questions and its exact headings |
+| `references/meeting-form.md` | the blank client meeting form for the four meetings, and how its answers start the PRD |
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
-| `examples/` | `cedar-clinic/`: all six documents for a website that saves personal data · `cedar-clinic-ar/`: the same in Arabic · `study-timer/`: a tiny terminal tool with no screens and nothing saved, so it has no DESIGN.md and no data document |
+| `examples/` | `cedar-clinic/`: a meeting form filled over four meetings and all seven documents for a website that saves personal data · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a tiny terminal tool for one student, with no screens, nothing saved and nobody to hand it to, so it has no DESIGN.md, no data document, no handover and no delivery steps |

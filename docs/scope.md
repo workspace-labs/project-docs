@@ -3,7 +3,12 @@
 ## What it does
 
 - Writes the documents a project needs **before anyone builds it**, in this order:
-  1. **PRD** (`docs/prd.md`): what it is, why, who it's for, what it must do, what it will NOT do, how we know it worked.
+  0. *(Before the PRD, when meeting a client: a blank **client meeting form**, `docs/meeting-form.md`, to print
+     and fill in over four meetings: the goal, today's work, the needs, approve the scope or stop. Not an
+     approved document; its answers start the PRD.)*
+  1. **PRD** (`docs/prd.md`): what it is, why, who it's for, who decides (owner, scope, prototype, acceptance,
+     others), how the work runs today and with it, what it must do (each with a check), what it will NOT do, what
+     comes later, assumptions and risks, how we know it worked, dates and budget.
   2. **TRD** (`docs/trd.md`): what it is built with (screen, brain, data storage, where it lives, outside services),
      the rules it must follow, how the code is written, and the reason for each choice.
   3. *(Offers the frameflow skill for the screens, once.)*
@@ -14,13 +19,17 @@
   6. **Security** (`docs/security.md`): always, short when simple. Who gets in, how it's protected (record owner checks, safe
      database queries, safe sign-in), secrets, personal data,
      outside services, work rules, and what to do if something goes wrong.
-  7. **Plan** (`docs/plan.md`): small steps you can see work, each with a check.
+  7. **Handover** (`docs/handover.md`): only when it is handed to someone. What is handed over, who receives
+     it, announcing it, the first weeks after go-live, running it, maintenance and updates, retiring it.
+  8. **Plan** (`docs/plan.md`): small steps you can see work, each with a check, then, when someone else
+     decides, the fixed delivery steps: prototype, functional test, security test, acceptance test (UAT) on a
+     test copy, guides and training, install, live test, go-live, handover.
 - An optional closing handoff carries approved documents, current decisions, open choices and existing
   Plan checks to a separately authorized builder. Applicable engineering tasks/evidence belong in the
   current Plan; this adds no required document or approval round for unchanged decisions.
 - **Asks first.** Click questions in small rounds of 2–3, then a read-back. It writes only after "yes, that's it".
 - **Approval.** Every document is a draft until the person (or their client) approves it: then it is
-  stamped **Approved** with the date. Each change makes v2, v3.
+  stamped **Approved** with the date and who approved it. Each change makes v2, v3.
 - **Locks.** Choices in the TRD and DESIGN.md are locked once approved. Only the person changes them,
   and the old choice stays visible with a dated "Changed" line.
 - **Resumes.** It reads what the project already has and continues from the first document that is not approved.
@@ -39,6 +48,8 @@
 - No installing anything on the person's computer, and no network calls (the preview page loads fonts
   online only when the person says yes to a font that is not bundled).
 - No data collection, no accounts.
+- No running the tests, the UAT, the install or the handover itself: the Plan names them as steps with
+  checks, and only the person ticks a sign-off.
 - No changing an existing DESIGN.md's look, or any locked choice, without the person's yes.
 
 ## How good it must be

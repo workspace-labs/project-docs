@@ -1,5 +1,36 @@
 # How project-docs was tested
 
+## 0.4.0: the client meetings to the handover, 2026-11-13
+
+Verified: **2026-11-13 · version 0.4.0 · 137 automated tests passed** (previews unchanged). Built as 0.3.0 on
+0.2.2 in parallel with the published 0.3.0/0.3.1, reviewed and approved by Codex in two rounds, then merged
+onto 0.3.1 as 0.4.0.
+
+### Blind dry run of the client parts
+
+A fresh agent with no memory of the build was given a made-up client (a staff car park for a city
+department: 120 spaces, about 200 staff, the department's own network only, sign-in with work accounts)
+and a fixed set of answers. It wrote the blank meeting form, filled it from typed meeting notes, then went
+through the PRD, TRD, Design, Data, Security, Handover and Plan to the closing summary, and listed 36 places
+where the wording made it guess.
+
+What mattered most for client work: the acceptance test came before the install while the testers could
+only reach the client's network (now: on a test copy the testers can reach); one open database choice
+blocked the prototype (now: the prototype runs on made-up data first); the client's deadline and its
+"later" wishes had nowhere to go (now: **Dates** and **Later** in the PRD, and a **Target** line on delivery
+steps); the stamp could not say who approved (now: `by <who>`); no step wrote the guides, held the
+training or marked the go-live (now: fixed steps); and the Handover's hints nudged the AI to fill in who
+fixes problems, which is the client's decision (now: a fact about the client is never "you pick"). The
+owner chose which of these to add; the wording fixes are listed in `CHANGELOG.md`. Left alone on purpose:
+the API-guide rule (already approved), a stronger mark for health data, and the design preview not seen in
+a browser by the agent.
+
+One limit of the test itself: while reading a reference, the agent's shell command also printed the filled
+clinic meeting form from the examples, so its own filled form may have copied that shape.
+
+Also run on macOS: `node --test` (137 pass after the merge) and the static skill audit (no findings). The preview page did
+not change, so it was not re-rendered.
+
 ## 0.3.1 conditional coverage update, 2026-11-11
 
 - Before edits, accepted source commit `47ee191d2dc98c3e0c8f405db6e655281268b042` had a clean

@@ -13,7 +13,8 @@ const EXAMPLES = path.join(SKILL, 'examples');
 const LANGS = {
   en: {
     templateHeading: 'The document',
-    stamp: /^> v[1-9]\d* · (Draft|Approved \d{4}-\d{2}-\d{2})$/,
+    stamp: /^> v[1-9]\d* · (Draft|Approved \d{4}-\d{2}-\d{2}( by \S.*)?)$/,
+    approvedBy: / · Approved \d{4}-\d{2}-\d{2} by \S/,
     changed: /^ {2}- Changed \d{4}-\d{2}-\d{2}: .+ → .+, because .+\.$/,
     changedWord: 'Changed ',
     tbd: /^- TBD: .+\. Decided when .+\.$/,
@@ -33,13 +34,20 @@ const LANGS = {
     },
     who: 'Who can see it', howLong: "How long it's kept",
     stepTitle: /^Step \d+: \S/, covers: 'Covers', how: 'How we know it works',
+    stepName: /^Step \d+: (.+)$/,
+    decides: 'Who decides',
+    check: /^ {2}- Check: \S/,
+    decidesLabels: ['Owner', 'Approves the scope', 'Approves the prototype', 'Accepts it (UAT)', 'Others to involve'],
+    alone: /^- \*\*Owner\*\*: .+, alone\.$/,
+    delivery: ['Prototype', 'Functional test', 'Security test', 'Acceptance test (UAT)', 'Guides and training', 'Install', 'Live test', 'Go-live', 'Handover'],
     statusLine: /^- \*\*Status:\*\* (not started|⛔ waits for TBD: .+|◐ waiting for your check \(ran: .+, \d{4}-\d{2}-\d{2}\)|✅ checked \d{4}-\d{2}-\d{2})$/m,
     waitingFor: /⛔ waits for TBD: (.+)$/m,
     noBrain: /^- None/m,
   },
   ar: {
     templateHeading: 'In Arabic',
-    stamp: /^> الإصدار [1-9]\d* · (مسودة|معتمد \d{4}-\d{2}-\d{2})$/,
+    stamp: /^> الإصدار [1-9]\d* · (مسودة|معتمد \d{4}-\d{2}-\d{2}( من \S.*)?)$/,
+    approvedBy: / · معتمد \d{4}-\d{2}-\d{2} من \S/,
     changed: /^ {2}- تغيّر في \d{4}-\d{2}-\d{2}: من .+ إلى .+، لأن .+\.$/,
     changedWord: 'تغيّر في',
     tbd: /^- لم يُحسم بعد: .+\. يُحسم عندما .+\.$/,
@@ -59,6 +67,12 @@ const LANGS = {
     },
     who: 'من يستطيع رؤيته', howLong: 'مدة الاحتفاظ به',
     stepTitle: /^الخطوة \d+: \S/, covers: 'تغطي', how: 'كيف نعرف أنها تعمل',
+    stepName: /^الخطوة \d+: (.+)$/,
+    decides: 'من يقرر',
+    check: /^ {2}- الفحص: \S/,
+    decidesLabels: ['المالك', 'يعتمد النطاق', 'يعتمد النموذج الأولي', 'يقبله (اختبار القبول UAT)', 'جهات أخرى'],
+    alone: /^- \*\*المالك\*\*: .+، وحده\.$/,
+    delivery: ['النموذج الأولي', 'الاختبار الوظيفي', 'الاختبار الأمني', 'اختبار القبول (UAT)', 'الأدلة والتدريب', 'التثبيت', 'اختبار التشغيل', 'الإطلاق', 'التسليم'],
     statusLine: /^- \*\*الحالة:\*\* (لم تبدأ|⛔ تنتظر ما لم يُحسم: .+|◐ بانتظار فحصك \(نُفّذ: .+، \d{4}-\d{2}-\d{2}\)|✅ فُحصت \d{4}-\d{2}-\d{2})$/m,
     waitingFor: /⛔ تنتظر ما لم يُحسم: (.+)$/m,
     noBrain: /^- لا شيء/m,
@@ -72,6 +86,7 @@ const DOCUMENTS = [
   { reference: 'design.md', en: ['cedar-clinic/DESIGN.md'], ar: ['cedar-clinic-ar/DESIGN.md'] },
   { reference: 'data.md', en: ['cedar-clinic/docs/data.md'], ar: ['cedar-clinic-ar/docs/data.md'] },
   { reference: 'security.md', en: ['cedar-clinic/docs/security.md', 'study-timer/docs/security.md'], ar: ['cedar-clinic-ar/docs/security.md'] },
+  { reference: 'handover.md', en: ['cedar-clinic/docs/handover.md'], ar: ['cedar-clinic-ar/docs/handover.md'] },
   { reference: 'plan.md', en: ['cedar-clinic/docs/plan.md', 'study-timer/docs/plan.md'], ar: ['cedar-clinic-ar/docs/plan.md'] },
 ];
 
@@ -186,6 +201,36 @@ function staffIdentityProblems(data, L) {
   return problems;
 }
 
+// "Who decides" is either the five fixed lines in order, or one "Owner …, alone." line.
+// Says whether the project is built for its owner alone, and any problem.
+function decidesProblems(prd, L) {
+  const lines = section(prd, L.decides).split('\n').filter((l) => l.startsWith('- '));
+  if (lines.length === 1 && L.alone.test(lines[0])) return { alone: true, problems: [] };
+  const labels = lines.map((l) => (l.match(/^- \*\*(.+?)\*\*: \S/) || [])[1]);
+  const ok = JSON.stringify(labels) === JSON.stringify(L.decidesLabels);
+  return { alone: false, problems: ok ? [] : [`"${L.decides}" must be the five fixed lines or one "alone" line, found ${JSON.stringify(labels)}`] };
+}
+
+// The fixed delivery steps: none when the owner builds it alone; otherwise all of them in order, the building
+// steps first, the Prototype at step 1 or 2 only when there are screens, and Handover last.
+function deliveryProblems(plan, { alone, screens }, L) {
+  const names = section(plan, L.s.steps).split('\n### ').slice(1)
+    .map((s) => (s.split('\n')[0].match(L.stepName) || [])[1] || '');
+  const found = names.map((name) => L.delivery.find((d) => name === d || name.startsWith(`${d}: `)));
+  const problems = [];
+  if (alone) {
+    if (found.some(Boolean)) problems.push('a project its owner builds alone has no delivery steps');
+    return problems;
+  }
+  const [prototype, ...closing] = L.delivery;
+  // Right after step 1, or step 1 itself when step 1 would wait for the database.
+  if (screens) { if (found[0] !== prototype && found[1] !== prototype) problems.push(`step 1 or 2 must be "${prototype}"`); }
+  else if (found.includes(prototype)) problems.push(`no screens, so no "${prototype}" step`);
+  if (JSON.stringify(found.slice(-closing.length)) !== JSON.stringify(closing)) problems.push(`the last steps must be ${closing.join(', ')}, in order`);
+  if (found.filter(Boolean).length !== closing.length + (screens ? 1 : 0)) problems.push('each delivery step appears once');
+  return problems;
+}
+
 function template(referenceFile, heading) {
   const text = readMarkdown(path.join(SKILL, 'references', referenceFile));
   const after = text.split(new RegExp(`^## ${heading}$`, 'm'))[1];
@@ -217,7 +262,7 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
   const doc = (name) => read(`${folder}/${name}`);
   const has = (name) => exists(`${folder}/${name}`);
   const steps = () => section(doc('docs/plan.md'), L.s.steps).split('\n### ').slice(1);
-  const allLines = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/security.md', 'docs/plan.md']
+  const allLines = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/security.md', 'docs/handover.md', 'docs/plan.md']
     .filter(has).flatMap((name) => doc(name).split('\n'));
   const field = (label) => new RegExp(`^- \\*\\*${label}:\\*\\* \\S`, 'm');
 
@@ -241,6 +286,13 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
     const numbers = [...section(doc('docs/prd.md'), L.s.must).matchAll(/^- \*\*M(\d+)\.\*\*/gm)].map((m) => Number(m[1]));
     assert.ok(numbers.length >= 1, 'no M lines found');
     assert.deepStrictEqual(numbers, numbers.map((_, i) => i + 1));
+  });
+
+  test(`(${folder}) every "must do" line has one check under it`, () => {
+    const lines = section(doc('docs/prd.md'), L.s.must).split('\n');
+    lines.forEach((line, i) => {
+      if (/^- \*\*M\d+\.\*\*/.test(line)) assert.match(lines[i + 1] || '', L.check, `${line} needs a check line under it`);
+    });
   });
 
   test(`(${folder}) every "Changed" line keeps the old choice and says when, what and why`, () => {
@@ -430,8 +482,31 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
     for (const m of must) assert.ok(covered.includes(m), `no step covers ${m}`);
   });
 
-  // Where a TBD really lives: the PRD, TRD, DESIGN.md and Data. Security and the Plan only quote them.
-  const tbdSources = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md'].filter(has).map(doc);
+  // Where a TBD really lives: the PRD, TRD, DESIGN.md, Data and the Handover. Security and the Plan only quote them.
+  const tbdSources = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/handover.md'].filter(has).map(doc);
+
+  test(`(${folder}) "Who decides" is the five fixed lines, or one "alone" line`, () => {
+    assert.deepStrictEqual(decidesProblems(doc('docs/prd.md'), L).problems, []);
+  });
+
+  test(`(${folder}) a handed-over project says who approved each approved document`, () => {
+    if (decidesProblems(doc('docs/prd.md'), L).alone) return;
+    for (const name of ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/security.md', 'docs/handover.md', 'docs/plan.md'].filter(has)) {
+      const stamp = doc(name).split('\n')[1];
+      if (stamp.includes(lang === 'en' ? 'Approved' : 'معتمد')) assert.match(stamp, L.approvedBy, `${name}: ${stamp}`);
+    }
+  });
+
+  test(`(${folder}) a handed-over project has a Handover document and every delivery step in order; one built alone has neither`, () => {
+    const { alone } = decidesProblems(doc('docs/prd.md'), L);
+    assert.strictEqual(has('docs/handover.md'), !alone, alone ? 'built alone: no handover.md' : 'handed over: needs handover.md');
+    assert.deepStrictEqual(deliveryProblems(doc('docs/plan.md'), { alone, screens: has('DESIGN.md') }, L), []);
+    if (has('docs/handover.md')) {
+      for (const line of doc('docs/handover.md').split('\n').filter((l) => l.startsWith('- ') && l.includes(L.tbdWord))) {
+        assert.match(line, L.tbd, line);
+      }
+    }
+  });
 
   test(`(${folder}) a step waiting for a TBD names a TBD that really is open`, () => {
     const waiting = steps().filter((s) => L.waitingFor.test(s));
@@ -628,11 +703,148 @@ test('a project that saves nothing has no data.md, and its security page says so
   assert.match(section(read('study-timer/docs/security.md'), 'Personal data'), /^- None: it saves nothing\.$/m);
 });
 
+test('a missing, misplaced or extra delivery step is caught, in both languages', () => {
+  for (const [lang, folder] of [['en', 'cedar-clinic'], ['ar', 'cedar-clinic-ar']]) {
+    const L = LANGS[lang];
+    const plan = read(`${folder}/docs/plan.md`);
+    const opts = { alone: false, screens: true };
+    assert.deepStrictEqual(deliveryProblems(plan, opts, L), [], `${lang}: the example passes`);
+    const steps = plan.split('\n### ');
+    const uat = steps.findIndex((s) => s.startsWith(`${lang === 'en' ? 'Step' : 'الخطوة'} 13: ${L.delivery[3]}`));
+    assert.ok(uat > 0, `${lang}: the example has its UAT step`);
+    assert.ok(deliveryProblems(steps.filter((_, i) => i !== uat).join('\n### '), opts, L).length > 0, `${lang}: a missing UAT is caught`);
+    const swapped = [...steps];
+    [swapped[uat], swapped[uat + 1]] = [swapped[uat + 1], swapped[uat]];
+    assert.ok(deliveryProblems(swapped.join('\n### '), opts, L).length > 0, `${lang}: UAT after Install is caught`);
+    assert.ok(deliveryProblems(plan, { alone: false, screens: false }, L).length > 0, `${lang}: a prototype without screens is caught`);
+    assert.ok(deliveryProblems(plan, { alone: true, screens: true }, L).length > 0, `${lang}: delivery steps in a project built alone are caught`);
+    const twice = plan.replace(/\n### [^\n]+\n/, (m) => m.replace(/: .+$/m, `: ${L.delivery[5]}`));
+    assert.ok(deliveryProblems(twice, opts, L).length > 0, `${lang}: a delivery step that appears twice is caught`);
+    // The prototype may come first (step 1 waits for the database), but never later than step 2.
+    const first = [steps[0], steps[2], steps[1], ...steps.slice(3)].join('\n### ');
+    assert.deepStrictEqual(deliveryProblems(first, opts, L), [], `${lang}: a prototype at step 1 is accepted`);
+    const late = [steps[0], steps[1], steps[3], steps[2], ...steps.slice(4)].join('\n### ');
+    assert.ok(deliveryProblems(late, opts, L).length > 0, `${lang}: a prototype at step 3 is caught`);
+    const noGoLive = steps.filter((s) => !s.includes(`: ${L.delivery[7]}\n`)).join('\n### ');
+    assert.notStrictEqual(noGoLive, plan);
+    assert.ok(deliveryProblems(noGoLive, opts, L).length > 0, `${lang}: a missing go-live is caught`);
+  }
+  const L = LANGS.en;
+  const prd = read('study-timer/docs/prd.md');
+  assert.strictEqual(decidesProblems(prd, L).alone, true);
+  const half = prd.replace('- **Owner**: the student, alone.', '- **Owner**: the student.\n- **Approves the scope**: the student.');
+  assert.notStrictEqual(half, prd);
+  assert.ok(decidesProblems(half, L).problems.length > 0, 'two of the five lines are caught');
+});
+
+// The meeting form has no stamp: it is checked on its own. It is four meetings with ten numbered sections;
+// both templates share one shape, and the filled example keeps every heading and role row of the English one.
+test('the meeting form templates match each other, and the filled example keeps the form', () => {
+  const formHeadings = (lines) => lines.filter((l) => /^#{1,3} /.test(l));
+  const shape = (lines) => formHeadings(lines).map((h) => h.match(/^(#+) /)[1] + ((h.match(/^#+ \D*?(\d+)[.:]/) || [])[1] || ''));
+  const roles = (lines) => {
+    const part = (lines.join('\n').split(/\n### 2\. .+\n/)[1] || '').split('\n#')[0];
+    return part.split('\n').filter((l) => /^\| [^-|]/.test(l)).slice(1).map((l) => l.split('|')[1].trim());
+  };
+  const en = template('meeting-form.md', 'The form');
+  const ar = template('meeting-form.md', 'In Arabic');
+  const want = ['#', '##1', '###1', '###2', '##2', '###3', '###4', '###', '##3', '###5', '###6', '###7', '###8', '###9', '##4', '###10'];
+  assert.deepStrictEqual(shape(en), want, 'four meetings, ten sections, the notes signature after meeting 2');
+  assert.deepStrictEqual(shape(ar), want, 'the Arabic form has the same shape');
+  assert.strictEqual(roles(en).length, 5, 'five roles, as in the PRD');
+  assert.strictEqual(roles(ar).length, 5, 'five roles in Arabic');
+  const filled = read('cedar-clinic/docs/meeting-form.md').split('\n');
+  assert.ok(filled[0].startsWith(en[0].split('<')[0]), 'the filled form keeps the title');
+  assert.ok(!/^> /.test(filled[1]), 'a meeting form has no stamp');
+  assert.deepStrictEqual(formHeadings(filled).slice(1), formHeadings(en).slice(1));
+  assert.deepStrictEqual(roles(filled), roles(en));
+  const questions = (lines) => lines.filter((l) => /^- \*\*/.test(l)).length;
+  assert.strictEqual(questions(ar), questions(en), 'the Arabic form asks the same number of questions');
+  assert.strictEqual(questions(filled), questions(en), 'the filled form answers every question');
+});
+
 test('the stamp rules reject a broken stamp', () => {
+  assert.match('> v2 · Approved 2026-10-08 by the clinic manager', LANGS.en.stamp);
+  assert.match('> الإصدار 2 · معتمد 2026-10-08 من مدير العيادة', LANGS.ar.stamp);
+  for (const bad of ['> v2 · Approved 2026-10-08 by ', '> v2 · Approved 2026-10-08 by', '> v2 · Draft by the manager']) {
+    assert.doesNotMatch(bad, LANGS.en.stamp, bad);
+  }
   for (const bad of ['> v1 Draft', '> v0 · Draft', '> v2 · Approved', '> v1 · Approved 8 Oct 2026', 'v1 · Draft']) {
     assert.doesNotMatch(bad, LANGS.en.stamp, bad);
   }
   for (const bad of ['> الإصدار 1 مسودة', '> الإصدار 0 · مسودة', '> الإصدار 2 · معتمد', '> v1 · مسودة']) {
     assert.doesNotMatch(bad, LANGS.ar.stamp, bad);
   }
+});
+
+// What an older approved PRD lacks under today's template: missing headings, and must-do lines with no check.
+function upgradeGaps(prd, L) {
+  const have = headings(prd.split('\n'));
+  const gaps = headings(template('prd.md', L.templateHeading)).filter((h) => !have.includes(h));
+  const lines = section(prd, L.s.must).split('\n');
+  lines.forEach((line, i) => {
+    const m = line.match(/^- \*\*(M\d+)\.\*\*/);
+    if (m && !L.check.test(lines[i + 1] || '')) gaps.push(`${m[1]} has no check`);
+  });
+  return gaps;
+}
+
+// A Prototype step must never wait for the TRD's data storage.
+function prototypeWaitProblems(plan, trd, L) {
+  const storage = openTbds(section(trd, L.s.storage), L).map((t) => t.name);
+  const proto = section(plan, L.s.steps).split('\n### ').slice(1)
+    .find((s) => ((s.split('\n')[0].match(L.stepName) || [])[1] || '').startsWith(L.delivery[0]));
+  const waits = proto && proto.match(L.waitingFor);
+  return waits && storage.includes(waits[1]) ? ['the prototype waits for the data storage'] : [];
+}
+
+const FIXTURES = path.join(__dirname, 'fixtures', 'approved-0.2.2');
+
+// Real output of 0.2.2 (the clinic example at ef1e129): approved, but missing what 0.3.0 needs. The skill must
+// treat it as not approved yet, keep everything, ask only for the gaps, and never invent an approval.
+test('an approved 0.2.2 document is found incomplete, and the skill says how to continue it', () => {
+  const L = LANGS.en;
+  const fixture = (name) => readMarkdown(path.join(FIXTURES, name));
+  for (const name of ['prd.md', 'trd.md', 'plan.md']) {
+    assert.match(fixture(name).split('\n')[1], / · Approved \d{4}-\d{2}-\d{2}$/, `${name} is a real approved 0.2.2 document`);
+  }
+  assert.deepStrictEqual(upgradeGaps(fixture('prd.md'), L), [
+    '## How it works today', '## How it will work', '## Who decides', '## Later', '## Assumptions and risks',
+    '## Dates and budget', 'M1 has no check', 'M2 has no check', 'M3 has no check', 'M4 has no check', 'M5 has no check',
+  ]);
+  assert.deepStrictEqual(upgradeGaps(read('cedar-clinic/docs/prd.md'), L), [], 'the 0.3.0 example has no gaps');
+  assert.doesNotMatch(section(fixture('trd.md'), 'Rules it must follow'), /\*\*Available:\*\*/, 'the 0.2.2 TRD has no Available line');
+  assert.ok(deliveryProblems(fixture('plan.md'), { alone: false, screens: true }, L).length > 0, 'the 0.2.2 plan has no delivery steps');
+  const skill = readMarkdown(path.join(SKILL, 'SKILL.md')).replace(/\s+/g, ' ');
+  for (const rule of [
+    'An **approved** document that lacks headings or fixed lines its reference now has',
+    'treat it as the first document that is not approved',
+    'Keep every line, its stamp history and its `Changed` lines',
+    'Never invent an approver, a check or an approval',
+    'set it to `Draft`, and approve it the normal way, before writing anything that needs the new parts',
+    'A document that exists but has no stamp (the person wrote it before): read it, keep everything in it',
+  ]) assert.ok(skill.includes(rule), `SKILL.md must keep the rule: ${rule}`);
+});
+
+// Screens chosen, database open: the prototype on made-up data can go first; every step that saves still waits.
+test('with the data storage TBD, the prototype goes first and the saving steps wait', () => {
+  const L = LANGS.en;
+  const trdText = read('cedar-clinic/docs/trd.md');
+  const storage = section(trdText, L.s.storage);
+  const trd = trdText.replace(storage, '\n- TBD: the database. Decided when the clinic\'s IT lead names one.\n');
+  assert.notStrictEqual(trd, trdText);
+  const plan = read('cedar-clinic/docs/plan.md');
+  const steps = plan.split('\n### ');
+  const booking = steps[1].replace(/^- \*\*Status:\*\* .+$/m, '- **Status:** ⛔ waits for TBD: the database');
+  const prototype = steps[2].replace(/^Step 2: /, 'Step 1: ').replace(/^- \*\*Status:\*\* .+$/m, '- **Status:** not started');
+  const first = [steps[0], prototype, booking.replace(/^Step 1: /, 'Step 2: '), ...steps.slice(3)].join('\n### ');
+  assert.deepStrictEqual(deliveryProblems(first, { alone: false, screens: true }, L), [], 'the prototype at step 1 is accepted');
+  assert.deepStrictEqual(waitingProblems(first, [trd, read('cedar-clinic/docs/handover.md')], L), [], 'the saving step waits for the open database by its exact name');
+  assert.deepStrictEqual(prototypeWaitProblems(first, trd, L), [], 'the prototype does not wait');
+  const blocked = first.replace(/(### Step 1: Prototype[\s\S]*?- \*\*Status:\*\* ).+/, '$1⛔ waits for TBD: the database');
+  assert.notStrictEqual(blocked, first);
+  assert.ok(prototypeWaitProblems(blocked, trd, L).length > 0, 'a prototype waiting for the database is caught');
+  const tbdRule = readMarkdown(path.join(SKILL, 'references', 'trd.md')).split('## TBD: an honest gap')[1].split('\n## ')[0].replace(/\s+/g, ' ');
+  assert.ok(tbdRule.includes('Only the prototype can be built until this is chosen'), 'the TRD tells the client the prototype can go on');
+  assert.doesNotMatch(tbdRule, /screen and the data storage are needed by the very first step/, 'the old "blocks everything" rule is gone');
 });

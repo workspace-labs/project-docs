@@ -24,6 +24,8 @@
 - **Security:** see `docs/security.md`.
 - **Languages:** English.
 - **Speed:** starts in under a second.
+- **Available:** when the student runs it.
+- **Accessibility:** None: no screens.
 
 ## How the code is written
 - **Language:** Python 3.

@@ -25,7 +25,9 @@ for (const [name, ending] of [['LF', '\n'], ['CRLF', '\r\n']]) {
           }
         }
       }
+      fs.cpSync(path.join(__dirname, 'fixtures'), path.join(work, 'tests', 'fixtures'), { recursive: true });
       convert(skill);
+      convert(path.join(work, 'tests', 'fixtures'));
       const result = spawnSync(process.execPath, ['--test', 'tests/documents.test.js'], {
         cwd: work, encoding: 'utf8', timeout: 30000,
         // This is an independent test run, not a child managed by the parent Node test runner.

@@ -33,6 +33,8 @@
 - **Languages:** English and Arabic (right to left).
 - **Speed:** every page opens in under 2 seconds on a phone on 4G.
 - **Recovery:** before real patient records are stored, the IT lead demonstrates restoring a backup into an isolated copy and reading the same visits back; a test never overwrites live records.
+- **Available:** patients book at any hour; the front desk needs it 8:00 to 18:00. When it is down, the desk takes bookings by phone as before.
+- **Accessibility:** text that stays readable when an older patient makes it larger; readable contrast, works with the keyboard, respects reduced motion (see DESIGN.md).
 
 ## How the code is written
 - **Language:** TypeScript.

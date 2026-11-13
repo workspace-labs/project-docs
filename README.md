@@ -1,11 +1,11 @@
 # project-docs
 
-![project-docs: a question card, "Where will the data be kept?", with "Not sure yet, write a TBD" picked, beside an approved TRD document](media/project-docs-hero.png)
+![project-docs: four client meetings (the goal, today's work, the needs, approve or stop), then seven documents (PRD, TRD, Design, Data, Security, Handover, Plan), then Build; beside it a PRD card where every must-do line has a check](media/project-docs-hero.png)
 
 **The documents your project needs, written with you before anyone builds it.**
 
 An agent skill that asks about your project in small click rounds, reads it back in plain words, and writes
-six documents in order. The AI **never picks the technology by itself**: you choose, or it is written down
+seven documents in order, from the first client meeting to the handover. The AI **never picks the technology by itself**: you choose, or it is written down
 as an honest "TBD". Each document is approved with a date, and after that every AI on every computer
 builds from the same truth.
 
@@ -13,8 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.3.1** · 119 package tests passed · exercise scope and limits are recorded below.
-Their scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.4.0** · 137 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -29,7 +28,14 @@ In your project:
 | `DESIGN.md` | **The look**: colors, fonts, shapes, pieces, must-have rules and ready values every AI copies | when it has screens |
 | `docs/data.md` | **Data**: every table and column, with personal 🔒 and secret 🔐 data marked | when it saves anything |
 | `docs/security.md` | **Security**: who gets in, how it's protected, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
+| `docs/handover.md` | **Handover**: what is handed over (and who owns the code), who receives it, how it is announced, the first weeks after go-live, who runs it, maintenance and updates, how it is retired | when it is handed to someone |
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
+
+Before the first document, when you are about to meet a client: `docs/meeting-form.md`, a **blank client
+meeting form** to print and fill in over **four meetings**: (1) the goal, who decides, dates and budget; (2) the
+users and how the work runs today, with the notes signed; (3) how it will run, what it must do and how each
+is checked, questions for later stages, assumptions and risks; (4) approve the scope, or stop. The PRD is
+drafted after meeting 3, so nobody asks the client twice.
 
 Each document carries a stamp under its title: `> v1 · Draft`, then `> v2 · Approved 2026-10-08`.
 
@@ -115,11 +121,11 @@ website before we build it."
 
 ## See an example
 
-[`skills/project-docs/examples/cedar-clinic/`](skills/project-docs/examples/cedar-clinic/) holds all six
-documents for a made-up clinic booking website, and
-[`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the same in Arabic.
-[`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing, so it
-has no data document, and its security page is short, with "None" wherever nothing applies.
+[`skills/project-docs/examples/cedar-clinic/`](skills/project-docs/examples/cedar-clinic/) holds a filled
+meeting form and all seven documents for a made-up clinic booking website, and
+[`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the documents in Arabic.
+[`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing and one
+student builds it for themselves, so it has no data document, no handover and no delivery steps, and its security page is short, with "None" wherever nothing applies.
 
 To see the look preview without an agent, copy
 [`skills/project-docs/assets/preview/`](skills/project-docs/assets/preview/) somewhere, put an example's

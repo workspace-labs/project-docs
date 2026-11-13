@@ -1,5 +1,5 @@
 # DESIGN.md: Cedar Clinic Booking
-> v1 · Approved 2026-10-08
+> v1 · Approved 2026-10-08 by the clinic manager
 
 ## The feel
 Quiet and trustworthy, like a well-kept waiting room. Big, clear buttons that are easy to hit on a phone.

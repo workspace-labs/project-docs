@@ -36,7 +36,8 @@ how long a row is kept, and how a personal row is removed. Keep this in the same
 > the Saturday after pickup. Right, or change something?
 
 - **Columns:** propose them from the PRD. Each one must serve a "must do" line, so never add one "just in
-  case". Then walk each "must do" line and check it has every column it needs (a total per item needs a
+  case". A column the client named in the meeting counts when you can say which line uses it; otherwise
+  ask. Then walk each "must do" line and check it has every column it needs (a total per item needs a
   price, if the PRD shows money). A minimal audit sheet can instead serve the agreed Security rule;
   do not add one for a project that does not need it.
 - **Required and unique:** propose which columns must be present (including generated IDs) and which
@@ -54,6 +55,8 @@ how long a row is kept, and how a personal row is removed. Keep this in the same
   "who can see it" says who may.
 - **How long it's kept:** for a sheet with nothing personal in it (a menu), propose "as long as the project
   runs". If the person doesn't know, write `TBD` and Security will carry it.
+- **Old records:** when the meeting form says records move in from paper or an old system, ask where
+  from, how many, and who checks them after the move. Write it under **How long it's kept**, or `TBD`.
 - **Linked rows:** when a sheet points at another (`book_id`), ask what happens to its rows when the row they
   point at is removed: they go with it, or they stay. Write the answer under **How the sheets link**.
 

@@ -12,6 +12,8 @@ change it: a new record replaces it, and the old one names its successor.
 | [0005](0005-a-waiting-step-names-the-open-choice-exactly.md) | A waiting step names the open choice exactly | Accepted | 2026-11-04 |
 | [0006](0006-the-ai-never-picks-the-technology.md) | The AI never picks the technology | Accepted | 2026-11-04 |
 | [0007](0007-security-protections-are-written-not-asked.md) | Security protections are written, not asked | Accepted | 2026-11-04 |
+| [0008](0008-the-skill-covers-the-project-from-the-client-meeting-to-the-handover.md) | The skill covers the project from the client meeting to the handover | Accepted | 2026-11-13 |
+| [0009](0009-understanding-a-client-project-takes-four-meetings.md) | Understanding a client project takes four meetings, not one | Accepted | 2026-11-13 |
 
 0004–0007 record decisions already in the shipped skill. They were written down and accepted by the owner
 on 2026-11-04.

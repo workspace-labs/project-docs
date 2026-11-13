@@ -24,6 +24,8 @@ Gather first · The questions · TBD: an honest gap · The pointer line · The r
   conformance claim from a product name. Ask only when a missing fact changes the current choice; use the
   existing `TBD` process for an unresolved choice, rather than a new mandatory questionnaire. These are
   requirements for later builder/reviewer evidence, never proof that a platform or assurance check ran.
+- A filled `docs/meeting-form.md`: where it must run, links, sign-in, languages, devices, available, speed,
+  accessibility, rules and policies. These are facts about the client: never "you pick".
 
 ## The questions
 
@@ -50,9 +52,9 @@ after later. All options obey the work rules.
 - **The part is not needed** (no back end, no outside services) → write `None`, with the reason.
 
 The parts: **Screen** (what people see and tap) · **Brain** (the back end that does the work) ·
-**Data storage** · **Where it lives** (hosting) · **Outside services** (anything it talks to over the
-internet: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
-languages, speed) · **How the code is written** (language, formatting, checks, names, file size, tests).
+**Data storage** · **Where it lives** (hosting) · **Outside services** (anything outside the project it talks
+to, over the internet or the client's network: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
+languages, speed, available, accessibility) · **How the code is written** (language, formatting, checks, names, file size, tests).
 
 For each **Outside service**, use that same question to confirm what the product sends, what must come
 back, and what the user sees or can still do when the service is down or returns a failure. Keep these
@@ -73,7 +75,12 @@ Two parts are smart defaults, not questions, unless the work rules or the person
   that's it" makes them theirs, written with "(on the AI's recommendation)" like any pick left to you (the
   Speed line too), and they can change any of them.
 - **Speed:** "every page or screen opens in under 2 seconds on an ordinary phone or computer", unless the
-  PRD says more.
+  PRD or the meeting form says more.
+- **Accessibility:** "readable contrast, works with the keyboard, respects reduced motion (see DESIGN.md)",
+  unless the meeting form says more. No screens → "None: no screens".
+
+**Available** is never a default: the hours it must work and what happens when it is down are the client's
+answer. Ask, or write `TBD`. Personal project → "When the person runs it".
 
 The **Security** rule in the TRD is one line: `see docs/security.md`, plus any security rule the work sets.
 
@@ -81,10 +88,16 @@ The **Security** rule in the TRD is one line: `see docs/security.md`, plus any s
 
 Write a `TBD` line as `- TBD: <what is open>. Decided when <what will decide it>.` Keep the person's wish
 in it when they gave one ("TBD: cheap or free hosting. Decided when …"). Every TBD stays visible until it
-is picked. A Plan step that needs it cannot start. The screen and the data storage are needed by the very
-first step, so a TBD in either blocks everything: say so in the read-back, before the TRD is written:
-"Nothing can be built until this is chosen. Settle it now, or keep it open?" An open hosting blocks only
-the step that puts it online: until then it runs on the builder's computer.
+is picked. A Plan step that needs it cannot start. Say what an open choice blocks in the read-back, before
+the TRD is written:
+
+- **The screen** is needed by the very first step, so a TBD there blocks everything: "Nothing can be built
+  until this is chosen. Settle it now, or keep it open?"
+- **The data storage** blocks every step that saves or reads saved data. When the project has screens, the
+  Prototype still goes first, on made-up data kept only in the screens (see the Plan): "Only the
+  prototype can be built until this is chosen. Settle it now, or keep it open?" No screens → it blocks
+  everything that saves, like the screen.
+- **The hosting** blocks only the step that puts it online: until then it runs on the builder's computer.
 
 ## The pointer line (only on the person's yes)
 
@@ -138,6 +151,8 @@ the old one (see SKILL.md).
 - **Security:** <…>
 - **Languages:** <…>
 - **Speed:** <…>
+- **Available:** <the hours it must work, and what happens when it is down>
+- **Accessibility:** <…>
 
 ## How the code is written
 - **Language:** <…>
@@ -199,6 +214,8 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 - **الأمان:** <…>
 - **اللغات:** <…>
 - **السرعة:** <…>
+- **التوفر:** <الساعات التي يجب أن يعمل فيها، وماذا يحدث عندما يتوقف>
+- **سهولة الوصول:** <…>
 
 ## طريقة كتابة الكود
 - **اللغة:** <…>
