@@ -1,6 +1,6 @@
 # project-docs
 
-![project-docs: four client meetings (the goal, today's work, the needs, approve or stop), then seven documents (PRD, TRD, Design, Data, Security, Handover, Plan), then Build; beside it a PRD card where every must-do line has a check](media/project-docs-hero.png)
+![project-docs: four client meetings (the goal, today's work, the needs, approve or stop), then seven documents (PRD, TRD, Design, Data, Security, Handover, Plan), then Build; beside it a PRD card where every must-do line has a check](media/project-docs-hero-v2.png)
 
 **The documents your project needs, written with you before anyone builds it.**
 
