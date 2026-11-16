@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.7.0** · 145 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.7.1** · 166 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -126,6 +126,8 @@ meeting form and all seven documents for a made-up clinic booking website, and
 [`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the documents in Arabic.
 [`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing and one
 student builds it for themselves, so it has no data document, no handover and no delivery steps, and its security page is short, with "None" wherever nothing applies.
+[`notes-digest/`](skills/project-docs/examples/notes-digest/) shows a small product that uses an AI model: what the AI
+may decide alone, what a person approves, what happens when it is wrong, the examples it is checked by, and what the model costs each month.
 
 To see the look preview without an agent, copy
 [`skills/project-docs/assets/preview/`](skills/project-docs/assets/preview/) somewhere, put an example's

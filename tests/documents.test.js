@@ -81,13 +81,13 @@ const LANGS = {
 
 // reference file → the examples written from it, per language
 const DOCUMENTS = [
-  { reference: 'prd.md', en: ['cedar-clinic/docs/prd.md', 'study-timer/docs/prd.md'], ar: ['cedar-clinic-ar/docs/prd.md'] },
-  { reference: 'trd.md', en: ['cedar-clinic/docs/trd.md', 'study-timer/docs/trd.md'], ar: ['cedar-clinic-ar/docs/trd.md'] },
+  { reference: 'prd.md', en: ['cedar-clinic/docs/prd.md', 'study-timer/docs/prd.md', 'notes-digest/docs/prd.md'], ar: ['cedar-clinic-ar/docs/prd.md'] },
+  { reference: 'trd.md', en: ['cedar-clinic/docs/trd.md', 'study-timer/docs/trd.md', 'notes-digest/docs/trd.md'], ar: ['cedar-clinic-ar/docs/trd.md'] },
   { reference: 'design.md', en: ['cedar-clinic/DESIGN.md'], ar: ['cedar-clinic-ar/DESIGN.md'] },
   { reference: 'data.md', en: ['cedar-clinic/docs/data.md'], ar: ['cedar-clinic-ar/docs/data.md'] },
-  { reference: 'security.md', en: ['cedar-clinic/docs/security.md', 'study-timer/docs/security.md'], ar: ['cedar-clinic-ar/docs/security.md'] },
+  { reference: 'security.md', en: ['cedar-clinic/docs/security.md', 'study-timer/docs/security.md', 'notes-digest/docs/security.md'], ar: ['cedar-clinic-ar/docs/security.md'] },
   { reference: 'handover.md', en: ['cedar-clinic/docs/handover.md'], ar: ['cedar-clinic-ar/docs/handover.md'] },
-  { reference: 'plan.md', en: ['cedar-clinic/docs/plan.md', 'study-timer/docs/plan.md'], ar: ['cedar-clinic-ar/docs/plan.md'] },
+  { reference: 'plan.md', en: ['cedar-clinic/docs/plan.md', 'study-timer/docs/plan.md', 'notes-digest/docs/plan.md'], ar: ['cedar-clinic-ar/docs/plan.md'] },
 ];
 
 // Each example project, checked as a whole. A "showcase" project must show every feature (a TBD, a blocked
@@ -96,6 +96,7 @@ const PROJECTS = [
   { folder: 'cedar-clinic', lang: 'en', showcase: true, staffProviderIdentity: true, network: true, audit: true },
   { folder: 'cedar-clinic-ar', lang: 'ar', showcase: true, staffProviderIdentity: true, network: true, audit: true },
   { folder: 'study-timer', lang: 'en', showcase: false },
+  { folder: 'notes-digest', lang: 'en', showcase: false, network: true },
 ];
 
 // Git's default Windows checkout uses CRLF. Markdown has the same meaning with either line ending.
@@ -915,7 +916,11 @@ function costProblems(costs, c) {
   const number = (s) => Number(s.replace(/,/g, ''));
   const sums = (text, pattern) => {
     const by = {};
-    for (const m of text.matchAll(pattern)) by[c.cadence[m[3]]] = (by[c.cadence[m[3]]] || 0) + number(m[1]);
+    // Added up per currency and cadence: 4 USD a month is not 4 AED a month.
+    for (const m of text.matchAll(pattern)) {
+      const key = `${m[2]} a ${c.cadence[m[3]]}`;
+      by[key] = (by[key] || 0) + number(m[1]);
+    }
     return by;
   };
   const parts = lines.filter((l) => !isTotal(l));
@@ -927,8 +932,8 @@ function costProblems(costs, c) {
   }
   const given = sums(parts.join('\n'), c.amount);
   const total = sums(lines.filter(isTotal).join('\n'), c.bare);
-  for (const cadence of ['month', 'year']) {
-    if ((given[cadence] || 0) !== (total[cadence] || 0)) problems.push(`the ${c.label} line says ${total[cadence] || 0} a ${cadence}, the parts add up to ${given[cadence] || 0}`);
+  for (const key of [...new Set([...Object.keys(given), ...Object.keys(total)])].sort()) {
+    if ((given[key] || 0) !== (total[key] || 0)) problems.push(`the ${c.label} line says ${total[key] || 0} ${key}, the parts add up to ${given[key] || 0} ${key}`);
   }
   return problems;
 }
@@ -947,7 +952,7 @@ test('a bill the client already pays stays in the running cost, with its amount,
   assert.ok(!trd.includes('is written as that, with no amount. A price'), 'an already-paid part is no longer written with no amount');
 
   // The examples: the clinic's existing subscription and its yearly bill are counted; the timer pays nothing.
-  for (const [folder, c] of [['cedar-clinic', COST.en], ['study-timer', COST.en], ['cedar-clinic-ar', COST.ar]]) {
+  for (const [folder, c] of [['cedar-clinic', COST.en], ['study-timer', COST.en], ['notes-digest', COST.en], ['cedar-clinic-ar', COST.ar]]) {
     assert.deepStrictEqual(costProblems(section(read(`${folder}/docs/trd.md`), c.heading), c), [], `${folder}: every amount has its source and the total adds up`);
   }
   for (const [folder, c, subscription] of [['cedar-clinic', COST.en, 'Microsoft 365'], ['cedar-clinic-ar', COST.ar, 'Microsoft 365']]) {
@@ -1346,6 +1351,118 @@ test('the AI part today is "no AI", five lines, or a named open choice: a bare r
   assert.ok(aiProblems(`${timer.trimEnd()}\n${AI_REOPEN.en.noneToTbd}\n`, AI.en, LANGS.en).length > 0, 'the Study Timer with "no AI" reopened by a bare TBD');
 });
 
+// 0.7.1: Notes Digest, the example whose product uses an AI model. Its documents must agree with each other:
+// the model is one outside service, the AI part has its five lines, the model's bill is in the running cost,
+// and the Plan runs the examples and tries a wrong answer where the reference says.
+// The Model line names a model: the words before its first comma, and those same words name the outside service.
+function modelProblems(trd) {
+  const model = ((section(trd, AI.en.heading).match(/^- \*\*Model:\*\* ([^,]+),/m) || [])[1] || '').trim();
+  const name = model.split(' from ')[0];
+  if (!model || /^(the|a|an) /i.test(model)) return [`the Model line describes a model without naming it: "${model}"`];
+  const services = section(trd, 'Outside services').split('\n').filter((l) => l.startsWith('- '));
+  return services.some((l) => l.startsWith(`- ${name}, `) || l.startsWith(`- ${name}: `)) ? [] : [`no Outside services line is named "${name}"`];
+}
+
+// The Plan's AI checks, where the Plan guide puts them: the step that first connects the model tries the
+// service failure; the step that first builds the AI part runs the kept examples and tries a wrong answer;
+// every later step that covers the AI part runs the examples again and compares everything they hold.
+function aiPlanProblems(steps) {
+  const problems = [];
+  const title = (step) => step.split('\n')[0];
+  const covers = (step, what) => ((step.match(/^- \*\*Covers:\*\* (.+)$/m) || [])[1] || '').split(', ').includes(what);
+  const ai = steps.filter((s) => covers(s, 'TRD: AI part'));
+  if (!ai.length) return ['no step covers the AI part'];
+  const first = ai[0];
+  if (!covers(first, 'TRD: Outside services')) problems.push(`"${title(first)}" first uses the model but does not cover its Outside services line`);
+  if (!first.includes('(TRD: Outside services)') || !/unavailable/.test(first)) problems.push(`"${title(first)}" connects the model but does not try the service being unavailable`);
+  if (!first.includes('(TRD: Checked by)')) problems.push(`"${title(first)}" first builds the AI part but does not run the kept examples`);
+  if (!first.includes('(TRD: When it is wrong)')) problems.push(`"${title(first)}" first lets the AI act but does not try a wrong answer`);
+  for (const step of ai.slice(1)) {
+    if (!step.includes('(TRD: Checked by)')) problems.push(`"${title(step)}" changes the AI part but does not run the kept examples again`);
+    else if (!/compare both the summaries and the actions/.test(step)) problems.push(`"${title(step)}" reruns the examples but does not compare everything they hold`);
+  }
+  return problems;
+}
+
+test('the Notes Digest example shows a product that uses AI, and its documents agree', () => {
+  const L = LANGS.en;
+  const doc = (name) => read(`notes-digest/docs/${name}`);
+  const trd = doc('trd.md');
+  const ai = section(trd, AI.en.heading);
+  assert.doesNotMatch(ai, AI.en.none, 'this example uses AI');
+  assert.deepStrictEqual(aiProblems(ai, AI.en, L), []);
+  const line = (label) => ai.split('\n').find((l) => l.startsWith(`- **${label}:** `)) || '';
+  assert.deepStrictEqual(AI.en.labels.filter((label) => !line(label)), [], 'all five lines are answered, none left open');
+  assert.deepStrictEqual(openTbds(trd, L), [], 'nothing in this TRD is open');
+
+  // A hosted model is one outside service, with what is sent, what comes back and what happens when it is down;
+  // the Model line points there instead of repeating it.
+  const services = section(trd, 'Outside services').split('\n').filter((l) => l.startsWith('- '));
+  assert.strictEqual(services.length, 1, 'the model is the only outside service');
+  for (const word of ['sends ', 'expects ', 'if unavailable', ', because ']) assert.ok(services[0].includes(word), `the service line says "${word.trim()}"`);
+  assert.ok(line('Model').includes('Outside services'), 'the Model line points at the Outside services line');
+  // Which model is a locked choice: the Model line names it, and the same name is the outside service.
+  assert.deepStrictEqual(modelProblems(trd), []);
+  const [model, provider] = ['Quill 2', 'Harborline'];
+  assert.ok(line('Model').startsWith(`- **Model:** ${model} from ${provider},`), 'the Model line begins with the model and its provider');
+  assert.ok(services[0].startsWith(`- ${model}, `) && services[0].includes(provider) && services[0].includes('made-up names'), 'the service line names the same model and provider, and says the names are made up');
+  const original = trd.replace(line('Model'), '- **Model:** the hosted language model named under Outside services, running on its provider\'s servers, because the team lead already has an account there.');
+  assert.ok(modelProblems(original).length > 0, 'caught: a model described but never named');
+  assert.ok(modelProblems(trd.replace(services[0], services[0].replace(`${model}, `, 'A model, '))).length > 0, 'caught: the Model line naming a model the service line does not');
+  assert.ok(!/\bsends\b/.test(ai), 'what is sent is not repeated in the AI part');
+  // The client's answers: something it does alone, something a person approves, and how the examples are kept and rerun.
+  assert.ok(!/^- \*\*Decides alone:\*\* Nothing/m.test(ai) && !/^- \*\*A person approves:\*\* Nothing/m.test(ai), 'both authority lines hold a real answer');
+  for (const word of ['kept by', 'after any change of the model or its instructions']) assert.ok(line('Checked by').includes(word), `Checked by says "${word}"`);
+  assert.doesNotMatch(ai, /\d\s?%/, 'no accuracy figure');
+
+  // A model charged by use is a running cost, with the person's amount and its source.
+  const costs = section(trd, COST.en.heading);
+  assert.deepStrictEqual(costProblems(costs, COST.en), []);
+  assert.strictEqual([...costs.matchAll(COST.en.amount)].length, 1, 'one sourced amount');
+  assert.ok(/language model: about .+ a month \(from /.test(costs) && costs.includes('charged by use'), 'the model is the paid part, charged by use');
+
+  // Security names the same service and what it receives; the key is a secret; the connection is protected.
+  const security = doc('security.md');
+  assert.ok(section(security, 'Outside services').startsWith(`- ${model}, `) && section(security, 'Outside services').includes('language model: receives'), 'Security names the same model and what it receives');
+  assert.ok(section(security, 'Secrets').includes('never in the code and never in git'));
+  // The PRD tells the user the answer came from AI, and the Plan carries the AI checks where the reference puts them.
+  assert.match(section(doc('prd.md'), L.s.must), /^- \*\*M\d+\.\*\* .*written by AI/m, 'a must-do line says the user is told it came from AI');
+  const steps = section(doc('plan.md'), L.s.steps).split('\n### ').slice(1);
+  const usesAi = steps.filter((s) => s.includes('TRD: AI part'));
+  assert.ok(usesAi.length >= 2 && usesAi[0] === steps[0], 'the first step builds the AI part');
+  // Each check sits in the step that first needs it, and a changed instruction reruns both outputs.
+  assert.deepStrictEqual(aiPlanProblems(steps), []);
+  assert.ok(steps.some((s) => s.includes('Security: How it\'s protected') && s.includes('ignore your instructions')), 'a step runs notes that try to steer the model');
+  const plan = doc('plan.md');
+  const stepsOf = (text) => section(text, L.s.steps).split('\n### ').slice(1);
+  const wrongAnswer = ' Read one digest against its notes and correct a wrong summary line before copying it (TRD: When it is wrong).';
+  const failure = ' Run it with the network off; one line says the service is unavailable and nothing else is printed (TRD: Outside services).';
+  for (const piece of [wrongAnswer, failure]) assert.strictEqual(plan.split(piece).length, 2, 'the sentence is in the plan once');
+  const lastCheck = 'with its first line saying it was written by AI.';
+  const misplaced = [
+    ['the wrong-answer try moved to the last step', plan.replace(wrongAnswer, '').replace(lastCheck, `${lastCheck}${wrongAnswer}`)],
+    ['the wrong-answer try left out of the first step', plan.replace(wrongAnswer, '')],
+    ['the service failure tried only in the last step', plan.replace(failure, '').replace(lastCheck, `${lastCheck}${failure}`)],
+    ['the kept examples not run when the AI is first built', plan.replace(' Run the ten kept notes files (TRD: Checked by) and compare each summary with the one the team lead accepts.', '')],
+    ['the rerun comparing only the actions', plan.replace('compare both the summaries and the actions with the accepted ones', 'compare the actions with the accepted ones')],
+    ['the rerun left out after the instructions changed', plan.replace(' The instructions changed, so run the ten kept notes files again (TRD: Checked by) and compare both the summaries and the actions with the accepted ones.', '')],
+  ];
+  for (const [what, text] of misplaced) {
+    assert.notStrictEqual(text, plan, `the changed plan really differs: ${what}`);
+    assert.ok(aiPlanProblems(stepsOf(text)).length > 0, `caught: ${what}`);
+  }
+
+  // Each of these is caught when the example loses it.
+  const without = (label) => ai.split('\n').filter((l) => !l.startsWith(`- **${label}:** `)).join('\n');
+  for (const label of AI.en.labels) assert.ok(aiProblems(without(label), AI.en, L).length > 0, `caught: the example without ${label}`);
+  assert.ok(costProblems(costs.replace(/ \(from [^)]+\)/, ''), COST.en).length > 0, 'caught: the amount without its source');
+  assert.ok(costProblems(costs.replace('about 4 USD a month, paid', 'nothing, paid'), COST.en).length > 0, 'caught: the model left out of the total');
+  assert.ok(costProblems(costs.replace('about 4 USD a month (from', 'about 4 AED a month (from'), COST.en).length > 0, 'caught: the part in one currency and the total in another');
+  // What is sent to the model is said once in the TRD and Security repeats it, not something else.
+  const sent = 'the text of the one notes file and the instructions';
+  assert.ok(services[0].includes(`sends ${sent}`) && section(security, 'Outside services').includes(`receives ${sent}`), 'the TRD and Security agree on what the model is given');
+});
+
 // The clinic's release step (step 10), as its two lines.
 function stepLines(plan, number, L) {
   const step = section(plan, L.s.steps).split('\n### ').slice(1).find((s) => new RegExp(`^\\S+ ${number}: `).test(s)) || '';
@@ -1432,7 +1549,7 @@ test('an approved TRD written before the Kept in line is found incomplete, and i
   assert.match(before.split('\n')[1], /^> v1 · Approved 2026-10-08$/, 'the fixture is a real approved 0.4.0 document');
   assert.deepStrictEqual(trdUpgradeGaps(before, L), ['AI part', 'Each month', 'Kept in'], 'it lacks the Kept in line, since 0.6.0 the running cost, and since 0.7.0 the AI part');
   assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['AI part', 'Each month', 'Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
-  for (const folder of ['cedar-clinic', 'study-timer']) assert.deepStrictEqual(trdUpgradeGaps(read(`${folder}/docs/trd.md`), L), [], `${folder} is complete`);
+  for (const folder of ['cedar-clinic', 'study-timer', 'notes-digest']) assert.deepStrictEqual(trdUpgradeGaps(read(`${folder}/docs/trd.md`), L), [], `${folder} is complete`);
   assert.deepStrictEqual(trdUpgradeGaps(read('cedar-clinic-ar/docs/trd.md'), LANGS.ar), [], 'the Arabic clinic is complete');
   assert.deepStrictEqual(upgradeProblems(before, after, L), [], 'the Study Timer example is the completed counterpart');
   const wrong = [

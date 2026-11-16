@@ -1,5 +1,18 @@
 # How project-docs was tested
 
+## 0.7.1: an example that uses AI, 2026-11-16
+
+Verified: **2026-11-16 · version 0.7.1 · 166 automated tests passed** on macOS, with
+`node tools/font-ranges.js --check`. The new example, Notes Digest, is checked by the same tests as the
+other examples and by one of its own, which makes its four documents agree with each other. The upload
+zip was rebuilt: one `project-docs/` root, 87 entries (69 files and 18 folders). Not rerun: the preview
+page (unchanged), Windows, and a blind dry run with a fresh agent. The example's amounts and its ten
+"kept notes files" are made up; no such files exist in the repository, and the model and provider
+names are made up too. After an independent review the example names its model, and its Plan tries the
+service failure and a wrong answer in the first step that needs them; the test gained checks for a
+model that is only described, for six misplaced or partial Plan checks, for a currency mismatch, and
+for the TRD and Security disagreeing on what is sent.
+
 ## 0.7.0: the AI part, 2026-11-16
 
 Verified: **2026-11-16 · version 0.7.0 · 143 automated tests passed** on macOS, with

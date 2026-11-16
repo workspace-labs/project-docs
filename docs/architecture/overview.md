@@ -24,7 +24,7 @@ skills/project-docs/               the installed skill: copied or zipped exactly
   references/engineering-handoff.md   optional approved-input summary for a separate builder
   assets/preview/                  the look preview page: preview.html, render.js, check.js,
                                    preview.css, fonts/
-  examples/                        cedar-clinic, cedar-clinic-ar, study-timer
+  examples/                        cedar-clinic, cedar-clinic-ar, study-timer, notes-digest
 tests/                             node --test: documents, preview, font ranges, line endings, reference integrity;
                                    behavioral-cases.md: separate real-agent exercise contracts
 tools/                             builder-only helpers: font-ranges.js, shot-mac.sh/.swift

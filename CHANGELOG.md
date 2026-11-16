@@ -2,6 +2,40 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.7.1] - 2026-11-16
+
+0.7.0 shipped the AI part with no example of a product that uses AI. This release adds one.
+
+### Added
+
+- **A fourth example, `notes-digest/`:** a small terminal tool for one team lead that turns a file of
+  meeting notes into a short summary and an action list, using a hosted language model whose name and
+  provider are made up for the example (Quill 2, from Harborline). It has four
+  documents (PRD, TRD, Security, Plan) and, like the Study Timer, no screens, nothing saved and nobody to
+  hand it to. It shows:
+  - the AI part with its five lines answered, the Model line pointing at the model's Outside services
+    line instead of repeating what is sent;
+  - the model as a paid part charged by use, with a made-up amount and its source, in the Running cost;
+  - a PRD line that tells the user the digest was written by AI;
+  - the Plan trying the service failure, running the kept examples and trying a wrong answer in the step
+    that first connects and builds the AI, and comparing every kept output again in the step that
+    changes its instructions;
+  - a Security line and a Plan step for notes that try to steer the model.
+- The skill's Files table and the README name the new example.
+
+### Changed
+
+- Nothing in the references. No heading, fixed line or rule changed.
+
+### Verification
+
+- macOS, 2026-11-16: `node --test`, 166 tests pass (145 before: one new test for the example, and the
+  twenty checks every example gets). The new test also removes each of the five AI lines, the amount's
+  source and the model from the total, and each is refused. It refuses a model that is described but
+  not named, an AI check placed in a later step than the one that first needs it, and a rerun that
+  compares only part of the kept outputs. The cost check now adds up each currency by itself. `node tools/font-ranges.js --check` passes.
+  The preview page is unchanged and was not rerun.
+
 ## [0.7.0] - 2026-11-16
 
 More and more projects have an AI model inside them. The TRD listed AI only as one more outside service,
