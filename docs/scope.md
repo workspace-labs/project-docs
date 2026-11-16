@@ -10,6 +10,8 @@
      others), how the work runs today and with it, what it must do (each with a check), what it will NOT do, what
      comes later, assumptions and risks, how we know it worked, dates and budget.
   2. **TRD** (`docs/trd.md`): what it is built with (screen, brain, data storage, where it lives, outside services),
+     its AI part when the product uses an AI model (what it may decide alone, what a person approves, what
+     happens when it is wrong, how it is checked),
      what it costs to run and who pays (the person's amounts, never a price the AI supplies),
      the rules it must follow, how the code is written, and the reason for each choice.
   3. *(Offers the frameflow skill for the screens, once.)*

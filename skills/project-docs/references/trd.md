@@ -53,7 +53,7 @@ after later. All options obey the work rules.
 
 The parts: **Screen** (what people see and tap) · **Brain** (the back end that does the work) ·
 **Data storage** · **Where it lives** (hosting) · **Outside services** (anything outside the project it talks
-to, over the internet or the client's network: logins, payments, maps, messages, AI) · **Running cost** (what is paid to
+to, over the internet or the client's network: logins, payments, maps, messages, AI) · **AI part** (only when the product itself uses an AI model) · **Running cost** (what is paid to
 keep it running, and who pays) · **Rules it must follow** (online or offline, security,
 languages, speed, available, accessibility) · **How the code is written** (language, formatting, checks, names, file size, tests, where the code is kept).
 
@@ -69,9 +69,26 @@ the Speed line): they change which options fit the other parts. Write the docume
 Prices, free plans and limits of hosting and services change often and you cannot look them up: say so,
 and tell the person to check them on the provider's site before they sign up.
 
+**AI part:** only when the product itself uses an AI model, to answer, draft, sort, recommend or act. The
+AI tool that helps build the project is not this part. No model → one line, `None: it uses no AI`, and
+ask nothing more. Otherwise write its five lines:
+
+- **Model** is a technology choice like any other: the person picks from the options, or it is `TBD`. Say
+  where it runs. A model reached over the internet is an outside service too: what is sent to it, what
+  must come back and what happens when it is down stay on its **Outside services** line, never repeated
+  here. A model that runs on the project's own computer sends nothing outside: say so.
+- **Decides alone** and **A person approves** are never a default and never "you pick": how far the AI may
+  go without a person is the client's responsibility. Go through the PRD's `M` lines the AI takes part in
+  and ask, for each, whether it acts alone or a person approves first, and who that person is.
+- **When it is wrong:** ask how a wrong answer is noticed, who corrects it, and what the user is told (that
+  an answer came from AI, how to report a wrong one). Never promise that it will not be wrong.
+- **Checked by:** ask for the examples it must get right (real questions with the answer the client
+  accepts), who keeps them, and when they are run again: before go-live, and after any change of the
+  model or its instructions. Never write an accuracy figure the person did not give.
+
 **Running cost** is never a default and never a guess. Once the other parts are chosen, list every part
 somebody pays for to keep the project running (hosting, a database service, a domain name, each paid
-outside service, a store or licence fee) and ask the person what each one costs, what makes it grow (more
+outside service, an AI model charged by use, a store or licence fee) and ask the person what each one costs, what makes it grow (more
 users, more messages, more storage, or "fixed"), and who pays. Write only an amount the person gave, with
 where it came from; never a price from your own memory. Who pays is a fact about the client: never "you
 pick".
@@ -126,6 +143,7 @@ the TRD is written:
 - **The hosting** blocks only the step that puts it online: until then it runs on the builder's computer.
 - **Where the code is kept** blocks only the step that releases it or hands it over: until then it is
   built on the builder's computer.
+- **The AI part** blocks only the steps that build or use it: the rest of the product can be built.
 - **A running cost** blocks only the step that starts paying for it (putting it online, or signing up for
   the service): everything before that step can be built.
 
@@ -178,6 +196,13 @@ the old one (see SKILL.md).
 ## Outside services
 - <service: what it is for; sends …; expects …; if unavailable …>, because <reason>.
 
+## AI part
+- **Model:** <which model, and where it runs>, because <reason>.
+- **Decides alone:** <what it may do with no person checking / Nothing: a person approves everything>
+- **A person approves:** <what waits for a person, and who approves it / Nothing: see Decides alone>
+- **When it is wrong:** <how a wrong answer is noticed, who corrects it, what the user is told>
+- **Checked by:** <the examples it must get right, who keeps them, and when they are run again>
+
 ## Running cost
 - <each paid part: what it is, about <amount> a month or a year (from <where the price came from>), and what makes it grow, or "fixed">
 - **Each month:** <about <the monthly amounts added up> a month, plus <the yearly amounts added up> a year, paid by <who>; not counted: <each part with no amount yet> / None: nothing is paid for, because <reason>>
@@ -215,6 +240,25 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 يستطيع فعله عند تعطّل الخدمة أو فشل الرد. تبقى هذه التفاصيل في سطر الخدمة الحالي، ويعيد الأمان
 استخدام ما تستقبله. لا تخترع إعادة محاولة أو خدمة بديلة أو بيانات محفوظة جديدة. القرار المفتوح يتبع
 «لم يُحسم بعد» ويعطّل العمل الذي يحتاجه فقط. دون خدمة خارجية، أبقِ «لا شيء» ولا تسأل عن تعطّلها.
+
+**جزء الذكاء الاصطناعي:** فقط عندما يستخدم المنتج نفسه نموذج ذكاء اصطناعي ليجيب أو يصوغ أو يصنّف أو
+يوصي أو يتصرف. أداة الذكاء الاصطناعي التي تساعد في بناء المشروع ليست هذا الجزء. إن لم يوجد نموذج
+فاكتب سطرًا واحدًا «لا شيء: لا يستخدم الذكاء الاصطناعي» ولا تسأل أكثر. وإلا فاكتب أسطره الخمسة:
+
+- **النموذج** اختيار تقني كغيره: يختاره الشخص من الخيارات، أو يبقى «لم يُحسم بعد». اذكر أين يعمل.
+  النموذج الذي يُوصل إليه عبر الإنترنت خدمة خارجية أيضًا: ما يُرسل إليه وما يجب أن يعود به وما يحدث عند
+  تعطّله يبقى في سطره تحت **الخدمات الخارجية** ولا يُكرَّر هنا. والنموذج الذي يعمل على حاسوب المشروع نفسه
+  لا يرسل شيئًا إلى الخارج: اذكر ذلك.
+- **يقرر وحده** و**يعتمده إنسان** ليسا خيارًا افتراضيًا ولا «اختر أنت»: مدى تصرف الذكاء الاصطناعي دون إنسان
+  مسؤولية العميل. مرّ على أسطر `M` في PRD التي يشارك فيها الذكاء الاصطناعي، واسأل عن كل سطر: هل يتصرف
+  وحده أم يعتمده إنسان أولًا، ومن هو ذلك الإنسان.
+- **عند الخطأ:** اسأل كيف يُلاحَظ الجواب الخاطئ، ومن يصحّحه، وماذا يُقال للمستخدم (أن الجواب من الذكاء
+  الاصطناعي، وكيف يبلّغ عن جواب خاطئ). ولا تعد بأنه لن يخطئ.
+- **يُفحص بـ:** اسأل عن الأمثلة التي يجب أن يجيب عنها صحيحًا (أسئلة حقيقية مع الجواب الذي يقبله العميل)،
+  ومن يحتفظ بها، ومتى تُعاد: قبل الإطلاق، وبعد أي تغيير في النموذج أو تعليماته. ولا تكتب نسبة دقة لم
+  يذكرها الشخص.
+
+القرار المفتوح هنا يعطّل فقط الخطوات التي تبني هذا الجزء أو تستخدمه.
 
 **تكلفة التشغيل** ليست خيارًا افتراضيًا ولا تخمينًا: بعد اختيار الأجزاء الأخرى، اذكر كل جزء يُدفع مقابله
 ليبقى المشروع يعمل (الاستضافة، خدمة قاعدة بيانات، اسم النطاق، كل خدمة خارجية مدفوعة، رسوم متجر أو
@@ -265,6 +309,13 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 
 ## الخدمات الخارجية
 - <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …>، لأن <السبب>.
+
+## جزء الذكاء الاصطناعي
+- **النموذج:** <أي نموذج، وأين يعمل>، لأن <السبب>.
+- **يقرر وحده:** <ما يفعله دون مراجعة إنسان / لا شيء: يعتمد إنسان كل شيء>
+- **يعتمده إنسان:** <ما ينتظر إنسانًا، ومن يعتمده / لا شيء: انظر يقرر وحده>
+- **عند الخطأ:** <كيف يُلاحَظ الجواب الخاطئ، ومن يصحّحه، وماذا يُقال للمستخدم>
+- **يُفحص بـ:** <الأمثلة التي يجب أن يجيب عنها صحيحًا، ومن يحتفظ بها، ومتى تُعاد>
 
 ## تكلفة التشغيل
 - <كل جزء مدفوع: ما هو، نحو <المبلغ> في الشهر أو السنة (من <مصدر السعر>)، وما الذي يزيده، أو «ثابت»>

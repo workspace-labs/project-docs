@@ -51,6 +51,10 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
     create `docs/privacy.md` or block unrelated work while that text is awaited.
   - An outside service is used: the step that connects it tries the agreed expected response and
     failure behavior from the TRD. A Security threat or audit rule gets its corresponding check there.
+  - An AI model is used (the TRD's **AI part** is not `None`): the step that first builds it runs the
+    examples named under **Checked by** and shows the result, and any later step that changes the model
+    or its instructions runs them again. The step that lets it act alone tries what **When it is wrong**
+    says.
   A tiny offline project with no saved data gets no restore, service, notice or deployment check merely
   because these examples exist. These are proposed checks; actual run results come from the builder or
   reviewer, and only the person marks them checked.
@@ -180,6 +184,9 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
   المستقل في انتظار النص.
 - يستخدم خدمة خارجية: تفحص الخطوة التي تربطها الرد المتوقع والتصرف عند الفشل كما في TRD؛ وتفحص
   أيضًا قاعدة التهديد أو سجل التدقيق ذات الصلة في الأمان.
+- يستخدم نموذج ذكاء اصطناعي (**جزء الذكاء الاصطناعي** في TRD ليس «لا شيء»): تشغّل الخطوة التي تبنيه أول
+  مرة الأمثلة المذكورة تحت **يُفحص بـ** وتعرض النتيجة، وتعيدها أي خطوة لاحقة تغيّر النموذج أو تعليماته.
+  والخطوة التي تسمح له بالتصرف وحده تجرّب ما يقوله سطر **عند الخطأ**.
 لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
 هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
 

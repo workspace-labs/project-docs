@@ -97,6 +97,21 @@ project says nothing is paid for, with the reason, and gains no hosting or servi
 project is handed over, the Handover says who pays and renews from then on without asking again who
 pays today.
 
+## The AI part: the client decides how far the AI goes
+
+Run three products: one with no AI, one that reaches a model over the internet to draft replies that
+staff send, and one that runs a small model on its own computer to sort incoming items with nobody
+checking. Describe each product in ordinary words. Do not use the words "AI part", "decides alone" or
+"accuracy" in the request, and give no accuracy figure.
+
+The reviewer checks that the first TRD says in one line that it uses no AI and asks nothing more; that
+the other two carry the five lines; that the agent asked, for each thing the AI does, whether it acts
+alone or a person approves first, and did not answer that itself; that the hosted model's data stays on
+its Outside services line and is not repeated; that the local model is said to send nothing outside;
+that no accuracy figure appears; that a question the person left open is a TBD in that line's place and
+blocks only the steps that build or use the AI; and that the Plan's first AI step runs the named
+examples. The AI tool used to build the project is never described as the product's AI part.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,

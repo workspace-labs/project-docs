@@ -984,6 +984,368 @@ test('a bill the client already pays stays in the running cost, with its amount,
   assert.deepStrictEqual(costProblems(unknown, COST.en), [], 'the open bill is named, not priced');
 });
 
+// 0.7.0: the AI part. A product that uses an AI model says which model, what it may decide alone, what a
+// person approves, what happens when it is wrong and how it is checked; a product with no AI says so in
+// one line. This checks the shape; it cannot know whether the answers are the client's.
+// `stillNone` is the reference's own sentence for a product with no AI, with or without its "None:" opening.
+// The word "None"/"لا شيء" alone is not enough: in Arabic the two authority lines may begin with the same
+// two words to say that nothing is done alone, or nothing waits for a person.
+const AI = {
+  en: { heading: 'AI part', none: /^- None: \S/, stillNone: /^(None: )?it uses no AI\b/, noLine: 'no line', source: '(from ', labels: ['Model', 'Decides alone', 'A person approves', 'When it is wrong', 'Checked by'] },
+  ar: { heading: 'جزء الذكاء الاصطناعي', none: /^- لا شيء: \S/, stillNone: /^(لا شيء: )?لا يستخدم الذكاء الاصطناعي/, noLine: 'لا سطر', source: '(من ', labels: ['النموذج', 'يقرر وحده', 'يعتمده إنسان', 'عند الخطأ', 'يُفحص بـ'] },
+};
+
+// The AI part as it stands today, read through its history like every locked choice (decision record 0004).
+// Each top-level line is a record with the Changed lines beneath it; collapsed historical records are left
+// out. A Changed line "no line → …" only says how the line came to be; any other Changed line replaces the
+// line's value with its target. Today the part is exactly one of:
+//   - "no AI": one None line (or one named choice settled to "no AI"), and nothing else;
+//   - undecided: one named open choice, and nothing else;
+//   - uses AI: the five lines, each answered or with a named choice standing in its place.
+// A value that is the bare TBD word is none of these, whether it was written that way or reached through a
+// Changed line: reopening keeps the old record collapsed and puts a named TBD in its place (SKILL.md).
+function aiProblems(ai, A, L) {
+  const nfc = (s) => s.normalize('NFC');
+  const records = [];
+  const problems = [];
+  for (const line of ai.replace(/<details data-project-docs-history>[\s\S]*?<\/details>/g, '').split('\n')) {
+    if (line.startsWith('- ')) records.push({ line, history: [] });
+    else if (line.startsWith('  - ') && records.length) records[records.length - 1].history.push(line);
+  }
+  if (!records.length) return ['the AI part is empty'];
+  const isTbd = (value) => nfc(value.trim().replace(/\.$/, '')) === nfc(L.tbdToken);
+  const isNone = (value) => A.stillNone.test(nfc(value.trim()));
+  // The value a record holds today: its last replacing Changed target, or null when the line stands as written.
+  const latest = (record) => {
+    for (const h of record.history) if (!L.change.test(h)) problems.push(`a history line that is not in the fixed form: ${h.trim()}`);
+    const changes = record.history.map((h) => h.match(L.change)).filter((c) => c && nfc(c[1].trim()) !== nfc(A.noLine));
+    return changes.length ? changes[changes.length - 1][2].trim() : null;
+  };
+  const state = records.map((record) => {
+    const now = latest(record);
+    const labelled = record.line.match(/^- \*\*(.+?):\*\* (\S.*)$/);
+    if (A.none.test(record.line)) {
+      if (now === null || isNone(now)) return { kind: 'none' };
+      // Reopened with a bare TBD: neither "no AI" nor a model, and no named choice to wait for.
+      return isTbd(now) ? { kind: 'unfinished', what: 'the "no AI" line' } : { kind: 'replaced' };
+    }
+    // A named TBD line, as the reference writes it: open, settled or reopened through its Changed lines.
+    if (L.tbdName.test(record.line)) return now !== null && isNone(now) ? { kind: 'none' } : { kind: 'choice', open: now === null || isTbd(now) };
+    if (labelled) {
+      const value = now === null ? labelled[2] : now;
+      if (isTbd(value)) return { kind: 'unfinished', what: labelled[1], label: labelled[1] };
+      return { kind: 'label', label: labelled[1], turnedNone: now !== null && isNone(now) };
+    }
+    return { kind: 'other', line: record.line };
+  });
+  for (const s of state) {
+    if (s.kind === 'unfinished') problems.push(`${s.what}: a bare TBD names no open choice and nothing that will decide it`);
+    if (s.kind === 'other') problems.push(`not a line of the AI part: ${s.line}`);
+  }
+  const live = state.filter((s) => s.kind !== 'replaced');
+  if (live.some((s) => s.kind === 'none')) {
+    if (live.length > 1) problems.push('a product with no AI has one line there and nothing else');
+    return problems;
+  }
+  // Whether the product uses AI at all is still open: one named choice, alone.
+  if (live.length === 1 && live[0].kind === 'choice' && live[0].open) return problems;
+  const labels = state.filter((s) => s.kind === 'label' || (s.kind === 'unfinished' && s.label));
+  for (const { label, turnedNone } of labels) {
+    if (!A.labels.includes(label)) problems.push(`not a line of the AI part: ${label}`);
+    if (turnedNone) problems.push(`${label}: one line says "no AI" while the others stand`);
+  }
+  for (const label of A.labels) if (labels.filter((s) => s.label === label).length > 1) problems.push(`written twice: ${label}`);
+  // A line still open, or opened and later settled, is a named choice in its place; anything else missing is a gap.
+  const missing = A.labels.filter((label) => !labels.some((s) => s.label === label));
+  if (missing.length > state.filter((s) => s.kind === 'choice').length) problems.push(`missing, with no choice in its place: ${missing.join(', ')}`);
+  // An accuracy figure is the person's, with where it came from, like a price.
+  for (const { line, history } of records) for (const text of [line, ...history]) if (/\d\s?[%٪]/.test(text) && !text.includes(A.source)) problems.push(`an accuracy figure with no source: ${text}`);
+  return problems;
+}
+
+test('the TRD has an AI part: five lines when the product uses AI, one line when it does not', () => {
+  const nfc = (s) => s.normalize('NFC');
+  const flat = (file) => nfc(readMarkdown(path.join(SKILL, 'references', file)).replace(/\s+/g, ' '));
+  const trd = flat('trd.md');
+  const plan = flat('plan.md');
+  for (const [L, A, examples] of [[LANGS.en, AI.en, ['cedar-clinic', 'study-timer']], [LANGS.ar, AI.ar, ['cedar-clinic-ar']]]) {
+    const shape = section(template('trd.md', L.templateHeading).join('\n'), A.heading);
+    assert.deepStrictEqual(aiProblems(shape, A, L), [], `the ${A.heading} template has its five lines`);
+    assert.deepStrictEqual(shape.split('\n').filter((l) => l.startsWith('- **')).length, 5);
+    for (const folder of examples) {
+      const ai = section(read(`${folder}/docs/trd.md`), A.heading);
+      assert.match(ai, A.none, `${folder} uses no AI and says so`);
+      assert.deepStrictEqual(aiProblems(ai, A, L), [], `${folder}: one line and nothing else`);
+    }
+    for (const label of [A.labels[4], A.labels[3]]) assert.ok(plan.includes(nfc(`**${label}**`)), `the Plan's check points at "${label}"`);
+  }
+  for (const rule of [
+    'only when the product itself uses an AI model',
+    'The AI tool that helps build the project is not this part.',
+    'stay on its **Outside services** line, never repeated here.',
+    '**Decides alone** and **A person approves** are never a default and never "you pick"',
+    'Never promise that it will not be wrong.',
+    'Never write an accuracy figure the person did not give.',
+    'مدى تصرف الذكاء الاصطناعي دون إنسان مسؤولية العميل', 'ولا تعد بأنه لن يخطئ', 'ولا تكتب نسبة دقة لم يذكرها الشخص',
+    'ولا يُكرَّر هنا',
+  ]) assert.ok(trd.includes(nfc(rule)), `trd.md must keep the rule: ${rule}`);
+  // The same four details, point for point, in English and in Arabic.
+  for (const [en, ar] of [
+    ["A model that runs on the project's own computer sends nothing outside: say so.", 'والنموذج الذي يعمل على حاسوب المشروع نفسه لا يرسل شيئًا إلى الخارج: اذكر ذلك.'],
+    ['whether it acts alone or a person approves first, and who that person is.', 'هل يتصرف وحده أم يعتمده إنسان أولًا، ومن هو ذلك الإنسان.'],
+    ['(that an answer came from AI, how to report a wrong one)', '(أن الجواب من الذكاء الاصطناعي، وكيف يبلّغ عن جواب خاطئ)'],
+    ['(real questions with the answer the client accepts)', '(أسئلة حقيقية مع الجواب الذي يقبله العميل)'],
+  ]) {
+    assert.ok(trd.includes(nfc(en)), `trd.md must keep the detail: ${en}`);
+    assert.ok(trd.includes(nfc(ar)), `the Arabic rules must keep the same detail: ${ar}`);
+  }
+  const tbd = nfc(readMarkdown(path.join(SKILL, 'references', 'trd.md')).split('## TBD: an honest gap')[1].split('\n## ')[0].replace(/\s+/g, ' '));
+  assert.ok(tbd.includes('**The AI part** blocks only the steps that build or use it: the rest of the product can be built.'));
+  // The check sits in the Plan's list of conditional checks, in both languages.
+  const between = (text, start, end) => text.split(nfc(start))[1].split(nfc(end))[0];
+  assert.ok(between(plan, 'An outside service is used', 'A tiny offline project').includes("An AI model is used (the TRD's **AI part** is not `None`)"));
+  assert.ok(between(plan, 'يستخدم خدمة خارجية', 'لا تفرض على أداة صغيرة').includes(nfc('يستخدم نموذج ذكاء اصطناعي')));
+
+  // A made-up product that uses AI: a help desk where the model drafts and staff send.
+  const used = [
+    '- **Model:** a hosted language model, reached through its Outside services line, because the owner already has an account.',
+    '- **Decides alone:** sorts each new request into one of five queues.',
+    '- **A person approves:** every reply before it is sent, by the help desk agent on duty.',
+    '- **When it is wrong:** the agent corrects the draft before sending; a wrong queue is moved by hand and counted each week by the team lead.',
+    '- **Checked by:** forty past requests with the reply the team lead accepts, kept by the team lead, run before go-live and after any change of the model or its instructions.',
+  ].join('\n');
+  assert.deepStrictEqual(aiProblems(used, AI.en, LANGS.en), []);
+  const wrong = [
+    ['what it may decide alone left out', used.split('\n').filter((l) => !l.startsWith('- **Decides alone')).join('\n')],
+    ['who approves left out', used.split('\n').filter((l) => !l.startsWith('- **A person approves')).join('\n')],
+    ['no word on wrong answers', used.split('\n').filter((l) => !l.startsWith('- **When it is wrong')).join('\n')],
+    ['no examples to check it by', used.split('\n').filter((l) => !l.startsWith('- **Checked by')).join('\n')],
+    ['"no AI" written above a model', `- None: it uses no AI.\n${used}`],
+    ['a line the AI part does not have', `${used}\n- **Accuracy:** very high.`],
+    ['an accuracy figure nobody gave', used.replace('run before go-live', 'right 95% of the time, run before go-live')],
+    ['an empty part', ''],
+  ];
+  for (const [what, doc] of wrong) assert.ok(aiProblems(doc, AI.en, LANGS.en).length > 0, `caught: ${what}`);
+  // How far it may go is still open: one TBD in the line's place, nothing filled in for the client.
+  const open = used.replace('- **Decides alone:** sorts each new request into one of five queues.', '- TBD: what the AI may decide alone. Decided when the help desk manager has agreed it with the team lead.');
+  assert.deepStrictEqual(openTbds(open, LANGS.en).map((t) => t.name), ['what the AI may decide alone']);
+  assert.deepStrictEqual(aiProblems(open, AI.en, LANGS.en), [], 'an open line is a TBD, not a gap');
+  assert.deepStrictEqual(aiProblems(used.replace('run before go-live', 'right 95% of the time (from the team lead, the March trial), run before go-live'), AI.en, LANGS.en), [], 'a figure the person gave, with its source, is kept');
+});
+
+// 0.7.0, review round 2: the AI part is judged as it stands today. A bare "TBD" is not an answer, a line
+// written twice is not five lines, an old "no AI" does not excuse a model added later, and a choice that
+// was open and then settled counts as answered. English and Arabic, with the controls that must still pass.
+const AI_CASES = [
+    { L: LANGS.en, A: AI.en,
+      used: [
+        '- **Model:** a hosted language model, reached through its Outside services line, because the owner already has an account.',
+        '- **Decides alone:** sorts each new request into one of five queues.',
+        '- **A person approves:** every reply before it is sent, by the help desk agent on duty.',
+        '- **When it is wrong:** the agent corrects the draft before sending; a wrong queue is moved by hand.',
+        '- **Checked by:** forty past requests with the reply the team lead accepts, run before go-live and after any change.',
+      ],
+      bare: 'TBD', decides: '- **Decides alone:**',
+      none: '- None: it uses no AI.',
+      upgraded: '  - Changed 2026-11-16: no line → it uses no AI, because v1, approved 2026-10-08, was written before this line was asked.',
+      toModel: "  - Changed 2026-11-17: it uses no AI → a local model on the student's computer, because the student added AI sorting.",
+      backToNone: '  - Changed 2026-11-18: a local model on the student\'s computer → it uses no AI, because the student removed it.',
+      tbd: '- TBD: what the AI may decide alone. Decided when the manager agrees its authority.',
+      name: 'what the AI may decide alone',
+      settled: '  - Changed 2026-11-16: TBD → M1: assigns each request to a queue, because the manager approved that authority.',
+      reopened: '  - Changed 2026-11-20: M1: assigns each request to a queue → TBD, because the manager withdrew it.',
+      label: 'Model' },
+    { L: LANGS.ar, A: AI.ar,
+      used: [
+        '- **النموذج:** نموذج لغوي مستضاف، يُوصل إليه عبر سطره في الخدمات الخارجية، لأن المالك لديه حساب أصلًا.',
+        '- **يقرر وحده:** يصنّف كل طلب جديد في واحدة من خمس قوائم.',
+        '- **يعتمده إنسان:** كل رد قبل إرساله، ويعتمده موظف الدعم المناوب.',
+        '- **عند الخطأ:** يصحّح الموظف المسودة قبل الإرسال؛ والطلب في القائمة الخطأ يُنقل يدويًا.',
+        '- **يُفحص بـ:** أربعون طلبًا سابقًا مع الرد الذي يقبله قائد الفريق، وتُعاد قبل الإطلاق وبعد أي تغيير.',
+      ],
+      bare: 'لم يُحسم بعد', decides: '- **يقرر وحده:**',
+      none: '- لا شيء: لا يستخدم الذكاء الاصطناعي.',
+      upgraded: '  - تغيّر في 2026-11-16: من لا سطر إلى لا يستخدم الذكاء الاصطناعي، لأن الإصدار 1 المعتمد 2026-10-08 كُتب قبل طلب هذا السطر.',
+      toModel: '  - تغيّر في 2026-11-17: من لا يستخدم الذكاء الاصطناعي إلى نموذج محلي على حاسوب الطالب، لأن الطالب أضاف تصنيفًا بالذكاء الاصطناعي.',
+      backToNone: '  - تغيّر في 2026-11-18: من نموذج محلي على حاسوب الطالب إلى لا يستخدم الذكاء الاصطناعي، لأن الطالب أزاله.',
+      tbd: '- لم يُحسم بعد: ما يقرره الذكاء الاصطناعي وحده. يُحسم عندما يوافق المدير على صلاحيته.',
+      name: 'ما يقرره الذكاء الاصطناعي وحده',
+      settled: '  - تغيّر في 2026-11-16: من لم يُحسم بعد إلى M1: يوزّع كل طلب على قائمة، لأن المدير اعتمد هذه الصلاحية.',
+      reopened: '  - تغيّر في 2026-11-20: من M1: يوزّع كل طلب على قائمة إلى لم يُحسم بعد، لأن المدير سحبها.',
+      label: 'النموذج' },
+];
+
+test('the AI part is read through its history: bare TBDs, repeats and a replaced "no AI" are caught', () => {
+  for (const { L, A, used, bare, decides, none, upgraded, toModel, backToNone, tbd, name, settled, reopened, label } of AI_CASES) {
+    const lang = L === LANGS.ar ? 'ar' : 'en';
+    const five = used.join('\n');
+    const check = (doc) => aiProblems(doc, A, L);
+    const withDecides = (lines) => used.map((l) => (l.startsWith(decides) ? lines : l)).join('\n');
+    for (const line of [upgraded, toModel, backToNone, settled, reopened]) assert.match(line, L.changed, `${lang}: the history line is in the fixed form`);
+    assert.match(tbd, L.tbd, `${lang}: the open choice is in the fixed form`);
+
+    // Controls that must keep passing.
+    assert.deepStrictEqual(check(five), [], `${lang}: five answered lines`);
+    assert.deepStrictEqual(check(none), [], `${lang}: an untouched "no AI"`);
+    assert.deepStrictEqual(check(`${none}\n${upgraded}`), [], `${lang}: "no AI" added by an upgrade`);
+
+    // F01: a bare TBD is not an answer, and a line written twice is not five lines.
+    const allBare = A.labels.map((l) => `- **${l}:** ${bare}`).join('\n');
+    assert.strictEqual(openTbds(allBare, L).length, 0, `${lang}: bare TBDs name no open choice`);
+    assert.strictEqual(check(allBare).length, 5, `${lang}: five bare TBDs are five problems`);
+    assert.ok(check(withDecides(`${decides} ${bare}.`)).length > 0, `${lang}: one bare TBD among four answers`);
+    assert.ok(check(`${five}\n${used[0]}`).length > 0, `${lang}: ${label} written twice`);
+    assert.ok(check(withDecides(`${decides} `)).length > 0, `${lang}: an empty labelled value`);
+
+    // F02: "no AI" replaced by a model through a Changed line no longer excuses the five lines.
+    assert.ok(check(`${none}\n${upgraded}\n${toModel}`).length > 0, `${lang}: a model added under an old "no AI", with no answers`);
+    assert.deepStrictEqual(check(`${none}\n${upgraded}\n${toModel}\n${five}`), [], `${lang}: the same, now with its five lines`);
+    assert.deepStrictEqual(check(`${none}\n${toModel}\n${backToNone}`), [], `${lang}: a model added and then removed again is "no AI" today`);
+    assert.ok(check(`${none}\n${toModel}\n${backToNone}\n${five}`).length > 0, `${lang}: "no AI" today, but five lines still standing`);
+
+    // F02: an open choice, a settled one and a reopened one each stand in for their line.
+    const open = withDecides(tbd);
+    assert.deepStrictEqual(openTbds(open, L).map((t) => t.name), [name], `${lang}: the open choice is found by its name`);
+    assert.deepStrictEqual(check(open), [], `${lang}: an open choice in the line's place`);
+    const closed = withDecides(`${tbd}\n${settled}`);
+    assert.deepStrictEqual(openTbds(closed, L), [], `${lang}: the settled choice is no longer open`);
+    assert.deepStrictEqual(check(closed), [], `${lang}: a settled choice counts as answered`);
+    const again = withDecides(`${tbd}\n${settled}\n${reopened}`);
+    assert.strictEqual(openTbds(again, L).length, 1, `${lang}: reopened, it is open again`);
+    assert.deepStrictEqual(check(again), [], `${lang}: a reopened choice still stands in for its line`);
+    assert.ok(check(used.filter((l) => !l.startsWith(decides)).join('\n')).length > 0, `${lang}: the line simply left out`);
+
+    // F02: an old "no AI" kept as a collapsed historical record does not excuse today's lines, and does not block them.
+    const archived = `<details data-project-docs-history>\n<summary>${label}</summary>\n\n${none}\n${toModel}\n\n</details>\n`;
+    assert.deepStrictEqual(check(`${archived}${closed}`), [], `${lang}: history archived, today's lines complete`);
+    assert.ok(check(`${archived}${used.slice(0, 2).join('\n')}`).length > 0, `${lang}: history archived, today's lines incomplete`);
+    assert.ok(check(archived).length > 0, `${lang}: only an archived record is an empty AI part`);
+  }
+
+  // The real examples still read as "no AI" today, and the Study Timer with a model added under it is caught.
+  const timer = section(read('study-timer/docs/trd.md'), AI.en.heading);
+  assert.deepStrictEqual(aiProblems(timer, AI.en, LANGS.en), []);
+  const changed = `${timer.trimEnd()}\n  - Changed 2026-11-17: it uses no AI → a local model on the student's computer, because the student added AI sorting.\n`;
+  assert.ok(aiProblems(changed, AI.en, LANGS.en).length > 0, 'the Study Timer with a model added and no answers');
+});
+
+// 0.7.0, review round 3: every state the AI part can be in today. An answer or a "no AI" reopened with a
+// bare "→ TBD" is unfinished: the skill's own reopening keeps the old line and its history in a collapsed
+// record and puts a named TBD, with what will decide it, in its place. Until then it is neither answered
+// nor "no AI". The same cases in English and in Arabic.
+const AI_REOPEN = {
+  en: {
+    toTbd: '  - Changed 2026-11-16: the answer above → TBD, because the owner reopened the decision.',
+    tbdToAnswer: '  - Changed 2026-11-21: TBD → sorts requests only, because the manager decided.',
+    toOther: '  - Changed 2026-11-19: the answer above → sorts requests and closes duplicates, because the manager widened it.',
+    toNone: '  - Changed 2026-11-23: the answer above → it uses no AI, because the owner removed it.',
+    noneToTbd: '  - Changed 2026-11-16: it uses no AI → TBD, because the owner reopened the AI decision.',
+    tbdToNone: '  - Changed 2026-11-22: TBD → it uses no AI, because the owner decided against it.',
+    tbdToModel: '  - Changed 2026-11-22: TBD → a local model on the office computer, because the owner chose it.',
+    whole: '- TBD: whether the product uses AI. Decided when the owner has tried the prototype.',
+    wholeName: 'whether the product uses AI',
+    other: '- It also summarises long requests.',
+    malformed: '  - Changed 2026-11-16: it uses no AI => a local model',
+    openFor: (label) => `- TBD: the ${label} line of the AI part. Decided when the owner has met the team lead.`,
+  },
+  ar: {
+    toTbd: '  - تغيّر في 2026-11-16: من الجواب أعلاه إلى لم يُحسم بعد، لأن المالك أعاد فتح القرار.',
+    tbdToAnswer: '  - تغيّر في 2026-11-21: من لم يُحسم بعد إلى يصنّف الطلبات فقط، لأن المدير قرر ذلك.',
+    toOther: '  - تغيّر في 2026-11-19: من الجواب أعلاه إلى يصنّف الطلبات ويغلق المكرر منها، لأن المدير وسّعه.',
+    toNone: '  - تغيّر في 2026-11-23: من الجواب أعلاه إلى لا يستخدم الذكاء الاصطناعي، لأن المالك أزاله.',
+    noneToTbd: '  - تغيّر في 2026-11-16: من لا يستخدم الذكاء الاصطناعي إلى لم يُحسم بعد، لأن المالك أعاد فتح قرار الذكاء الاصطناعي.',
+    tbdToNone: '  - تغيّر في 2026-11-22: من لم يُحسم بعد إلى لا يستخدم الذكاء الاصطناعي، لأن المالك قرر عدم استخدامه.',
+    tbdToModel: '  - تغيّر في 2026-11-22: من لم يُحسم بعد إلى نموذج محلي على حاسوب المكتب، لأن المالك اختاره.',
+    whole: '- لم يُحسم بعد: هل يستخدم المنتج الذكاء الاصطناعي. يُحسم عندما يجرّب المالك النموذج الأولي.',
+    wholeName: 'هل يستخدم المنتج الذكاء الاصطناعي',
+    other: '- ويلخّص أيضًا الطلبات الطويلة.',
+    malformed: '  - تغيّر في 2026-11-16: من لا يستخدم الذكاء الاصطناعي => نموذج محلي',
+    openFor: (label) => `- لم يُحسم بعد: سطر ${label} في جزء الذكاء الاصطناعي. يُحسم عندما يلتقي المالك بقائد الفريق.`,
+  },
+};
+
+test('the AI part today is "no AI", five lines, or a named open choice: a bare reopening is none of them', () => {
+  for (const { L, A, used, decides, none, upgraded } of AI_CASES) {
+    const lang = L === LANGS.ar ? 'ar' : 'en';
+    const R = AI_REOPEN[lang];
+    const five = used.join('\n');
+    const check = (doc) => aiProblems(doc, A, L);
+    const decidesLine = used.find((l) => l.startsWith(decides));
+    const withDecides = (lines) => used.map((l) => (l.startsWith(decides) ? lines : l)).join('\n');
+    const archive = (lines) => `<details data-project-docs-history>\n<summary>${A.heading}</summary>\n\n${lines}\n\n</details>\n`;
+    for (const key of ['toTbd', 'tbdToAnswer', 'toOther', 'toNone', 'noneToTbd', 'tbdToNone', 'tbdToModel']) assert.match(R[key], L.changed, `${lang}: ${key} is in the fixed form`);
+    assert.match(R.whole, L.tbd, `${lang}: the whole-part choice is in the fixed form`);
+    assert.doesNotMatch(R.malformed, L.changed, `${lang}: the malformed line is not in the fixed form`);
+
+    // F01: an answer reopened with a bare "→ TBD" is not an answer.
+    assert.ok(check(withDecides(`${decidesLine}\n${R.toTbd}`)).length > 0, `${lang}: one answer reopened with a bare TBD`);
+    assert.ok(check(used.map((l) => `${l}\n${R.toTbd}`).join('\n')).length >= 5, `${lang}: all five answers reopened with a bare TBD`);
+    // The skill's own reopening: the old line and its history collapsed, a named TBD in its place.
+    const reopenedOne = `${archive(`${decidesLine}\n${R.toTbd}`)}${withDecides(R.openFor(A.labels[1]))}`;
+    assert.deepStrictEqual(check(reopenedOne), [], `${lang}: one answer reopened the skill's way`);
+    assert.strictEqual(openTbds(reopenedOne, L).length, 1, `${lang}: and it is found open, once`);
+    const reopenedAll = `${archive(used.map((l) => `${l}\n${R.toTbd}`).join('\n'))}${A.labels.map(R.openFor).join('\n')}`;
+    assert.deepStrictEqual(check(reopenedAll), [], `${lang}: all five reopened the skill's way`);
+    assert.strictEqual(openTbds(reopenedAll, L).length, 5, `${lang}: and five choices are open`);
+    // An answer that was changed, or reopened and then answered again, is answered today.
+    assert.deepStrictEqual(check(withDecides(`${decidesLine}\n${R.toOther}`)), [], `${lang}: an answer changed to another answer`);
+    assert.deepStrictEqual(check(withDecides(`${decidesLine}\n${R.toTbd}\n${R.tbdToAnswer}`)), [], `${lang}: reopened, then answered again`);
+    assert.ok(check(withDecides(`${decidesLine}\n${R.toOther}\n${R.toTbd}`)).length > 0, `${lang}: changed, then reopened with a bare TBD`);
+    // One line changed to "no AI" while the others stand says two things at once.
+    assert.ok(check(withDecides(`${decidesLine}\n${R.toNone}`)).length > 0, `${lang}: one line turned into "no AI" beside four answers`);
+
+    // Review round 4: "nothing" as the answer of one line is not "the product uses no AI". The template
+    // itself offers it for the two authority lines; in Arabic both begin with the same two words as "None".
+    const shape = template('trd.md', L.templateHeading);
+    for (const index of [1, 2]) {
+      const field = A.labels[index];
+      const placeholder = shape.find((l) => l.startsWith(`- **${field}:** <`));
+      const nothing = placeholder.slice(placeholder.lastIndexOf(' / ') + 3, -1);
+      const line = used.find((l) => l.startsWith(`- **${field}:**`));
+      const withField = (lines) => used.map((l) => (l === line ? lines : l)).join('\n');
+      const changedTo = R.toOther.replace(R.toOther.match(L.change)[2], nothing);
+      const settledTo = R.tbdToAnswer.replace(R.tbdToAnswer.match(L.change)[2], nothing);
+      for (const history of [changedTo, settledTo]) assert.match(history, L.changed, `${lang}: the history line for "${nothing}" is in the fixed form`);
+      assert.strictEqual(changedTo.match(L.change)[2], nothing, `${lang}: the changed line ends at the template's own words`);
+      assert.deepStrictEqual(check(withField(`- **${field}:** ${nothing}`)), [], `${lang}: ${field} written as "${nothing}"`);
+      assert.deepStrictEqual(check(withField(`${line}\n${changedTo}`)), [], `${lang}: ${field} changed to "${nothing}"`);
+      assert.deepStrictEqual(check(withField(`${R.openFor(field)}\n${settledTo}`)), [], `${lang}: an open ${field} settled to "${nothing}"`);
+      assert.deepStrictEqual(check(withField(`${line}\n${R.toTbd}\n${settledTo}`)), [], `${lang}: ${field} reopened in place, then settled to "${nothing}"`);
+      // A real "no AI" in the same places is still two things at once.
+      assert.ok(check(withField(`${line}\n${R.toNone}`)).length > 0, `${lang}: ${field} changed to "no AI" beside the other lines`);
+      assert.ok(check(withField(`${R.openFor(field)}\n${R.tbdToNone}`)).length > 0, `${lang}: an open ${field} settled to "no AI" beside the other lines`);
+    }
+
+    // F02: "no AI" reopened with a bare "→ TBD" is unresolved, not "no AI".
+    assert.ok(check(`${none}\n${R.noneToTbd}`).length > 0, `${lang}: "no AI" reopened with a bare TBD`);
+    assert.ok(check(`${none}\n${upgraded}\n${R.noneToTbd}`).length > 0, `${lang}: the same after an upgrade line`);
+    assert.ok(check(`${none}\n${R.noneToTbd}\n${five}`).length > 0, `${lang}: the same with five lines beside it`);
+    assert.strictEqual(openTbds(`${none}\n${R.noneToTbd}`, L).length, 1, `${lang}: the unresolved record is seen as open`);
+    // The skill's own reopening of "no AI": history collapsed, one named choice for the whole part.
+    const wholeOpen = `${archive(`${none}\n${R.noneToTbd}`)}${R.whole}`;
+    assert.deepStrictEqual(check(wholeOpen), [], `${lang}: whether it uses AI is open, the skill's way`);
+    assert.deepStrictEqual(openTbds(wholeOpen, L).map((t) => t.name), [R.wholeName], `${lang}: and found by its name`);
+    assert.deepStrictEqual(check(R.whole), [], `${lang}: a new product that has not decided yet`);
+    // That choice settled: "no AI" stands alone; a model needs the other four lines.
+    assert.deepStrictEqual(check(`${R.whole}\n${R.tbdToNone}`), [], `${lang}: decided: no AI`);
+    assert.ok(check(`${R.whole}\n${R.tbdToNone}\n${five}`).length > 0, `${lang}: decided no AI, with five lines still standing`);
+    assert.ok(check(`${R.whole}\n${R.tbdToModel}`).length > 0, `${lang}: decided on a model, the other four lines missing`);
+    assert.deepStrictEqual(check(`${R.whole}\n${R.tbdToModel}\n${used.slice(1).join('\n')}`), [], `${lang}: decided on a model, with its other four lines`);
+    // Reopened in place and then decided again: what counts is today.
+    assert.deepStrictEqual(check(`${none}\n${R.noneToTbd}\n${R.tbdToNone}`), [], `${lang}: reopened and decided "no AI" again`);
+    assert.ok(check(`${none}\n${R.noneToTbd}\n${R.tbdToModel}`).length > 0, `${lang}: reopened and decided on a model, with no answers`);
+
+    // Anything else under the heading is not part of it.
+    assert.ok(check(`${five}\n${R.other}`).length > 0, `${lang}: an unlabelled line beside the five`);
+    assert.ok(check(`${none}\n${R.malformed}`).length > 0, `${lang}: a history line that is not in the fixed form`);
+    assert.ok(check(`${five}\n${R.whole}`).length === 0, `${lang}: five answers and one more open question is still complete`);
+  }
+
+  // The real example, with the owner reopening its "no AI" in place.
+  const timer = section(read('study-timer/docs/trd.md'), AI.en.heading);
+  assert.ok(aiProblems(`${timer.trimEnd()}\n${AI_REOPEN.en.noneToTbd}\n`, AI.en, LANGS.en).length > 0, 'the Study Timer with "no AI" reopened by a bare TBD');
+});
+
 // The clinic's release step (step 10), as its two lines.
 function stepLines(plan, number, L) {
   const step = section(plan, L.s.steps).split('\n### ').slice(1).find((s) => new RegExp(`^\\S+ ${number}: `).test(s)) || '';
@@ -1027,11 +1389,14 @@ test('the clinic release step itself carries the version, the dated changelog li
   }
 });
 
-// Fixed bold lines a TRD lacks under today's template.
+// What a TRD lacks under today's template: the AI part heading, and the fixed bold lines. The AI part's
+// own five lines are not fixed lines: a product with no AI has one "None" line there instead (aiProblems).
 function trdUpgradeGaps(trd, L) {
+  const A = L === LANGS.ar ? AI.ar : AI.en;
   const labels = (lines) => lines.map((l) => (l.match(/^- \*\*(.+?):\*\* /) || [])[1]).filter(Boolean);
   const have = labels(trd.split('\n'));
-  return labels(template('trd.md', L.templateHeading)).filter((label) => !have.includes(label));
+  const fixed = labels(template('trd.md', L.templateHeading)).filter((label) => !A.labels.includes(label));
+  return [...(trd.includes(`\n## ${A.heading}\n`) ? [] : [A.heading]), ...fixed.filter((label) => !have.includes(label))];
 }
 
 // Upgrading an approved document that lacks a newer fixed line: keep every line, add the missing line with
@@ -1049,8 +1414,10 @@ function upgradeProblems(before, after, L) {
   if (version(after) !== version(before) + 1) problems.push('the version was not raised by one');
   if (!/^> v\d+ · Draft$/.test(stampOf(after))) problems.push('the upgraded document must wait as a Draft, never carry an approval nobody gave');
   for (const gap of trdUpgradeGaps(before, L)) {
-    const at = afterLines.findIndex((l) => l.startsWith(`- **${gap}:** `));
-    const history = afterLines[at + 1] || '';
+    // A missing heading is answered by the first line under it; a missing fixed line by that line.
+    const heading = afterLines.indexOf(`## ${gap}`);
+    const at = heading >= 0 ? heading + 1 : afterLines.findIndex((l) => l.startsWith(`- **${gap}:** `));
+    const history = (at >= 0 && afterLines[at].startsWith('- ') && afterLines[at + 1]) || '';
     if (at < 0 || !L.changed.test(history) || !history.includes(`approved ${approved}`)) problems.push(`${gap}: the earlier approval (${approved}) is not kept beneath the new line`);
     else if (!history.includes(': no line → ')) problems.push(`${gap}: the history invents an earlier value`);
   }
@@ -1063,8 +1430,8 @@ test('an approved TRD written before the Kept in line is found incomplete, and i
   const before = readMarkdown(path.join(__dirname, 'fixtures', 'approved-0.4.0', 'trd.md'));
   const after = read('study-timer/docs/trd.md');
   assert.match(before.split('\n')[1], /^> v1 · Approved 2026-10-08$/, 'the fixture is a real approved 0.4.0 document');
-  assert.deepStrictEqual(trdUpgradeGaps(before, L), ['Each month', 'Kept in'], 'it lacks the Kept in line and, since 0.6.0, the running cost');
-  assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['Each month', 'Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
+  assert.deepStrictEqual(trdUpgradeGaps(before, L), ['AI part', 'Each month', 'Kept in'], 'it lacks the Kept in line, since 0.6.0 the running cost, and since 0.7.0 the AI part');
+  assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['AI part', 'Each month', 'Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
   for (const folder of ['cedar-clinic', 'study-timer']) assert.deepStrictEqual(trdUpgradeGaps(read(`${folder}/docs/trd.md`), L), [], `${folder} is complete`);
   assert.deepStrictEqual(trdUpgradeGaps(read('cedar-clinic-ar/docs/trd.md'), LANGS.ar), [], 'the Arabic clinic is complete');
   assert.deepStrictEqual(upgradeProblems(before, after, L), [], 'the Study Timer example is the completed counterpart');
@@ -1076,6 +1443,9 @@ test('an approved TRD written before the Kept in line is found incomplete, and i
     ['an invented earlier value', after.replace('Changed 2026-11-16: no line → the student', 'Changed 2026-11-16: only this computer → the student')],
     ['an invented earlier running cost', after.replace(': no line → nothing is paid for', ': a free plan → nothing is paid for')],
     ['the running cost added with no history', after.replace(/\n  - Changed 2026-11-16: no line → nothing is paid for[^\n]*/, '')],
+    ['an invented earlier AI part', after.replace(': no line → it uses no AI', ': a chatbot → it uses no AI')],
+    ['the AI part added with no history', after.replace(/\n  - Changed 2026-11-16: no line → it uses no AI[^\n]*/, '')],
+    ['the AI part never added', after.replace(/\n## AI part\n- None: it uses no AI\.\n  - Changed[^\n]*\n/, '\n')],
     ['an earlier line lost', after.replace('- **Tests:** pytest, in `tests/`.\n', '')],
     ['the line never added', before.replace('> v1 · Approved 2026-10-08', '> v2 · Draft')],
   ];

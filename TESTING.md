@@ -1,5 +1,39 @@
 # How project-docs was tested
 
+## 0.7.0: the AI part, 2026-11-16
+
+Verified: **2026-11-16 · version 0.7.0 · 143 automated tests passed** on macOS, with
+`node tools/font-ranges.js --check`. The new test was tried against changed copies, each in its own
+throwaway folder, and each fails the suite: an example that says no AI and also names a model, an
+example without the heading, an empty Arabic AI part, the Study Timer's new line without its approval
+history, the English and the Arabic template each missing one of the five lines, the rule changed to
+let the AI choose its own authority, accuracy figures allowed without the person, an open AI choice
+made to block every step, the building tool described as the product's AI, and the Plan guide without
+its AI check.
+The upload zip was rebuilt: one `project-docs/` root, 81 entries (65 files and 16 folders). Not rerun:
+the preview page (unchanged), Windows, and a blind dry run with a fresh agent on a product that uses AI.
+No example project uses AI, so the five lines are exercised only by the made-up cases inside the tests.
+After an independent review, the checker was rewritten to read the AI part as it stands today, through
+its Changed lines, and a second test was added with English and Arabic cases: five bare TBDs, a line
+written twice, and a model added under an old "no AI" are refused; an untouched "no AI", an open
+choice, a settled one, a reopened one and an archived historical record are accepted. The Arabic rules
+were rewritten as the same four points as the English, and four details are now checked in both.
+A second review found two more routes through Changed history: an answer, or the "no AI" line, reopened
+with a bare "→ TBD" still passed. The checker now names the three states the part can be in today and
+refuses anything else, and a third test covers each state and each way between them in both languages.
+Run against the previous checker, that test fails at "one answer reopened with a bare TBD". The
+reviewer's recorded inputs were replayed against the repaired checker: the original 18 and the 14
+added in the second review all give the expected outcome.
+A third review found that fix had gone one step too far in Arabic: the template lets the two authority
+lines say «لا شيء: …» ("nothing: …"), and the checker read those two opening words as "the product uses
+no AI". "No AI" is now recognised only by the reference's own sentence. The third test gained, for both
+authority lines and in both languages, the template's own "nothing" answer written directly, reached
+through a Changed line, and reached by settling a named TBD, each accepted, beside a real "no AI" in the
+same places, each refused. Run against the previous checker it fails at the Arabic Decides alone case;
+the English cases passed before and after. The test count is unchanged because the cases joined an
+existing test.
+Verified again: **145 automated tests passed**.
+
 ## 0.6.0: what it costs to run, and who pays, 2026-11-16
 
 Verified: **2026-11-16 · version 0.6.0 · 142 automated tests passed** on macOS, with

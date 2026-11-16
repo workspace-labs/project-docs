@@ -27,6 +27,9 @@
 - TBD: the text-message service for reminders and patient sign-in codes. Decided when the clinic's IT lead has approved one that keeps data in the country.
   The proposed contract sends the patient's phone number and the code or reminder text, expects a delivery-acceptance or failure response, and reports a failed code request without signing the patient in. A failed reminder leaves the saved visit unchanged and shows staff that delivery failed; it never says the message was delivered without confirmation.
 
+## AI part
+- None: it uses no AI.
+
 ## Running cost
 - The clinic's in-country server: bought and owned by the clinic; no bill.
 - Microsoft 365 accounts for staff login: about 450 AED a month (from the clinic manager, the October 2026 invoice); grows with the number of staff accounts. The same accounts serve all the clinic's work, so this is the whole bill, not this project's share.

@@ -2,6 +2,63 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.7.0] - 2026-11-16
+
+More and more projects have an AI model inside them. The TRD listed AI only as one more outside service,
+so nothing asked the questions a client must answer before such a product is built: how far the AI may
+go without a person, and what happens when it is wrong.
+
+### Added
+
+- **TRD → AI part** (Arabic: `جزء الذكاء الاصطناعي`), a new heading after Outside services and before
+  Running cost. It is about an AI model the product itself uses, never the AI tool that builds the
+  project. A product with no AI has one line there: `None: it uses no AI`. A product that uses AI has
+  five lines:
+  - **Model:** which model and where it runs. A technology choice like any other: the person picks.
+    For a model reached over the internet, what is sent to it stays on its Outside services line and
+    is not repeated.
+  - **Decides alone** and **A person approves:** how far the AI may go without a person, asked for each
+    PRD `M` line the AI takes part in. Never a default and never "you pick".
+  - **When it is wrong:** how a wrong answer is noticed, who corrects it, what the user is told.
+  - **Checked by:** the examples it must get right, who keeps them, and when they are run again. An
+    accuracy figure is written only when the person gave it, with where it came from.
+- **An open choice in the AI part** is a `TBD` in that line's place. It blocks only the steps that build
+  or use the AI part.
+- **Plan → conditional checks** gain one: when an AI model is used, the step that first builds it runs the
+  Checked by examples, any later step that changes the model or its instructions runs them again, and
+  the step that lets it act alone tries what When it is wrong says.
+- **Running cost** names an AI model charged by use among the paid parts.
+- The three examples carry the heading with `None`. The Study Timer TRD shows the upgrade again, with the
+  earlier approval kept in a `Changed` line beneath the new line.
+
+### Not added, on purpose
+
+- No example project that uses AI. The filled form is shown only as a made-up case in the tests.
+- No new line in the Security document. What an outside model receives is already named there through
+  Outside services.
+
+### Upgrading
+
+- A TRD approved before 0.7.0 has no AI part heading. As with any newer heading, the skill keeps
+  everything, asks only whether the product uses AI, and the TRD is approved again.
+- This release adds one heading to the TRD's heading contract. Older TRDs do not have it.
+
+### Verification
+
+- macOS, 2026-11-16: `node --test`, 145 tests pass (142 before, plus three for the AI part; the upgrade
+  test gained three wrong-upgrade cases). The first test checks the template, the three examples, the
+  rule sentences and four details point for point in both languages, the Plan check's place, and a
+  made-up help desk product in eight wrong forms, each refused. The second reads the AI part through its
+  history, in English and in Arabic: a bare TBD, a line written twice and a model added under an old
+  "no AI" are refused; an open choice, a settled one, a reopened one and an archived historical record
+  are accepted. The third walks every state the part can be in today: "no AI", undecided (one named open
+  choice), or five lines. An answer or a "no AI" reopened with a bare "→ TBD" is none of these and is
+  refused until it is reopened the skill's way, with the old record collapsed and a named TBD in its
+  place. "Nothing" as the answer of one authority line, which the template offers and which in Arabic
+  begins with the same two words as "None", is an answer and not "no AI".
+  All three check shape and history, never whether the answers are the client's.
+  `node tools/font-ranges.js --check` passes. The preview page is unchanged and was not rerun.
+
 ## [0.6.0] - 2026-11-16
 
 A project is paid for twice: once to build it, and then every month to keep it running. The PRD asked

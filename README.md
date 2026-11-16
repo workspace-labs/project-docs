@@ -13,7 +13,7 @@ The skill is the folder [`skills/project-docs/`](skills/project-docs/): its inst
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
 the look. **Nothing to install.**
 
-**Version 0.6.0** · 142 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.7.0** · 145 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -24,7 +24,7 @@ In your project:
 | File | What it is | When |
 |---|---|---|
 | `docs/prd.md` | **PRD**: what it is, why, who it's for, what it must do, what it will NOT do, how we know it worked | always |
-| `docs/trd.md` | **TRD**: what it is built with, what it costs to run and who pays, the rules it follows, how the code is written, where the code is kept, and why each choice | always |
+| `docs/trd.md` | **TRD**: what it is built with, what its AI part may decide alone and what a person approves, what it costs to run and who pays, the rules it follows, how the code is written, where the code is kept, and why each choice | always |
 | `DESIGN.md` | **The look**: colors, fonts, shapes, pieces, must-have rules and ready values every AI copies | when it has screens |
 | `docs/data.md` | **Data**: every table and column, with personal 🔒 and secret 🔐 data marked | when it saves anything |
 | `docs/security.md` | **Security**: who gets in, how it's protected, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
