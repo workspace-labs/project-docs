@@ -2,6 +2,54 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.6.0] - 2026-11-16
+
+A project is paid for twice: once to build it, and then every month to keep it running. The PRD asked
+for the build budget; nothing asked what it costs to run, or who pays that after the handover.
+
+### Added
+
+- **TRD → Running cost** (Arabic: `تكلفة التشغيل`), a new heading after Outside services: one line for each
+  part somebody pays for, then a fixed **Each month** line (`كل شهر`) with the total and who pays.
+  The amounts are the person's, with where each came from. The AI never supplies a price, and who pays
+  is a fact about the client, never "you pick". Nothing paid is `None: nothing is paid for`, with the
+  reason.
+- **Owned or still paid for.** A part bought once and owned has no bill and no amount. A bill the client
+  already pays (an existing subscription, a yearly renewal) is still a running cost: it carries its
+  amount and source and stays in the total. A bill that also covers other work is written whole, never
+  as a share the AI worked out. A yearly bill stays yearly, never divided into months. The Each month
+  line adds up only the amounts above it and names every part it does not count.
+- **An open price** is a `TBD` named `the cost of <the part>`. It blocks only the step that starts
+  paying for it. A price that depends on a choice still open stays with that choice: no second `TBD`.
+- **Handover → Running it** gains a line: who pays the running cost and renews the paid parts from the
+  handover on. It is gathered from the TRD and never asked twice.
+- The three examples carry the new lines. The clinic's TRD shows an owned server, an existing monthly
+  subscription, a yearly web address and a price still tied to an open choice; its amounts are made up.
+  The clinic's Handover shows the upgrade of an approved
+  document: it had been approved without the line, so it is now `v2 · Draft` with the earlier approval
+  kept in a `Changed` line beneath the new line. The Study Timer TRD does the same for its Each month line.
+
+### Upgrading
+
+- A TRD approved before 0.6.0 has no Running cost heading and no Each month line. As with any newer
+  heading or fixed line, the skill keeps everything, asks only for what is missing, and the TRD is
+  approved again. A Handover approved earlier is not treated as incomplete: its new line is asked the
+  next time that Handover is opened for a change.
+- This release adds one heading to the TRD's heading contract. Older TRDs do not have it.
+
+### Verification
+
+- macOS, 2026-11-16: `node --test`, 142 tests pass (140 before, plus two for these lines; the upgrade
+  test gained three wrong-upgrade cases). The second test adds up the amounts in each Running cost
+  section and refuses an amount with no source or cadence, a subscription left out of the total, a
+  yearly bill divided into months and a total nobody gave. It checks shape and sums; it cannot know
+  whether an amount is true. Changed copies were tried and each fails the suite: an
+  example without its Each month line (English and Arabic), a second TBD opened for a price, a Handover
+  that keeps or invents an approval, a dropped or invented history line, the open-price rule made to
+  block every step, the AI allowed to supply a price, and a template without the heading or the
+  Handover pointer. `node tools/font-ranges.js --check` passes. The preview page is unchanged and was
+  not rerun.
+
 ## [0.5.0] - 2026-11-16
 
 From an outside review of a finished document set, which listed eight things as missing. Six were

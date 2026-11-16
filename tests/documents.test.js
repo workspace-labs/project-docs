@@ -855,6 +855,135 @@ test('the TRD says where the code is kept, and the Plan checks the changelog and
   assert.ok(nfc(trd.replace(/\s+/g, ' ')).includes(nfc('ويعطّل خطوة الإصدار أو التسليم فقط')), 'the Arabic rule blocks only the release or the handover');
 });
 
+// 0.6.0: what the project costs to run is the person's answer in the TRD, never a price the AI supplies;
+// the Handover says who pays and renews from the handover on. Both languages, every example.
+test('the TRD says what it costs to run and who pays, and the Handover says who pays from then on', () => {
+  const nfc = (s) => s.normalize('NFC');
+  const flat = (file) => nfc(readMarkdown(path.join(SKILL, 'references', file)).replace(/\s+/g, ' '));
+  const trd = flat('trd.md');
+  const handover = flat('handover.md');
+  const cases = [
+    { L: LANGS.en, cost: 'Running cost', label: 'Each month', running: 'Running it', noLine: ': no line → ', trds: ['cedar-clinic', 'study-timer'], handovers: ['cedar-clinic'] },
+    { L: LANGS.ar, cost: 'تكلفة التشغيل', label: 'كل شهر', running: 'تشغيله', noLine: ': من لا سطر إلى ', trds: ['cedar-clinic-ar'], handovers: ['cedar-clinic-ar'] },
+  ];
+  for (const { L, cost, label, running, noLine, trds, handovers } of cases) {
+    const line = new RegExp(`^- \\*\\*${label}:\\*\\* \\S`, 'm');
+    assert.match(section(template('trd.md', L.templateHeading).join('\n'), cost), line, `the TRD template has "${label}" under "${cost}"`);
+    for (const folder of trds) {
+      const costs = section(read(`${folder}/docs/trd.md`), cost);
+      assert.match(costs, line, `${folder} says what it costs each month, under "${cost}"`);
+      // A price that depends on a choice still open stays with that choice: no second open line here.
+      assert.deepStrictEqual(openTbds(costs, L), [], `${folder}: the running cost opens no TBD of its own`);
+    }
+    assert.ok(section(template('handover.md', L.templateHeading).join('\n'), running).includes(`TRD: ${cost}`), `the Handover template points at "${cost}"`);
+    for (const folder of handovers) {
+      const doc = read(`${folder}/docs/handover.md`);
+      const lines = section(doc, running).split('\n').filter((l) => l.trim());
+      const history = lines.findIndex((l) => L.changed.test(l) && l.includes(noLine));
+      assert.ok(history > 0 && lines[history - 1].startsWith('- '), `${folder}: the line about paying keeps "no line" as its earlier value`);
+      assert.ok(lines[history].includes('2026-10-08'), `${folder}: the earlier approval is kept beneath the new line`);
+      assert.doesNotMatch(doc.split('\n')[1], L.approvedBy, `${folder}: a handover that gained a line waits as a draft`);
+    }
+  }
+  for (const rule of [
+    '**Running cost** is never a default and never a guess.',
+    'Write only an amount the person gave, with where it came from; never a price from your own memory.',
+    'Who pays is a fact about the client: never "you pick".',
+    'say so on its line, and write no second `TBD`.',
+    'ولا تكتب سعرًا من ذاكرتك',
+    'من يدفع حقيقة عن العميل',
+    'ويعطّل فقط الخطوة التي يبدأ عندها الدفع',
+  ]) assert.ok(trd.includes(nfc(rule)), `trd.md must keep the rule: ${rule}`);
+  // An open price blocks only the step that starts paying, never the building steps.
+  const tbd = nfc(readMarkdown(path.join(SKILL, 'references', 'trd.md')).split('## TBD: an honest gap')[1].split('\n## ')[0].replace(/\s+/g, ' '));
+  assert.ok(tbd.includes('**A running cost** blocks only the step that starts paying for it (putting it online, or signing up for the service): everything before that step can be built.'));
+  assert.ok(handover.includes('Never ask it again'), 'the Handover takes the running cost from the TRD');
+});
+
+// 0.6.0, review round 2: a bill the client already pays stays a running cost. Every amount in a Running
+// cost section is "about <number> <CUR> a month|a year (from <source>)", and the Each month line adds up
+// exactly the amounts above it, monthly and yearly apart. This checks the shape and the sums; it cannot
+// know whether an amount is true.
+const COST = {
+  en: { heading: 'Running cost', label: 'Each month', amount: /about ([\d,.]*\d) ([A-Z]{3}) a (month|year) \(from [^)]+\)/g, bare: /([\d,.]*\d) ([A-Z]{3}) a (month|year)/g, cadence: { month: 'month', year: 'year' } },
+  ar: { heading: 'تكلفة التشغيل', label: 'كل شهر', amount: /نحو ([\d,.]*\d) ([A-Z]{3}) في (الشهر|السنة) \(من [^)]+\)/g, bare: /([\d,.]*\d) ([A-Z]{3}) في (الشهر|السنة)/g, cadence: { 'الشهر': 'month', 'السنة': 'year' } },
+};
+function costProblems(costs, c) {
+  const problems = [];
+  const lines = costs.split('\n').filter((l) => l.startsWith('- '));
+  const isTotal = (l) => l.startsWith(`- **${c.label}:**`);
+  const number = (s) => Number(s.replace(/,/g, ''));
+  const sums = (text, pattern) => {
+    const by = {};
+    for (const m of text.matchAll(pattern)) by[c.cadence[m[3]]] = (by[c.cadence[m[3]]] || 0) + number(m[1]);
+    return by;
+  };
+  const parts = lines.filter((l) => !isTotal(l));
+  for (const line of parts) {
+    // Money written any other way (no cadence, no source, the currency first, a symbol) is refused.
+    const money = (line.match(/\d ?[A-Z]{3}\b|\b[A-Z]{3} ?\d|[$€£]\s?\d/g) || []).length;
+    const sourced = [...line.matchAll(c.amount)].length;
+    if (money !== sourced) problems.push(`an amount without its cadence and source: ${line}`);
+  }
+  const given = sums(parts.join('\n'), c.amount);
+  const total = sums(lines.filter(isTotal).join('\n'), c.bare);
+  for (const cadence of ['month', 'year']) {
+    if ((given[cadence] || 0) !== (total[cadence] || 0)) problems.push(`the ${c.label} line says ${total[cadence] || 0} a ${cadence}, the parts add up to ${given[cadence] || 0}`);
+  }
+  return problems;
+}
+
+test('a bill the client already pays stays in the running cost, with its amount, its source and its cadence', () => {
+  const nfc = (s) => s.normalize('NFC');
+  const trd = nfc(readMarkdown(path.join(SKILL, 'references', 'trd.md')).replace(/\s+/g, ' '));
+  for (const rule of [
+    'A part **bought once and owned** (a server the client already owns) has no bill',
+    'A part **already being paid for** (an existing subscription, a yearly renewal) is still a running cost',
+    "never work out this project's share yourself",
+    'A yearly bill is written as a yearly amount and stays one: never divide it into months.',
+    'adds up only the amounts written above it, monthly and yearly apart, and names every part it does not count',
+    'يبقى تكلفة تشغيل', 'ولا تحسب نصيب هذا المشروع بنفسك', 'ولا تُقسَّم على الأشهر', 'ويسمّي كل جزء لم يحسبه',
+  ]) assert.ok(trd.includes(nfc(rule)), `trd.md must keep the rule: ${rule}`);
+  assert.ok(!trd.includes('is written as that, with no amount. A price'), 'an already-paid part is no longer written with no amount');
+
+  // The examples: the clinic's existing subscription and its yearly bill are counted; the timer pays nothing.
+  for (const [folder, c] of [['cedar-clinic', COST.en], ['study-timer', COST.en], ['cedar-clinic-ar', COST.ar]]) {
+    assert.deepStrictEqual(costProblems(section(read(`${folder}/docs/trd.md`), c.heading), c), [], `${folder}: every amount has its source and the total adds up`);
+  }
+  for (const [folder, c, subscription] of [['cedar-clinic', COST.en, 'Microsoft 365'], ['cedar-clinic-ar', COST.ar, 'Microsoft 365']]) {
+    const costs = section(read(`${folder}/docs/trd.md`), c.heading);
+    const line = costs.split('\n').find((l) => l.includes(subscription)) || '';
+    assert.strictEqual([...line.matchAll(c.amount)].length, 1, `${folder}: the existing subscription carries its amount and source`);
+    const cadences = [...costs.matchAll(c.amount)].map((m) => c.cadence[m[3]]).sort();
+    assert.deepStrictEqual(cadences, ['month', 'year'], `${folder}: one monthly bill and one yearly bill`);
+  }
+
+  // A made-up owner-supplied case: an owned server, an existing subscription, a yearly renewal.
+  const ok = [
+    '- The office server: bought and owned by the firm; no bill.',
+    '- The accounting subscription: about 200 AED a month (from the owner, the September invoice); fixed.',
+    '- The web address: about 90 AED a year (from the owner, the renewal notice); fixed.',
+    '- **Each month:** about 200 AED a month, plus 90 AED a year, paid by the firm.',
+  ].join('\n');
+  assert.deepStrictEqual(costProblems(ok, COST.en), []);
+  const wrong = [
+    ['the existing subscription left out of the total', ok.replace('about 200 AED a month, plus 90 AED a year, paid', 'nothing new, plus 90 AED a year, paid')],
+    ['the existing subscription written with no amount, and the total still claiming none', ok.replace('about 200 AED a month (from the owner, the September invoice); fixed', 'already paid for; fixed')],
+    ['the yearly bill divided into months', ok.replace('about 200 AED a month, plus 90 AED a year, paid', 'about 207.50 AED a month, paid')],
+    ['an amount with no source', ok.replace(' (from the owner, the September invoice)', '')],
+    ['an amount with no cadence', ok.replace('about 200 AED a month (from', 'about 200 AED (from')],
+    ['a price written the other way round', ok.replace('- The web address:', '- A text service: AED 999/month.\n- The web address:')],
+    ['a total nobody gave', ok.replace('about 200 AED a month, plus', 'about 350 AED a month, plus')],
+  ];
+  for (const [what, doc] of wrong) assert.ok(costProblems(doc, COST.en).length > 0, `caught: ${what}`);
+
+  // An existing bill whose amount nobody has yet stays open; nothing is filled in for it.
+  const unknown = ok.replace('- The accounting subscription: about 200 AED a month (from the owner, the September invoice); fixed.', '- TBD: the cost of the accounting subscription. Decided when the owner finds the invoice.')
+    .replace('about 200 AED a month, plus 90 AED a year, paid by the firm.', 'about 90 AED a year, paid by the firm; not counted: the accounting subscription.');
+  assert.deepStrictEqual(openTbds(unknown, LANGS.en).map((t) => t.name), ['the cost of the accounting subscription']);
+  assert.deepStrictEqual(costProblems(unknown, COST.en), [], 'the open bill is named, not priced');
+});
+
 // The clinic's release step (step 10), as its two lines.
 function stepLines(plan, number, L) {
   const step = section(plan, L.s.steps).split('\n### ').slice(1).find((s) => new RegExp(`^\\S+ ${number}: `).test(s)) || '';
@@ -934,8 +1063,8 @@ test('an approved TRD written before the Kept in line is found incomplete, and i
   const before = readMarkdown(path.join(__dirname, 'fixtures', 'approved-0.4.0', 'trd.md'));
   const after = read('study-timer/docs/trd.md');
   assert.match(before.split('\n')[1], /^> v1 · Approved 2026-10-08$/, 'the fixture is a real approved 0.4.0 document');
-  assert.deepStrictEqual(trdUpgradeGaps(before, L), ['Kept in'], 'it lacks only the Kept in line');
-  assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
+  assert.deepStrictEqual(trdUpgradeGaps(before, L), ['Each month', 'Kept in'], 'it lacks the Kept in line and, since 0.6.0, the running cost');
+  assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['Each month', 'Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
   for (const folder of ['cedar-clinic', 'study-timer']) assert.deepStrictEqual(trdUpgradeGaps(read(`${folder}/docs/trd.md`), L), [], `${folder} is complete`);
   assert.deepStrictEqual(trdUpgradeGaps(read('cedar-clinic-ar/docs/trd.md'), LANGS.ar), [], 'the Arabic clinic is complete');
   assert.deepStrictEqual(upgradeProblems(before, after, L), [], 'the Study Timer example is the completed counterpart');
@@ -944,7 +1073,9 @@ test('an approved TRD written before the Kept in line is found incomplete, and i
     ['a new approval nobody gave', after.replace('> v2 · Draft', '> v2 · Approved 2026-11-16')],
     ['the version not raised', after.replace('> v2 · Draft', '> v1 · Draft')],
     ['the approval history dropped', after.split('\n').filter((l) => !l.includes('Changed 2026-11-16')).join('\n')],
-    ['an invented earlier value', after.replace(': no line → ', ': only this computer → ')],
+    ['an invented earlier value', after.replace('Changed 2026-11-16: no line → the student', 'Changed 2026-11-16: only this computer → the student')],
+    ['an invented earlier running cost', after.replace(': no line → nothing is paid for', ': a free plan → nothing is paid for')],
+    ['the running cost added with no history', after.replace(/\n  - Changed 2026-11-16: no line → nothing is paid for[^\n]*/, '')],
     ['an earlier line lost', after.replace('- **Tests:** pytest, in `tests/`.\n', '')],
     ['the line never added', before.replace('> v1 · Approved 2026-10-08', '> v2 · Draft')],
   ];

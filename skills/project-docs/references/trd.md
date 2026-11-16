@@ -53,7 +53,8 @@ after later. All options obey the work rules.
 
 The parts: **Screen** (what people see and tap) · **Brain** (the back end that does the work) ·
 **Data storage** · **Where it lives** (hosting) · **Outside services** (anything outside the project it talks
-to, over the internet or the client's network: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
+to, over the internet or the client's network: logins, payments, maps, messages, AI) · **Running cost** (what is paid to
+keep it running, and who pays) · **Rules it must follow** (online or offline, security,
 languages, speed, available, accessibility) · **How the code is written** (language, formatting, checks, names, file size, tests, where the code is kept).
 
 For each **Outside service**, use that same question to confirm what the product sends, what must come
@@ -67,6 +68,25 @@ the Speed line): they change which options fit the other parts. Write the docume
 
 Prices, free plans and limits of hosting and services change often and you cannot look them up: say so,
 and tell the person to check them on the provider's site before they sign up.
+
+**Running cost** is never a default and never a guess. Once the other parts are chosen, list every part
+somebody pays for to keep the project running (hosting, a database service, a domain name, each paid
+outside service, a store or licence fee) and ask the person what each one costs, what makes it grow (more
+users, more messages, more storage, or "fixed"), and who pays. Write only an amount the person gave, with
+where it came from; never a price from your own memory. Who pays is a fact about the client: never "you
+pick".
+
+Keep two things apart. A part **bought once and owned** (a server the client already owns) has no bill:
+write that, with no amount. A part **already being paid for** (an existing subscription, a yearly renewal)
+is still a running cost: ask for its amount and where it came from like any other, and keep it in the
+total. When that bill also covers other work (company accounts everybody uses), say so on its line and
+write the whole bill; never work out this project's share yourself. A yearly bill is written as a yearly
+amount and stays one: never divide it into months.
+
+A price that depends on a choice still open stays with that choice: say so on its line, and write no second
+`TBD`. A price still open on its own, for a new part or an existing bill → `TBD`, named `the cost of <the
+part>`. The **Each month** line adds up only the amounts written above it, monthly and yearly apart, and
+names every part it does not count. Nothing is paid for → `None: nothing is paid for`, with the reason.
 
 Two parts are smart defaults, not questions, unless the work rules or the person say otherwise:
 
@@ -106,6 +126,8 @@ the TRD is written:
 - **The hosting** blocks only the step that puts it online: until then it runs on the builder's computer.
 - **Where the code is kept** blocks only the step that releases it or hands it over: until then it is
   built on the builder's computer.
+- **A running cost** blocks only the step that starts paying for it (putting it online, or signing up for
+  the service): everything before that step can be built.
 
 ## The pointer line (only on the person's yes)
 
@@ -123,7 +145,9 @@ Change nothing else in those files.
 
 > Work project: must use the clinic's Microsoft logins, patient data stays in the country. Screen: Next.js.
 > Brain: Next.js server routes. Data: PostgreSQL. Lives on the clinic's own server. Outside services: staff
-> login + a text-message service (TBD). Works online only, English and Arabic. Code: TypeScript, Prettier,
+> login + a text-message service (TBD). Running cost: the Microsoft accounts they already pay for, about
+> 450 AED a month, and the web address, about 60 AED a year, both paid by the clinic; the text messages are
+> not counted yet; the server is theirs, with no bill. Works online only, English and Arabic. Code: TypeScript, Prettier,
 > ESLint, Vitest. Is that it?
 
 ## The document
@@ -153,6 +177,10 @@ the old one (see SKILL.md).
 
 ## Outside services
 - <service: what it is for; sends …; expects …; if unavailable …>, because <reason>.
+
+## Running cost
+- <each paid part: what it is, about <amount> a month or a year (from <where the price came from>), and what makes it grow, or "fixed">
+- **Each month:** <about <the monthly amounts added up> a month, plus <the yearly amounts added up> a year, paid by <who>; not counted: <each part with no amount yet> / None: nothing is paid for, because <reason>>
 
 ## Rules it must follow
 - **Online or offline:** <…>
@@ -188,6 +216,22 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 استخدام ما تستقبله. لا تخترع إعادة محاولة أو خدمة بديلة أو بيانات محفوظة جديدة. القرار المفتوح يتبع
 «لم يُحسم بعد» ويعطّل العمل الذي يحتاجه فقط. دون خدمة خارجية، أبقِ «لا شيء» ولا تسأل عن تعطّلها.
 
+**تكلفة التشغيل** ليست خيارًا افتراضيًا ولا تخمينًا: بعد اختيار الأجزاء الأخرى، اذكر كل جزء يُدفع مقابله
+ليبقى المشروع يعمل (الاستضافة، خدمة قاعدة بيانات، اسم النطاق، كل خدمة خارجية مدفوعة، رسوم متجر أو
+ترخيص)، واسأل الشخص عن تكلفة كل جزء، وما الذي يزيدها، ومن يدفعها. اكتب فقط المبلغ الذي ذكره الشخص مع
+مصدره، ولا تكتب سعرًا من ذاكرتك. من يدفع حقيقة عن العميل وليس «اختر أنت».
+
+فرّق بين أمرين. الجزء **المشترى مرة واحدة والمملوك** (خادم يملكه العميل أصلًا) لا فاتورة له: اكتب ذلك دون
+مبلغ. والجزء **الذي يُدفع له أصلًا باستمرار** (اشتراك قائم، تجديد سنوي) يبقى تكلفة تشغيل: اسأل عن مبلغه
+ومصدره كأي جزء آخر، وأبقِه في المجموع. وإن كانت الفاتورة تغطي أعمالًا أخرى أيضًا (حسابات الشركة التي
+يستخدمها الجميع) فاذكر ذلك في سطره واكتب الفاتورة كلها، ولا تحسب نصيب هذا المشروع بنفسك. والفاتورة
+السنوية تُكتب مبلغًا سنويًا وتبقى كذلك، ولا تُقسَّم على الأشهر.
+
+السعر المرتبط بقرار ما زال مفتوحًا يبقى مع ذلك القرار، ولا يُكتب له سطر مفتوح ثانٍ. وإن بقي السعر وحده
+مفتوحًا، لجزء جديد أو لفاتورة قائمة، فهو «لم يُحسم بعد» باسم «تكلفة <الجزء>»، ويعطّل فقط الخطوة التي يبدأ
+عندها الدفع. وسطر **كل شهر** يجمع فقط المبالغ المكتوبة فوقه، الشهري وحده والسنوي وحده، ويسمّي كل جزء لم
+يحسبه. وإن لم يُدفع شيء فاكتب «لا شيء: لا يُدفع شيء» مع السبب.
+
 **مكان الكود** ليس خيارًا افتراضيًا: اسأل أين يُحفظ الكود وتاريخه وأين نسخته الثانية، حتى لا يضيع
 المشروع بضياع حاسوب واحد. قواعد العمل أولًا، والشخص هو من يختار؛ وإن بقي مفتوحًا فهو «لم يُحسم بعد»
 ويعطّل خطوة الإصدار أو التسليم فقط.
@@ -221,6 +265,10 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 
 ## الخدمات الخارجية
 - <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …>، لأن <السبب>.
+
+## تكلفة التشغيل
+- <كل جزء مدفوع: ما هو، نحو <المبلغ> في الشهر أو السنة (من <مصدر السعر>)، وما الذي يزيده، أو «ثابت»>
+- **كل شهر:** <نحو <مجموع المبالغ الشهرية> في الشهر، إضافةً إلى <مجموع المبالغ السنوية> في السنة، يدفعه <من>؛ غير محسوب: <كل جزء بلا مبلغ بعد> / لا شيء: لا يُدفع شيء، لأن <السبب>>
 
 ## القواعد التي يلتزم بها
 - **متصل أو دون اتصال:** <…>

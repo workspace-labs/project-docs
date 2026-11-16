@@ -1,5 +1,5 @@
 # Handover: Cedar Clinic Booking
-> v1 · Approved 2026-10-08 by the clinic manager
+> v2 · Draft
 
 ## What is handed over
 - The code belongs to the clinic, in the clinic's own git repository.
@@ -19,6 +19,8 @@
 
 ## Running it
 - The IT lead keeps it running on the clinic's in-country server and backs it up every night to a second disk at the clinic.
+- The clinic keeps paying the Microsoft 365 accounts, the web address and the text messages; the IT lead renews the web address each year and holds the text-message service account.
+  - Changed 2026-11-16: no line → the clinic pays and the IT lead renews, because v1, approved 2026-10-08 by the clinic manager, was written before this line was asked.
 
 ## Maintenance and updates
 - The front desk reports a problem to the IT lead by email; it is answered within one working day.

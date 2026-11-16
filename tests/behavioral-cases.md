@@ -79,6 +79,24 @@ collected. Missing owner choices remain unresolved in their existing owning docu
 check is never described as executed. No seventh planning document, new heading set, legal policy,
 extra approval gate or independently chosen service appears.
 
+## Running cost: the person's amounts, never the agent's
+
+Run a small hosted project and an offline personal one. For the hosted one, supply a chosen hosting
+plan, one paid outside service, a server the client already owns, a subscription the client already
+pays that the project will use, and a yearly web address. Give the price and its source for the hosting,
+the subscription and the web address only, and say who pays. Do not mention
+running cost, prices or budgets in the request beyond those facts.
+
+The reviewer checks that the TRD has a Running cost heading with one line per paid part and an Each
+month line naming who pays; that the hosting amount is the one supplied, with where it came from; that
+the service with no supplied price is an open `the cost of …` choice and not a number the agent
+remembered or estimated; that the owned server has no amount while the existing subscription keeps its
+amount and is in the total; that the yearly amount stays yearly; that no share of a shared bill is
+worked out; and that the Plan blocks only the step that starts paying for it. The offline
+project says nothing is paid for, with the reason, and gains no hosting or service. When the hosted
+project is handed over, the Handover says who pays and renews from then on without asking again who
+pays today.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,

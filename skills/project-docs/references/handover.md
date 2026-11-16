@@ -13,6 +13,8 @@ Gather first · The questions · The read-back · The document · In Arabic
 - **A filled `docs/meeting-form.md`:** its training, handover, running, announcing and retiring answers.
 - **PRD → Who decides:** the owner and who accepts it are usually who receives it.
 - **TRD → Where it lives:** where it will run, so where it is installed and run from.
+- **TRD → Running cost:** what is paid to keep it running and who pays it now. Never ask it again: the
+  Handover only says who pays and renews from the handover on.
 - **Data → How long it's kept:** what happens to the data when the project is retired.
 - **Security → If something goes wrong:** who is told first, to check it matches who looks after it.
 - Any `TBD` in those places: quote it with the document that holds it, never fill it in. Who receives,
@@ -36,6 +38,7 @@ Round 2 has four questions, so it takes two rounds when none is answered yet.
 4. **The first weeks after go-live:** who fixes problems at first (often the builder), for how long, and
    when the old way (a paper list, a spreadsheet) stops.
 5. **Who runs it day to day?** Who keeps it switched on, checks it works, and makes the backups, and where.
+   When the TRD's **Running cost** names a paid part: who pays it and renews it from the handover on.
 6. **Who fixes problems and makes updates after that?** How a problem or a change request reaches them, how
    fast it is answered, and how an update is tested before it goes live.
 7. **When would it be retired?** What would end it (a replacement, the end of a contract), who decides, and
@@ -49,7 +52,8 @@ the heading it belongs to.
 > The clinic manager receives the code, a front desk guide and an admin guide, and signs the handover; two
 > front desk staff get one hour of training. Patients are told by a poster and a text. For the first four
 > weeks the builder fixes problems, and phone booking stops after two weeks. Then the IT lead runs it
-> on the clinic's server, backs it up every night, and fixes problems within one working day; updates are
+> on the clinic's server, backs it up every night, renews the web address the clinic pays for, and
+> fixes problems within one working day; updates are
 > tried on a copy first. If it is replaced, visits are exported, then deleted once the new system has them. Is that it?
 
 ## The document
@@ -76,6 +80,7 @@ Write exactly these headings, in this order. A heading with nothing under it say
 
 ## Running it
 - <who runs it day to day, where, backups>
+- <who pays the running cost and renews the paid parts from the handover on (TRD: Running cost) / None: nothing is paid for>
 
 ## Maintenance and updates
 - <who fixes problems, how requests arrive, how fast, how updates are tested>
@@ -108,6 +113,7 @@ says so in one line ("لا شيء: لن يُعلن عنه.").
 
 ## تشغيله
 - <من يشغّله يوميًا، وأين، والنسخ الاحتياطية>
+- <من يدفع تكلفة التشغيل ويجدّد الأجزاء المدفوعة بعد التسليم (TRD: تكلفة التشغيل) / لا شيء: لا يُدفع شيء>
 
 ## الصيانة والتحديثات
 - <من يصلح المشكلات، وكيف تصل الطلبات، وبأي سرعة، وكيف تُختبر التحديثات>

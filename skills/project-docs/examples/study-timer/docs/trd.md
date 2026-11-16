@@ -19,6 +19,10 @@
 ## Outside services
 - None: it never goes online.
 
+## Running cost
+- **Each month:** None: nothing is paid for, because it runs on the student's own computer.
+  - Changed 2026-11-16: no line → nothing is paid for, because v1, approved 2026-10-08, was written before this line was asked.
+
 ## Rules it must follow
 - **Online or offline:** offline only.
 - **Security:** see `docs/security.md`.

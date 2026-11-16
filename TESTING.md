@@ -1,5 +1,21 @@
 # How project-docs was tested
 
+## 0.6.0: what it costs to run, and who pays, 2026-11-16
+
+Verified: **2026-11-16 · version 0.6.0 · 142 automated tests passed** on macOS, with
+`node tools/font-ranges.js --check`. The new test and the extended upgrade test were tried against ten
+changed copies, each in its own throwaway folder, and each fails the suite: the Study Timer and the
+Arabic clinic without their monthly line, a second TBD opened for the text-message price, the clinic's
+Handover keeping its old approval, its history line dropped, the Arabic history given an invented
+earlier value, the open-price rule changed to block every step, the AI allowed to supply a price, the
+Handover template without its pointer to the TRD, and the TRD template without the heading. The upload
+zip was rebuilt: one `project-docs/` root, 81 entries (65 files and 16 folders). After an independent
+review found that a bill the client already pays could drop out of the total, a second test was added:
+it adds up the amounts of each Running cost section and was tried against a made-up case with an owned
+server, an existing subscription and a yearly renewal, in seven wrong forms, each refused. It checks the
+shape and the sums, never whether an amount is true. Not rerun: the preview page (unchanged), Windows,
+and a blind dry run of the new question with a fresh agent.
+
 ## 0.5.0: where the code is kept, the changelog and a from-empty set-up, 2026-11-16
 
 Verified: **2026-11-16 · version 0.5.0 · 140 automated tests passed** on macOS, with

@@ -10,6 +10,7 @@
      others), how the work runs today and with it, what it must do (each with a check), what it will NOT do, what
      comes later, assumptions and risks, how we know it worked, dates and budget.
   2. **TRD** (`docs/trd.md`): what it is built with (screen, brain, data storage, where it lives, outside services),
+     what it costs to run and who pays (the person's amounts, never a price the AI supplies),
      the rules it must follow, how the code is written, and the reason for each choice.
   3. *(Offers the frameflow skill for the screens, once.)*
   4. **Design brief** (`DESIGN.md`): colors, fonts, shapes, pieces, must-have rules and ready values,
@@ -20,7 +21,8 @@
      database queries, safe sign-in), secrets, personal data,
      outside services, work rules, and what to do if something goes wrong.
   7. **Handover** (`docs/handover.md`): only when it is handed to someone. What is handed over, who receives
-     it, announcing it, the first weeks after go-live, running it, maintenance and updates, retiring it.
+     it, announcing it, the first weeks after go-live, running it (and who pays and renews from then on),
+     maintenance and updates, retiring it.
   8. **Plan** (`docs/plan.md`): small steps you can see work, each with a check, then, when someone else
      decides, the fixed delivery steps: prototype, functional test, security test, acceptance test (UAT) on a
      test copy, guides and training, install, live test, go-live, handover.
