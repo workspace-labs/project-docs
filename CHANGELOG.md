@@ -2,6 +2,43 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.5.0] - 2026-11-16
+
+From an outside review of a finished document set, which listed eight things as missing. Six were
+already there or half there; this release adds the gaps as lines inside the existing documents, with no
+new document type.
+
+### Added
+
+- **TRD → How the code is written → Kept in:** where the code and its history are kept, and where the
+  second copy is (Arabic: `مكان الكود`). It is the person's answer, never the AI's default; an open
+  choice is a `TBD` that blocks only the step that releases or hands over the project.
+- **Plan → the release check** now also asks for a version and a dated line in `CHANGELOG.md` for each
+  release, saying what changed for the people who use it, with its code in the place the TRD names.
+- **Plan → the README check** now covers setting the project up again on another computer, not only
+  another person: the how-to goes from an empty computer to running, and is tried that way.
+- The three examples carry the Kept in line; the clinic's release step covers it and carries the
+  changelog line. The Study Timer TRD shows the upgrade: it had been approved without the line, so it is
+  now `v2 · Draft` with the earlier approval kept in a `Changed` line beneath the new line.
+
+### Not added, on purpose
+
+- No separate decision log: each choice already keeps its reason and its dated `Changed` lines in the
+  document that owns it (decision record 0004).
+
+### Upgrading
+
+- A TRD approved before 0.5.0 has no Kept in line. As with any newer fixed line, the skill keeps
+  everything, asks only for that line, and the TRD is approved again.
+
+### Verification
+
+- macOS, 2026-11-16: `node --test`, 140 tests pass (137 before, plus three for these lines). They fail
+  when an example loses its Kept in line, when the changelog sentence leaves the release check for
+  another step, when an open code location is made to block every building step, and when an upgraded
+  TRD keeps or invents an approval. `node tools/font-ranges.js --check` passes. The preview page is
+  unchanged and was not rerun.
+
 ## [0.4.0] - 2026-11-13
 
 Built in parallel with the published 0.3.0 and 0.3.1 and merged onto them; its decision records are

@@ -39,11 +39,13 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
   `TBD` and approval process. Keep these within **Covers** and **How we know it works**:
   - Saved data that cannot reasonably be recreated: before first entrusting it to the product, restore
     a backup into a separate safe copy and read the records back; never overwrite live data for a test.
-  - Someone besides the author will run it: when it becomes runnable, write the README how-to and try
-    its instructions as that user.
+  - Someone besides the author will run it, or it will be set up again on another computer: when it
+    becomes runnable, write the README how-to from an empty computer to running (what to install, its
+    settings, how to start it) and try its instructions that way, as that user.
   - It is deployed or distributed beyond the builder's computer: that step names how to release it,
     how to return to the previous working release and what happens to saved data; try the rollback on
-    a safe copy before release.
+    a safe copy before release. Each release gets a version and a dated line in `CHANGELOG.md` saying
+    what changed for the people who use it, and its code is in the place the TRD names under **Kept in**.
   - It collects personal data from its users: the owner supplies the notice shown before collection;
     check that the product shows the supplied text. Do not draft a legal policy, infer a legal duty,
     create `docs/privacy.md` or block unrelated work while that text is awaited.
@@ -168,9 +170,11 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 المعتادة مع «لم يُحسم بعد» والاعتماد:
 - بيانات محفوظة لا يمكن إعادة إنشائها عمليًا: قبل الاعتماد على المنتج لحفظها، استعد نسخة احتياطية
   في نسخة آمنة منفصلة واقرأ السجلات مجددًا؛ لا تستبدل البيانات الحية للاختبار.
-- سيشغّله شخص غير مؤلفه: عند أول نسخة قابلة للتشغيل، اكتب إرشادات README وجرّب اتباعها مثل ذلك المستخدم.
+- سيشغّله شخص غير مؤلفه، أو سيُجهَّز من جديد على حاسوب آخر: عند أول نسخة قابلة للتشغيل، اكتب إرشادات
+  README من حاسوب فارغ إلى التشغيل (ما يُثبَّت، وإعداداته، وكيف يبدأ) وجرّب اتباعها مثل ذلك المستخدم.
 - سينشر أو يوزّع خارج حاسوب المطوّر: سمِّ طريقة الإصدار والعودة إلى الإصدار السابق الذي يعمل، وما
-  يحدث للبيانات المحفوظة؛ جرّب الرجوع على نسخة آمنة قبل الإصدار.
+  يحدث للبيانات المحفوظة؛ جرّب الرجوع على نسخة آمنة قبل الإصدار. لكل إصدار رقم وسطر مؤرّخ في
+  `CHANGELOG.md` يقول ما تغيّر لمن يستخدمونه، وكوده في المكان الذي يسمّيه TRD تحت **مكان الكود**.
 - يجمع بيانات شخصية من مستخدميه: يقدّم المالك نص الإشعار الذي يظهر قبل الجمع؛ افحص ظهور النص الذي
   قدّمه. لا تكتب سياسة قانونية، ولا تفترض واجبًا قانونيًا، ولا تنشئ `docs/privacy.md`، ولا تعطّل العمل
   المستقل في انتظار النص.

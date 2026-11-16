@@ -1,5 +1,5 @@
 # TRD: Study Timer
-> v1 · Approved 2026-10-08
+> v2 · Draft
 
 ## Work rules
 - None: personal project.
@@ -34,3 +34,5 @@
 - **Names:** snake_case.
 - **File size:** one file, kept under about 200 lines.
 - **Tests:** pytest, in `tests/`.
+- **Kept in:** the student's computer, with a second copy in their private GitHub repository.
+  - Changed 2026-11-16: no line → the student's computer with a second copy, because v1, approved 2026-10-08, was written before this line was asked.

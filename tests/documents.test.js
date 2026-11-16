@@ -826,6 +826,131 @@ test('an approved 0.2.2 document is found incomplete, and the skill says how to 
   ]) assert.ok(skill.includes(rule), `SKILL.md must keep the rule: ${rule}`);
 });
 
+// 0.5.0: where the code is kept is the person's answer in the TRD; the Plan's release check carries the
+// changelog line and the set-up-from-empty README, in both languages and in every example.
+test('the TRD says where the code is kept, and the Plan checks the changelog and a from-empty set-up', () => {
+  const trd = readMarkdown(path.join(SKILL, 'references', 'trd.md'));
+  const plan = readMarkdown(path.join(SKILL, 'references', 'plan.md')).replace(/\s+/g, ' ');
+  for (const [label, examples] of [['Kept in', ['cedar-clinic', 'study-timer']], ['مكان الكود', ['cedar-clinic-ar']]]) {
+    const line = new RegExp(`^- \\*\\*${label}:\\*\\* \\S`, 'm');
+    assert.match(trd, line, `the TRD template has the "${label}" line`);
+    for (const folder of examples) assert.match(read(`${folder}/docs/trd.md`), line, `${folder} says where its code is kept`);
+    assert.ok(plan.includes(`**${label}**`), `the Plan's release check points at "${label}"`);
+  }
+  assert.ok(trd.replace(/\s+/g, ' ').includes('**Where the code is kept** is never a default'), 'the AI never picks where the code is kept');
+  for (const rule of ['from an empty computer to running', 'a dated line in `CHANGELOG.md`', 'من حاسوب فارغ إلى التشغيل', 'وسطر مؤرّخ في `CHANGELOG.md`']) {
+    assert.ok(plan.includes(rule), `plan.md must keep the check: ${rule}`);
+  }
+  // Each rule sits in the bullet it belongs to, not just somewhere in the file.
+  const nfc = (s) => s.normalize('NFC');
+  const between = (text, start, end) => nfc(text).split(nfc(start))[1].split(nfc(end))[0];
+  const en = between(plan, 'It is deployed or distributed beyond', 'It collects personal data');
+  const ar = between(plan, 'خارج حاسوب', '- يجمع بيانات شخصية');
+  assert.ok(en.includes('a dated line in `CHANGELOG.md`') && en.includes('**Kept in**'), 'the English release check holds both');
+  assert.ok(ar.includes('`CHANGELOG.md`') && ar.includes(nfc('**مكان الكود**')), 'the Arabic release check holds both');
+  assert.ok(between(plan, 'Someone besides the author', 'It is deployed or distributed').includes('from an empty computer to running'));
+  // An open choice blocks only the release or the handover, never the building steps.
+  const tbd = nfc(trd.split('## TBD: an honest gap')[1].split('\n## ')[0].replace(/\s+/g, ' '));
+  assert.ok(tbd.includes('**Where the code is kept** blocks only the step that releases it or hands it over: until then it is built on the builder\'s computer.'));
+  assert.ok(nfc(trd.replace(/\s+/g, ' ')).includes(nfc('ويعطّل خطوة الإصدار أو التسليم فقط')), 'the Arabic rule blocks only the release or the handover');
+});
+
+// The clinic's release step (step 10), as its two lines.
+function stepLines(plan, number, L) {
+  const step = section(plan, L.s.steps).split('\n### ').slice(1).find((s) => new RegExp(`^\\S+ ${number}: `).test(s)) || '';
+  const line = (label) => step.split('\n').find((l) => l.startsWith(`- **${label}:**`)) || '';
+  return { covers: line(L.covers), how: line(L.how) };
+}
+
+// The release step itself must cover the TRD's code location, name that same place, and ask for a
+// version and a dated changelog line. A token elsewhere in the plan does not count.
+function releaseCheckProblems(plan, trd, W, L) {
+  const nfc = (s) => s.normalize('NFC');
+  const { covers, how } = stepLines(nfc(plan), 10, L);
+  const kept = (nfc(trd).match(new RegExp(`^- \\*\\*${nfc(W.label)}:\\*\\* (.+)$`, 'm')) || [])[1] || '';
+  const problems = [];
+  if (!covers.includes('TRD:') || !covers.includes(nfc(W.label))) problems.push('the release step does not cover the TRD code location');
+  if (!how.includes(nfc(W.version))) problems.push('the release check gives the release no version');
+  if (!how.includes(nfc(W.dated))) problems.push('the release check has no dated changelog line');
+  if (!kept.includes(nfc(W.place)) || !how.includes(nfc(W.place))) problems.push('the release check and the TRD do not name the same place');
+  return problems;
+}
+
+test('the clinic release step itself carries the version, the dated changelog line and the TRD code location', () => {
+  const cases = [
+    { folder: 'cedar-clinic', L: LANGS.en, protoTitle: 'Step 2: Prototype',
+      W: { label: 'Kept in', version: 'Give the release a version', dated: 'a dated line in `CHANGELOG.md`', place: "the clinic's own git repository" } },
+    { folder: 'cedar-clinic-ar', L: LANGS.ar, protoTitle: 'الخطوة 2: النموذج الأولي',
+      W: { label: 'مكان الكود', version: 'أعطِ الإصدار رقمًا', dated: 'وسطرًا مؤرّخًا في `CHANGELOG.md`', place: 'مستودع git الخاص بالعيادة' } },
+  ];
+  for (const { folder, L, W, protoTitle } of cases) {
+    const plan = read(`${folder}/docs/plan.md`).normalize('NFC'), trd = read(`${folder}/docs/trd.md`);
+    assert.deepStrictEqual(releaseCheckProblems(plan, trd, W, L), [], `${folder}: the real example`);
+    // The sentence moved out of the release check into the Prototype title is caught.
+    const sentence = plan.slice(plan.indexOf(W.version.normalize('NFC')), plan.indexOf(W.place.normalize('NFC')) + W.place.normalize('NFC').length);
+    assert.ok(sentence.includes('`CHANGELOG.md`') && plan.includes(protoTitle.normalize('NFC')), `${folder}: the mutation can be made`);
+    const moved = plan.replace(sentence, '').replace(protoTitle.normalize('NFC'), `${protoTitle.normalize('NFC')} ${sentence}`);
+    assert.ok(moved.includes('`CHANGELOG.md`'));
+    assert.ok(releaseCheckProblems(moved, trd, W, L).length >= 3, `${folder}: a changelog token outside the release check does not count`);
+    // The release step no longer covering the code location is caught, and so is a TRD naming another place.
+    assert.ok(releaseCheckProblems(plan.replace(new RegExp(`[,،] ${W.label.normalize('NFC')}`), ''), trd, W, L).length > 0, `${folder}: Covers`);
+    assert.ok(releaseCheckProblems(plan, trd.normalize('NFC').replace(W.place.normalize('NFC'), 'GitHub'), W, L).length > 0, `${folder}: the place`);
+  }
+});
+
+// Fixed bold lines a TRD lacks under today's template.
+function trdUpgradeGaps(trd, L) {
+  const labels = (lines) => lines.map((l) => (l.match(/^- \*\*(.+?):\*\* /) || [])[1]).filter(Boolean);
+  const have = labels(trd.split('\n'));
+  return labels(template('trd.md', L.templateHeading)).filter((label) => !have.includes(label));
+}
+
+// Upgrading an approved document that lacks a newer fixed line: keep every line, add the missing line with
+// the earlier approval kept beneath it, raise the version, and wait as a Draft. Never a new approval.
+function upgradeProblems(before, after, L) {
+  const stampOf = (doc) => doc.split('\n')[1];
+  const version = (doc) => Number((stampOf(doc).match(/^> v(\d+) · /) || [])[1]);
+  const approved = (stampOf(before).match(/Approved (\d{4}-\d{2}-\d{2})/) || [])[1];
+  const problems = [];
+  const afterLines = after.split('\n');
+  for (const line of before.split('\n').filter((l, i) => i !== 1 && l.trim())) {
+    if (!afterLines.includes(line)) problems.push(`a line was lost: ${line}`);
+  }
+  for (const gap of trdUpgradeGaps(after, L)) problems.push(`still missing: ${gap}`);
+  if (version(after) !== version(before) + 1) problems.push('the version was not raised by one');
+  if (!/^> v\d+ · Draft$/.test(stampOf(after))) problems.push('the upgraded document must wait as a Draft, never carry an approval nobody gave');
+  for (const gap of trdUpgradeGaps(before, L)) {
+    const at = afterLines.findIndex((l) => l.startsWith(`- **${gap}:** `));
+    const history = afterLines[at + 1] || '';
+    if (at < 0 || !L.changed.test(history) || !history.includes(`approved ${approved}`)) problems.push(`${gap}: the earlier approval (${approved}) is not kept beneath the new line`);
+    else if (!history.includes(': no line → ')) problems.push(`${gap}: the history invents an earlier value`);
+  }
+  return problems;
+}
+
+// Real output of 0.4.0 (the Study Timer TRD at a0a4131): approved, with no Kept in line.
+test('an approved TRD written before the Kept in line is found incomplete, and its upgrade keeps the approval history', () => {
+  const L = LANGS.en;
+  const before = readMarkdown(path.join(__dirname, 'fixtures', 'approved-0.4.0', 'trd.md'));
+  const after = read('study-timer/docs/trd.md');
+  assert.match(before.split('\n')[1], /^> v1 · Approved 2026-10-08$/, 'the fixture is a real approved 0.4.0 document');
+  assert.deepStrictEqual(trdUpgradeGaps(before, L), ['Kept in'], 'it lacks only the Kept in line');
+  assert.deepStrictEqual(trdUpgradeGaps(readMarkdown(path.join(FIXTURES, 'trd.md')), L), ['Available', 'Accessibility', 'Kept in'], 'the 0.2.2 TRD lacks more');
+  for (const folder of ['cedar-clinic', 'study-timer']) assert.deepStrictEqual(trdUpgradeGaps(read(`${folder}/docs/trd.md`), L), [], `${folder} is complete`);
+  assert.deepStrictEqual(trdUpgradeGaps(read('cedar-clinic-ar/docs/trd.md'), LANGS.ar), [], 'the Arabic clinic is complete');
+  assert.deepStrictEqual(upgradeProblems(before, after, L), [], 'the Study Timer example is the completed counterpart');
+  const wrong = [
+    ['the line added but the old approval kept', after.replace('> v2 · Draft', '> v1 · Approved 2026-10-08')],
+    ['a new approval nobody gave', after.replace('> v2 · Draft', '> v2 · Approved 2026-11-16')],
+    ['the version not raised', after.replace('> v2 · Draft', '> v1 · Draft')],
+    ['the approval history dropped', after.split('\n').filter((l) => !l.includes('Changed 2026-11-16')).join('\n')],
+    ['an invented earlier value', after.replace(': no line → ', ': only this computer → ')],
+    ['an earlier line lost', after.replace('- **Tests:** pytest, in `tests/`.\n', '')],
+    ['the line never added', before.replace('> v1 · Approved 2026-10-08', '> v2 · Draft')],
+  ];
+  for (const [what, doc] of wrong) assert.ok(upgradeProblems(before, doc, L).length > 0, `caught: ${what}`);
+});
+
 // Screens chosen, database open: the prototype on made-up data can go first; every step that saves still waits.
 test('with the data storage TBD, the prototype goes first and the saving steps wait', () => {
   const L = LANGS.en;

@@ -43,3 +43,4 @@
 - **Names:** camelCase for code, kebab-case for file names.
 - **File size:** one job per file; split any file that grows past about 300 lines.
 - **Tests:** Vitest, in `tests/`, run before every delivery.
+- **Kept in:** the clinic's own git repository on its in-country server; the second copy is the server's nightly backup.

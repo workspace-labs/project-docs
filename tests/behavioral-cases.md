@@ -72,8 +72,9 @@ copying patient content or secrets.
 For each outside service, the TRD names the expected response and the behavior when it fails; Security
 continues to name what it receives. Data's readable required/unique declarations agree with its ready
 block, and personal-record removal accounts for linked records. The Plan puts restoration and read-back
-on the first step saving irreplaceable data, README instructions on a runnable step for another user,
-release and rollback on the distribution step, and an owner-supplied notice before personal data is
+on the first step saving irreplaceable data, README instructions from an empty computer on a runnable
+step for another user or another computer, release, rollback and a dated changelog line on the
+distribution step (its code in the place the TRD's Kept in line names), and an owner-supplied notice before personal data is
 collected. Missing owner choices remain unresolved in their existing owning documents. A proposed
 check is never described as executed. No seventh planning document, new heading set, legal policy,
 extra approval gate or independently chosen service appears.

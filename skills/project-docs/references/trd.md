@@ -54,7 +54,7 @@ after later. All options obey the work rules.
 The parts: **Screen** (what people see and tap) · **Brain** (the back end that does the work) ·
 **Data storage** · **Where it lives** (hosting) · **Outside services** (anything outside the project it talks
 to, over the internet or the client's network: logins, payments, maps, messages, AI) · **Rules it must follow** (online or offline, security,
-languages, speed, available, accessibility) · **How the code is written** (language, formatting, checks, names, file size, tests).
+languages, speed, available, accessibility) · **How the code is written** (language, formatting, checks, names, file size, tests, where the code is kept).
 
 For each **Outside service**, use that same question to confirm what the product sends, what must come
 back, and what the user sees or can still do when the service is down or returns a failure. Keep these
@@ -82,6 +82,12 @@ Two parts are smart defaults, not questions, unless the work rules or the person
 **Available** is never a default: the hours it must work and what happens when it is down are the client's
 answer. Ask, or write `TBD`. Personal project → "When the person runs it".
 
+**Where the code is kept** is never a default either. Ask where the code and its history are kept (a
+private Git repository at a provider they name, the workplace's own server, only this computer) and where
+its second copy is, so a lost computer does not lose the project. The work rules come first. The person
+picks; "only this computer, no second copy" is their answer to give and is written as it is. Still open →
+`TBD`.
+
 The **Security** rule in the TRD is one line: `see docs/security.md`, plus any security rule the work sets.
 
 ## TBD: an honest gap
@@ -98,6 +104,8 @@ the TRD is written:
   prototype can be built until this is chosen. Settle it now, or keep it open?" No screens → it blocks
   everything that saves, like the screen.
 - **The hosting** blocks only the step that puts it online: until then it runs on the builder's computer.
+- **Where the code is kept** blocks only the step that releases it or hands it over: until then it is
+  built on the builder's computer.
 
 ## The pointer line (only on the person's yes)
 
@@ -161,6 +169,7 @@ the old one (see SKILL.md).
 - **Names:** <…>
 - **File size:** <…>
 - **Tests:** <…>
+- **Kept in:** <where the code and its history are kept, and where the second copy is>
 ```
 
 ## In Arabic
@@ -178,6 +187,10 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 يستطيع فعله عند تعطّل الخدمة أو فشل الرد. تبقى هذه التفاصيل في سطر الخدمة الحالي، ويعيد الأمان
 استخدام ما تستقبله. لا تخترع إعادة محاولة أو خدمة بديلة أو بيانات محفوظة جديدة. القرار المفتوح يتبع
 «لم يُحسم بعد» ويعطّل العمل الذي يحتاجه فقط. دون خدمة خارجية، أبقِ «لا شيء» ولا تسأل عن تعطّلها.
+
+**مكان الكود** ليس خيارًا افتراضيًا: اسأل أين يُحفظ الكود وتاريخه وأين نسخته الثانية، حتى لا يضيع
+المشروع بضياع حاسوب واحد. قواعد العمل أولًا، والشخص هو من يختار؛ وإن بقي مفتوحًا فهو «لم يُحسم بعد»
+ويعطّل خطوة الإصدار أو التسليم فقط.
 
 | English | Arabic |
 |---|---|
@@ -224,4 +237,5 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 - **الأسماء:** <…>
 - **حجم الملفات:** <…>
 - **الاختبارات:** <…>
+- **مكان الكود:** <أين يُحفظ الكود وتاريخه، وأين نسخته الثانية>
 ```

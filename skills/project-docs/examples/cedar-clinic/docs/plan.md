@@ -56,8 +56,8 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Status:** not started
 
 ### Step 10: Release safely before collecting real patient data
-- **Covers:** TRD: Where it lives, Work rules, Recovery; Data: How long it's kept; Security: Connections, Audit
-- **How we know it works:** after steps 4 and 5, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and return to the previous working image, including database compatibility; try the rollback on that isolated copy without losing its visits or overwriting live data. Follow the README as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
+- **Covers:** TRD: Where it lives, Work rules, Recovery, Kept in; Data: How long it's kept; Security: Connections, Audit
+- **How we know it works:** after steps 4 and 5, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and return to the previous working image, including database compatibility; try the rollback on that isolated copy without losing its visits or overwriting live data. Give the release a version and a dated line in `CHANGELOG.md`, from the clinic's own git repository. Follow the README from an empty computer as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
 - **Status:** ⛔ waits for TBD: the owner-supplied patient notice
 
 ### Step 11: Functional test

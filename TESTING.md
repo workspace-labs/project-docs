@@ -1,5 +1,15 @@
 # How project-docs was tested
 
+## 0.5.0: where the code is kept, the changelog and a from-empty set-up, 2026-11-16
+
+Verified: **2026-11-16 · version 0.5.0 · 140 automated tests passed** on macOS, with
+`node tools/font-ranges.js --check`. The three new tests were tried against changed copies: an example
+TRD without its Kept in line, the changelog sentence moved out of the clinic's release check into the
+Prototype title, and the open-code-location rule reversed to block every building step each fail the
+suite. `tests/fixtures/approved-0.4.0/trd.md` is the Study Timer TRD as 0.4.0 shipped it; the upgrade
+test compares it with today's example. Not rerun: the preview page (unchanged), Windows, and a blind dry
+run of the new question.
+
 ## 0.4.0: the client meetings to the handover, 2026-11-13
 
 Verified: **2026-11-13 · version 0.4.0 · 137 automated tests passed** (previews unchanged). Built as 0.3.0 on
