@@ -7,9 +7,11 @@ Each thing has one home. A change goes to the home that owns it, and nowhere els
 | `skills/project-docs/SKILL.md` | the document order, the shared loop (ask, read back, write, approve), the stamp, locks and `Changed` lines, the frameflow offer, the rules that never bend | anything about one document only; it stays a short menu (about 150 lines at most) |
 | `skills/project-docs/references/<document>.md` | that document's questions, its exact headings, and its "In Arabic" words | rules shared by all documents (those belong in `SKILL.md`) |
 | `skills/project-docs/assets/preview/` | how looks are drawn (`render.js`, `preview.css`), whether a look may be shown (`check.js`: contrast pairs, fonts, value shapes), the bundled fonts and their licences | project words or looks: those come only from the `looks.js` an agent writes in the user's project |
-| `skills/project-docs/examples/` | complete, valid sample documents in each supported shape (full English, full Arabic, tiny with no screens and no saved data) | anything that does not pass `node --test` |
-| `tests/` | proof that examples follow the reference headings, agree with each other, and that the preview refuses what it must | test fixtures inside the skill folder |
-| `tools/` | builder-only helpers: font coverage (`font-ranges.js`), Mac screenshots (`shot-mac.sh`) | anything the installed skill needs at run time |
+| `skills/project-docs/scripts/markdown-blocks.js` | the block structure of a Markdown text as CommonMark reads it (headings, list items, quotes, paragraphs; code and raw HTML are not content), and the refusal of what it would have to guess | anything about plans: it knows no step, field or status |
+| `skills/project-docs/scripts/plan-page.js` | reading the plan from those blocks (the Steps section, steps, fields, change entries, the four statuses) and drawing `docs/plan.html` | the plan's format rules, which are the Plan reference's; reading raw lines of the file |
+| `skills/project-docs/examples/` | complete, valid sample documents in each supported shape (full English, full Arabic, tiny with no screens and no saved data), each with its generated `plan.html` | anything that does not pass `node --test` |
+| `tests/` | proof that examples follow the reference headings, agree with each other, that the preview refuses what it must, and that the plan page reads Markdown as Pandoc recorded it | test fixtures inside the skill folder |
+| `tools/` | builder-only helpers: font coverage (`font-ranges.js`), Mac screenshots (`shot-mac.sh`), the comparison with Pandoc (`blocks-vs-pandoc.js`) | anything the installed skill needs at run time |
 | root Markdown and `docs/` | install, scope, decisions, architecture, release, security, verification record | instructions the installed skill depends on |
 
 ## Rules at the boundaries

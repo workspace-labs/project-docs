@@ -9,16 +9,21 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 ### Step 1: A patient books a visit and the front desk sees it
 - **Covers:** M1, M4
 - **How we know it works:** on the builder's computer only, with made-up patients (there is no sign-in yet, so nothing goes online before steps 4 and 5), book a visit with Dr. Haddad for tomorrow at phone size; it shows up on the front desk list straight away, and the same time can't be booked twice.
+- **Built:** a booking page that works at phone size, a front desk list that refreshes by itself, and a rule in the database so one time can never be booked twice; tried with 12 made-up bookings.
+- **Your note:** 2026-10-09 — keep the booking to three taps; no account needed to see free times.
 - **Status:** ✅ checked 2026-10-10
 
 ### Step 2: Prototype: the front desk lead tries booking
 - **Covers:** PRD: Who decides
 - **How we know it works:** the front desk lead books a made-up visit on a phone and finds it on the list, on the builder's computer; they say go on, or what to change.
+- **Built:** a phone test link on the builder's computer with five made-up patients ready to book.
+- **Your note:** 2026-10-10 — the front desk lead says go on.
 - **Status:** ✅ checked 2026-10-10
 
 ### Step 3: The front desk list, by doctor and by day
 - **Covers:** M4
 - **How we know it works:** still on the builder's computer, with visits booked for two doctors, the list shows each doctor's day in time order, and the day can be changed.
+- **Built:** the list grouped by doctor in time order, with yesterday, today and tomorrow buttons and a date picker; it works on a computer and a phone.
 - **Status:** ◐ waiting for your check (ran: booked 6 visits for 2 doctors and opened the list on a computer and a phone, 2026-10-11)
 
 ### Step 4: Staff sign in and manage any visit

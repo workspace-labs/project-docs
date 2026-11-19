@@ -24,10 +24,13 @@ skills/project-docs/               the installed skill: copied or zipped exactly
   references/engineering-handoff.md   optional approved-input summary for a separate builder
   assets/preview/                  the look preview page: preview.html, render.js, check.js,
                                    preview.css, fonts/
+  scripts/                         the plan page: markdown-blocks.js reads the Markdown of docs/plan.md,
+                                   plan-page.js reads the plan from it and writes docs/plan.html
   examples/                        cedar-clinic, cedar-clinic-ar, study-timer, notes-digest
-tests/                             node --test: documents, preview, font ranges, line endings, reference integrity;
+tests/                             node --test: documents, preview, plan page, Markdown blocks, font ranges, line
+                                   endings, reference integrity; fixtures/markdown-blocks/: a sample recorded from Pandoc;
                                    behavioral-cases.md: separate real-agent exercise contracts
-tools/                             builder-only helpers: font-ranges.js, shot-mac.sh/.swift
+tools/                             builder-only helpers: font-ranges.js, shot-mac.sh/.swift, blocks-vs-pandoc.js
 media/                             the README picture
 ```
 
@@ -40,6 +43,9 @@ media/                             the README picture
                         │
                         ├──copies──▶ assets/preview/ → project docs/design-preview/
                         │            and writes only looks.js there
+                        │
+                        ├──runs────▶ scripts/plan-page.js docs/plan.md → project docs/plan.html
+                        │            (markdown-blocks.js → the plan → one page; refuses what it would guess)
                         │
                         └──offers once──▶ frameflow skill (if installed; never installs it)
 

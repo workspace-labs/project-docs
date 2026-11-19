@@ -20,6 +20,12 @@ Every change after 0.1.0 is a release (see `AGENTS.md`).
 2. **Look at the preview** after any change to `assets/preview/`: open it with each example `looks.js` at
    computer and phone width, or on a Mac run `tools/shot-mac.sh <looks.js>`. Both examples must say `ready`.
 
+   **Check the plan page** after any change to `skills/project-docs/scripts/`: run
+   `node skills/project-docs/scripts/plan-page.js` on each example's `docs/plan.md`, open the four pages
+   (English and Arabic, computer and phone width, one card open, and printed), and, where Pandoc is
+   installed, run `node tools/blocks-vs-pandoc.js 5000` — it must report `0 differ`. Without Pandoc, say
+   in `TESTING.md` that the comparison was not rerun.
+
 3. **Bump the version once** in `README.md` (the `Version x.y.z · N tests` line). Update the test count
    there too.
 

@@ -60,6 +60,8 @@
 
 - **Same shape everywhere.** Every document has fixed headings, so any AI on any computer writes it the same way.
 - **Nothing to install.** Documents are plain markdown; the preview page opens in any browser, with its fonts inside.
+  The plan page is made by a script that needs Node.js; without it the plan stays in `docs/plan.md`, and the
+  skill never installs Node.js.
 - **Readable looks only.** The preview page checks text contrast and never shows a look that fails.
 - **Private by default.** Personal and secret data are marked in data.md and collected in security.md.
 - **Proven.** The preview page's checks and the example documents have automatic tests; the owner looks at

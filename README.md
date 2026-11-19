@@ -10,10 +10,12 @@ as an honest "TBD". Each document is approved with a date, and after that every 
 builds from the same truth.
 
 The skill is the folder [`skills/project-docs/`](skills/project-docs/): its instructions,
-[`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, and a preview page for picking
-the look. **Nothing to install.**
+[`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, a preview page for picking
+the look, and a small script that draws the plan page. **Nothing to install** to write or read the
+documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
+coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.7.1** · 166 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.8.0** · 218 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -30,6 +32,7 @@ In your project:
 | `docs/security.md` | **Security**: who gets in, how it's protected, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
 | `docs/handover.md` | **Handover**: what is handed over (and who owns the code), who receives it, how it is announced, the first weeks after go-live, who runs it and who pays for it from then on, maintenance and updates, how it is retired | when it is handed to someone |
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
+| `docs/plan.html` | **The plan page**: the plan as a board (Done · Waiting for your check · Next · Waiting for a decision) with "You are here"; every card opens to its plan, what was built and your decisions. Kept current after every step, opened when you ask "where are we?", and it works on a phone | always, made by a script (needs Node.js) |
 
 Before the first document, when you are about to meet a client: `docs/meeting-form.md`, a **blank client
 meeting form** to print and fill in over **four meetings**: (1) the goal, who decides, dates and budget; (2) the
@@ -171,7 +174,7 @@ There is no server, database or settings file: the skill needs no configuration.
 
 ## Working on project-docs
 
-See [`AGENTS.md`](AGENTS.md). Tests: `node --test` (Node.js 18 or newer, for the tests only).
+See [`AGENTS.md`](AGENTS.md). Tests: `node --test` (Node.js 18 or newer, the same version that makes and refreshes the plan page).
 
 ## Licence
 

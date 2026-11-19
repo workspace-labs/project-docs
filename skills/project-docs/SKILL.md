@@ -1,6 +1,6 @@
 ---
 name: project-docs
-description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for the four meetings before building (the goal, today's work, the needs, approve the scope or stop). Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build'. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
+description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for the four meetings before building (the goal, today's work, the needs, approve the scope or stop). Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
 ---
 
 # project-docs
@@ -77,7 +77,9 @@ Load **only** the reference file of the document you are writing: its questions 
 6. Go on to the next document in the order. If an answer here needs an **approved** earlier document to
    change (a new outside service, a new column), say which one, and change it there the normal way
    (`Changed` line, new version, approved again).
-7. **After the Plan is approved, close with a short summary:** the documents written, every open `TBD` with
+7. **After the Plan is approved,** make the plan page `docs/plan.html`, open it, ask once whether a PDF is
+   wanted, keep the page current after every step change, and open it when asked "where are we?" (see
+   **The plan page** in [references/plan.md](references/plan.md)). Then **close with a short summary:** the documents written, every open `TBD` with
    what will decide it (a `TBD` with a `Changed` line settling it underneath is closed, not open), and the
    first step to build. If a `TBD` blocks step 1, say so first. For a builder handoff, read
    [references/engineering-handoff.md](references/engineering-handoff.md); this skill still writes documents only.
@@ -157,4 +159,5 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 | `references/prd.md` … `references/plan.md` | one per document: its questions and its exact headings |
 | `references/meeting-form.md` | the blank client meeting form for the four meetings, and how its answers start the PRD |
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
+| `scripts/plan-page.js` | makes `docs/plan.html` from `docs/plan.md`: the plan as a board whose cards open (Node.js, no packages); `scripts/markdown-blocks.js` reads the plan's Markdown for it |
 | `examples/` | `cedar-clinic/`: a meeting form filled over four meetings and all seven documents for a website that saves personal data · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a tiny terminal tool for one student, with no screens, nothing saved and nobody to hand it to, so it has no DESIGN.md, no data document, no handover and no delivery steps · `notes-digest/`: a small terminal tool that uses an AI model, with the five lines of its AI part filled, the model as an outside service and its bill in the running cost |

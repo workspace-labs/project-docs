@@ -1,7 +1,8 @@
 # Security
 
-project-docs is a set of instructions plus one local web page. It has no accounts, no server, no
-database, and collects nothing. This page covers what it touches and what it promises never to do.
+project-docs is a set of instructions, one local web page for picking a look, and one small script that
+draws the plan as a second local page. It has no accounts, no server, no database, and collects nothing.
+This page covers what it touches and what it promises never to do.
 
 ## What runs, and where
 
@@ -10,8 +11,10 @@ database, and collects nothing. This page covers what it touches and what it pro
 | `SKILL.md` and references | inside the person's AI tool, as instructions | only the project's documents: `docs/`, `DESIGN.md`, and the TRD pointer line in `AGENTS.md` or `CLAUDE.md` on the person's yes |
 | the preview page | in the person's browser, opened from disk | reads `looks.js` next to it; may fetch fonts (below) |
 | `node check.js looks.js` | Node.js, on the person's computer | reads one file, prints `ready` or `refused` |
-| `tests/` | Node.js, for builders only | reads the repository; `line-endings.test.js` copies the skill into a temporary folder and deletes it afterwards |
-| `tools/` | builders only | `font-ranges.js` reads the bundled fonts and, without `--check`, rewrites their coverage lines; `shot-mac.sh` compiles a helper and writes screenshots under `/tmp/project-docs-shot/` |
+| `node scripts/plan-page.js docs/plan.md` | Node.js, on the person's computer, run by the person's agent | reads the one plan file it is given and writes `plan.html` beside it (or the path given); no network, no other file; when it cannot read the plan with certainty it says why and writes nothing |
+| the plan page | in the person's browser, opened from disk | one self-contained file: it loads nothing and holds only what the plan holds |
+| `tests/` | Node.js, for builders only | reads the repository; `line-endings.test.js` copies the skill into a temporary folder and deletes it afterwards; `plan-page.test.js` writes a plan and its page in a temporary folder and deletes it |
+| `tools/` | builders only | `font-ranges.js` reads the bundled fonts and, without `--check`, rewrites their coverage lines; `shot-mac.sh` compiles a helper and writes screenshots under `/tmp/project-docs-shot/`; `blocks-vs-pandoc.js` runs the local `pandoc` program on texts it generates itself and, with `--record`, writes the sample file named |
 
 ## The one network call
 
@@ -36,6 +39,11 @@ and font files."
 - **`looks.js` is a script.** The browser runs it as code. It is written by the person's own agent in the
   person's own project. Treat a `looks.js` from anywhere else like any other script: read it before
   opening the page.
+- **The plan page shows plan text as text.** `plan-page.js` escapes every value it puts into the page; a
+  test feeds it `<script>` and `<img onerror>` in a title, a Built line and a note. The page's one inline
+  script only adds keyboard use, and the page works with scripts off.
+- **The plan page never guesses.** A plan it cannot read with certainty is refused with the step or the
+  line to fix, so an example inside a code block is not shown as a step, and a real step is not hidden.
 
 ## Secrets and personal data
 

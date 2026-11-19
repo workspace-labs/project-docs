@@ -35,7 +35,9 @@ The builder or independent reviewer supplies actual commands, outcomes, dates an
 unavailable platform checks. `project-docs` does not run them. Never report a proposed check as passed.
 The existing waiting-for-your-check status needs a real run; only the person can authorize **checked**.
 Tests passing or another agent's confidence is not that authorization. Preserve earlier runs and checked
-progress as history when a decision changes, exactly as [plan.md](plan.md) requires.
+progress as history when a decision changes, exactly as [plan.md](plan.md) requires. With the waiting
+status the builder writes the step's **Built** line, then runs the plan page script again, as **The plan
+page** in [plan.md](plan.md) says.
 
 If `software-engineering-build-standard` is available to the separately authorized builder, it can
 organize implementation and the applicable engineering checks from these inputs. The documents remain
@@ -68,7 +70,8 @@ Do not create a mandatory handoff file, new stamp, sign-off round or separate pr
   على مؤقّت لا يحفظ شيئًا. إذا طلب الشخص مستوى ضمان، اكتبه هدفًا لا نتيجة محققة.
 - يقدّم المطوّر أو المراجع المستقل التنفيذ الفعلي والنتيجة والتاريخ والدليل، ويبيّن فحوص المنصات التي
   لم يتمكن من إجرائها. لا تنفّذها هذه المهارة. لا تُكتب «بانتظار فحصك» إلا بعد فحص حقيقي، ولا تُكتب
-  «فُحصت» إلا عندما يقول الشخص إنها تعمل. احفظ التقدّم السابق كتاريخ إذا تغيّر القرار.
+  «فُحصت» إلا عندما يقول الشخص إنها تعمل. احفظ التقدّم السابق كتاريخ إذا تغيّر القرار. ومع «بانتظار فحصك»
+  يكتب المطوّر سطر **ما بُني** ثم يعيد تشغيل نص صفحة الخطة.
 - يمكن للمطوّر المأذون له استخدام `software-engineering-build-standard` إن كانت متاحة؛ الوثائق تعمل
   دونها أيضًا. لا تثبّتها ولا تبدأ البناء. اختم بالمدخلات المعتمدة والقرارات المفتوحة والخطوات المعطّلة
   وأول خطوة مستقلة وفحصها؛ لا تضف ملف تسليم إلزاميًا أو دورة اعتماد جديدة.

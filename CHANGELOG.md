@@ -2,6 +2,105 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.8.0] - 2026-11-19
+
+The owner wanted to see the plan before anything is built, and later to ask "where are we?" and see the
+answer, without the cost of redrawing a PDF after every step.
+
+### Added
+
+- **The plan page, `docs/plan.html`:** the plan as a board with four columns (Done · Waiting for your check
+  · Next · Waiting for a decision), a progress ring, and a **You are here** bar on the first step not yet
+  checked. Every card opens to that step's plan, what was built and the person's decisions, with the
+  previous and next step one tap away. One self-contained file: no network, and its cards open without
+  JavaScript, so it also works in a phone's file preview. Arabic plans give an Arabic page, right to left.
+- **`scripts/plan-page.js`** makes the page from `docs/plan.md` (Node.js 18 or newer, no packages), with
+  `scripts/markdown-blocks.js` beside it, which reads the plan's Markdown. Without Node.js, or in a chat that
+  cannot run commands, the skill says so and the plan stays in `docs/plan.md`.
+- **When the page is made:** after the Plan is approved and before anything is built, it is made and opened
+  without asking; the person is asked once whether they want a PDF (a printed copy of that day, made once).
+  After every change to a step the script runs again. "Where are we?" runs it, opens the page and answers in
+  one line.
+- **Two optional step lines,** added while the work goes on: `- **Built:**` (what was really made, written
+  in the same edit as the waiting status) and `- **Your note:** <date> — <words>` (only the person's own
+  words). Arabic: `ما بُني` and `ملاحظتك`. The clinic examples show both, in English and Arabic.
+- **What a card shows of a step's history.** A changed check keeps its first wording readable and shows
+  each change under it: what the check is now, the part it replaced and why; the newest of several is marked
+  Latest and the card says "Check changed". A settled wait ("waited for X → not started") written under
+  **How we know it works** appears under Your decisions as status history. Changes written under other
+  fields appear in a neutral box under The plan with the field name. For Target, the exact label is
+  `Changed 2026-11-19 · Target · recorded as written` or
+  `تغيّرت في 2026-11-19 · الموعد المستهدف · كما كُتب`. This visible markup was introduced in the previous
+  candidate and also applies to settled-wait wording outside the check in this round. A change whose
+  meaning is unclear also appears in a neutral box. A built step with no Built line says that none was recorded.
+- **Keyboard and phone.** Focus moves into the open card and stays there (Tab, Shift+Tab); the arrows change
+  step; Page Down, the arrow keys, Home and End scroll a long card; Esc or × gives focus back to the card
+  that opened it. The board behind an open card is locked, so a tap on the dimmed background closes the card
+  on a scrolled page too.
+- Every example carries its generated `plan.html`.
+- `tools/blocks-vs-pandoc.js`, a builder's tool that compares the script's reading of generated texts with
+  Pandoc's, and `tests/fixtures/markdown-blocks/pandoc-sample.json`, a sample recorded from it.
+- ADR 0010 (accepted): the plan is shown as a generated HTML board. ADR 0011 (accepted): the plan page
+  reads Markdown as CommonMark does, or refuses.
+
+### How the script reads the plan
+
+- **Through its Markdown structure, the way CommonMark reads it.** `scripts/markdown-blocks.js` follows the
+  block phase of the CommonMark reference parser. A step, a field or a change shown as an example inside a
+  code block or raw HTML is not counted, and a real step is never hidden by one. The steps are the level-3
+  headings of the one `## Steps` section, which ends at the next level-1 or level-2 heading; a step's fields
+  are its list items that begin with `**Label:**`, and a field's text may run over lines.
+- **What it would have to guess, it refuses, naming the line:** a code fence, or an HTML comment, `<pre>`,
+  `<script>`, `<style>` or `<textarea>` block, that is never closed or is cut off by the end of its list item
+  or quote; a text line with `===` or `---` under it (a heading in Markdown, which could end the steps); and
+  forms that Markdown versions and tools read differently: a `<source>` or `<search>` tag starting a line, a
+  closing `</pre>` (or the like) alone on a line, a comment written `<!-->`, a `<!…>` declaration in small
+  letters, an HTML tag alone on the line right after quoted or list text, a link-definition label whose
+  closing bracket immediately precedes a colon, and a bare carriage return as a line end. Bracketed
+  prose can contain a later link-definition lookalike and still be read as a paragraph.
+- **A plan it would show wrongly, it refuses, naming the step:** a `###` heading that is not a step; steps
+  out of order or numbered twice; an empty check; two Status (or other field) lines; a Status that is not
+  exactly one of the four forms of the plan's language, or runs over two lines, or carries an impossible
+  date; a recognizable change entry without a real `YYYY-MM-DD` date in Western digits, or written in
+  the other language. This includes dates written in words or with Arabic-Indic digits.
+- **Malformed change labels.** The CLI names the step when a recognizable change entry uses a different
+  capitalization of `Changed`, puts `*` or `_` emphasis around the label, or writes `تغير في` without the
+  shadda in `تغيّر في`. The entry must use the template spelling. Prose such as “Changed my mind after
+  the call.” remains readable.
+- **A change entry is split only where its sentence is certain.** "→" and "because" count only at the top
+  level of the sentence: outside quotes, brackets and code marks, whose words belong to the thing named. An
+  entry is split into old, new and reason when there is exactly one transition and one reason marker there.
+  Status history requires one top-level transition before the reason. Multiple unquoted separators leave a
+  wait ambiguous, even with a quoted target or a reason that follows the template. Quote a wait name that
+  contains `→` or Arabic «إلى» to keep it as status history. A mark that cannot be paired with certainty
+  or a reason whose start is unclear leaves the entry neutral.
+- A file saved with a byte order mark, with CRLF line ends, or with Arabic letters in their decomposed form
+  reads the same as without.
+
+### Changed
+
+- **The Plan read-back** is now told as the story of the build: each building step on its own line, what
+  is built and what the person will see; delivery steps may share a line. The question stays "Right order?
+  Anything missing, too big or not needed?"
+- SKILL.md step 7 names the plan page; the description also answers "where are we?". The builder handoff
+  says the builder writes the Built line with the waiting status, then runs the script again. The Plan
+  reference says where a `Changed` line must sit to count as a change to the check.
+- README and AGENTS.md say plainly where Node.js is needed: for the tests and to make or refresh the plan
+  page; never to write or read the documents. The architecture pages name the two scripts and what each owns;
+  the security page, the risks page and the release steps cover the plan page.
+
+### Verification
+
+- macOS, 2026-11-19. All 218 tests passed on Node.js 18.20.8, 20.20.0, 20.20.2, 22.14.0, 22.23.1
+  and 24.22.1. Node.js 26.13.1 passed 217 tests and reproduced the existing design-preview failure.
+  The change-label regression test failed on the saved round-10 parser and passed on round 11.
+- Pandoc 3.12.1 reported zero differences in the round-11 5,000-text run (seed 662071). The suite replayed
+  the 367-text sample recorded in round 10. Earlier comparisons are in TESTING.md.
+- All four example pages regenerated byte-identically. Chrome and WebKit passed 16 desktop and phone-width
+  example checks in round 11. Round 10 also checked both Target labels. All four examples were printed to
+  PDF in Chrome, and their print styles were checked in WebKit. The ZIP contains 75 byte-matched files.
+- Windows, a physical iPhone and a live agent using the updated rules remain unverified for this candidate.
+
 ## [0.7.1] - 2026-11-16
 
 0.7.0 shipped the AI part with no example of a product that uses AI. This release adds one.

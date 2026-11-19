@@ -6,7 +6,7 @@ continue from there.
 
 ## Contents
 
-Gather first · How to make the steps · Delivery steps · The status of a step · The read-back · The document · In Arabic
+Gather first · How to make the steps · Delivery steps · The status of a step · The read-back · The plan page · The document · In Arabic
 
 ## Gather first
 
@@ -110,7 +110,7 @@ Exactly one of these, on the step's **Status** line:
 |---|---|---|
 | `not started` | nothing done yet | the AI, when writing the plan |
 | `⛔ waits for TBD: <what>` | it needs a choice a document left open | the AI; back to `not started` once that choice is made |
-| `◐ waiting for your check (ran: <what you ran>, <date>)` | built, and its check was run | the AI, **only after running the check** |
+| `◐ waiting for your check (ran: <what you ran>, <date>)` | built, and its check was run | the AI, **only after running the check**, in the same edit as the step's **Built** line |
 | `✅ checked <date>` | the person tried it and it works | **only the person**: the AI types it only when the person says it works |
 
 **The builder never marks its own homework.** Never write `✅` because the code looks right or the tests
@@ -122,9 +122,10 @@ run and its date as historical text beneath the step's check, with only one curr
 several choices block a step, keep its existing open TBD label first and name the others in its check.
 
 When the choice a step waited for is settled, set its Status back to `not started` and keep the wait as one
-line under its check: `  - Changed <date>: waited for <what> → not started, because <the document> settled it
-as <the choice>.` The words `⛔ waits for TBD:` appear only on a Status line, never in a history line: they
-are how a waiting step is found.
+line under **How we know it works**. Use `  - Changed <date>: waited for <what> → not started, because
+<the document> settled it as <the choice>.` If the wait's name contains `→`, quote the name, for example
+`waited for “draft → sent”`. The page records a wait with extra unquoted arrows as written. The words
+`⛔ waits for TBD:` appear only on a Status line, where the script looks for a waiting step.
 
 Ordinary execution progress changes the status without changing the version or stamp. Changes caused by
 a revised approved decision (including new blockers or revised checks), or adding, removing or reordering
@@ -132,12 +133,72 @@ steps, follow SKILL.md: preserve the decision history, raise the version, and re
 
 ## The read-back
 
-> 17 steps. Step 1: a patient books a visit with one doctor and it shows on the front desk list, then the
-> front desk lead tries it as the prototype. Then the full list, staff sign-in, patient sign-in, moving and
-> cancelling, the reminder (these three wait for the text-message service), the API guide and Arabic. Then
-> delivery: functional test, security test, UAT by the front desk lead on a test copy, guides and training,
-> install on the clinic's server, live test, go-live by early December, handover to the clinic manager.
-> Is that it?
+Tell it as the story of the build: each building step on its own line, what is built first and what the
+person will see when it is done; the delivery steps may share one line. Nothing is built until the person
+approves the order.
+
+> 18 steps, in this order:
+> 1. First I build: a patient books a visit with one doctor → you will see it on the front desk list.
+> 2. Prototype: the front desk lead tries booking → they say go on, or what to change.
+> 3. The front desk list by doctor and day → you will see each doctor's day in time order.
+> 4. Staff sign-in → without a clinic account the front desk list will not open.
+> 5. Patient sign-in with a code by text → a patient sees only their own visits (waits for the
+>    text-message service).
+> 6. Moving and cancelling → a patient moves or cancels their own visit, never someone else's (waits for
+>    the text-message service).
+> 7. The reminder → a text arrives at 18:00 the day before the visit (waits for the text-message service).
+> 8. The API guide → a new developer can follow every request in `docs/api.md`.
+> 9. Arabic → every page reads right to left, with nothing left in English.
+> 10. The safe release → a backup restores and the release can be rolled back (waits for the patient
+>    notice).
+> 11–18. Delivery: functional test, security test, UAT by the front desk lead on a test copy, guides and
+>    training, install on the clinic's server, live test, go-live by early December, handover to the clinic
+>    manager.
+> Right order? Anything missing, too big or not needed?
+
+## The plan page
+
+`docs/plan.md` is the truth. `docs/plan.html` shows it as a board the person can open at any time: four
+columns (Done · Waiting for your check · Next · Waiting for a decision), a **You are here** bar on the first
+step not yet checked, and every card opens to that step's plan, what was built and the person's decisions.
+The skill's script makes it; never write or edit the page by hand:
+
+    node <this skill's folder>/scripts/plan-page.js docs/plan.md
+
+It needs Node.js 18 or newer and nothing else: no packages, no network. If Node.js is missing, or your tool
+cannot run a command (a chat in the browser), say so once and never install it; the plan stays in
+`docs/plan.md` and the page waits.
+
+- **After the Plan is approved, before anything is built:** make the page without asking and open it for
+  the person. Then ask once: "Do you want the plan as a PDF?" Yes → print the page to `docs/plan.pdf`
+  (with a browser you can drive, or tell the person: open the page, then Print, then Save as PDF). The PDF
+  is a copy of that day: make it once, never refresh it. No → no PDF.
+- **After every change to a step** (built, checked, waiting, settled, a new note): change `docs/plan.md`
+  first, then run the script again.
+- **"Where are we?"**: run the script, open the page for the person, and answer in one line: the step you
+  are on and its state.
+- The page is one file and holds only what the plan holds, so the person may share it. Its cards open
+  without JavaScript, which a phone's file preview turns off (an iPhone opening the file from a chat).
+- The script reads the plan the way Markdown reads it: a step shown as an example inside a code block is not
+  counted, and what it would have to guess (a code block left open, a text line with `---` under it, an HTML
+  tag alone on a line) it refuses. When it refuses, it names the step, or the line of the file, to fix. Fix
+  `docs/plan.md`, never the page.
+- Write a calendar date with Western digits in every `Changed` line, using `YYYY-MM-DD`. The script names
+  the step if it refuses a change entry because of the date.
+- The page files an entry as a check change or settled-wait history only when it sits under
+  **How we know it works**. The check-change format is `  - Changed <date>: <old> → <new>, because
+  <reason>.` Under another field, or when the transition is ambiguous, the page records the entry as
+  written. Quote the old or new wording with “…” if it contains an arrow or the word "because". The script
+  looks for the entry's arrow and reason outside those quotes.
+
+Two lines are added to a step while the work goes on, never when the plan is written. Both go after **How
+we know it works** and its history lines, before **Target** and **Status**:
+
+- `- **Built:** <what was really made, in plain words>`: written by the builder in the same edit that sets
+  `◐ waiting for your check`. Never on a step that is not built.
+- `- **Your note:** <date> — <the person's words>`: a decision or comment the person gave about this step,
+  one line each, in the order given. Only the person's own words; never invent one, and never put the AI's
+  opinion there.
 
 ## The document
 
@@ -190,6 +251,17 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
 هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
 
+صفحة الخطة نفسها تعمل بالعربية من اليمين إلى اليسار حين تكون الخطة عربية، ويصنعها النص البرمجي نفسه. والسطران
+اللذان يُضافان أثناء العمل لهما الاسمان في الجدول أدناه: «ما بُني» يكتبه المطوّر مع حالة «بانتظار فحصك»، و«ملاحظتك»
+بكلمات الشخص وحده. اكتب تاريخًا صحيحًا بالأرقام الغربية بصيغة `YYYY-MM-DD` في كل سطر يبدأ بـ«تغيّر في».
+إذا رفض النص البرمجي السطر بسبب التاريخ، يذكر اسم الخطوة.
+
+ضع تغييرات الفحص وسجلّ الانتقال إلى «لم تبدأ» بعد حسم الانتظار تحت سطر **كيف نعرف أنها تعمل**. تحت أي حقل
+آخر، أو إذا التبس معنى الانتقال، يُعرض السطر كما كُتب. إذا احتوى اسم ما تنتظره الخطوة على كلمة «إلى»،
+فضع الاسم بين علامتي تنصيص، مثل `من انتظار «الوصول إلى خدمة الاستضافة» إلى لم تبدأ`. يظهر الانتظار
+الذي فيه أكثر من «إلى» خارج علامات التنصيص كما كُتب. وإذا احتوت الصياغة القديمة أو الجديدة على «إلى»
+أو «لأن»، فاكتب تلك الصياغة بين «…» ليبقى الفاصل والسبب واضحين.
+
 | English | Arabic |
 |---|---|
 | `not started` | `لم تبدأ` |
@@ -206,6 +278,8 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 | `Go-live` | `الإطلاق` |
 | `Handover` | `التسليم` |
 | `- **Target:** <…>` | `- **الموعد المستهدف:** <…>` |
+| `- **Built:** <…>` | `- **ما بُني:** <…>` |
+| `- **Your note:** <date> — <…>` | `- **ملاحظتك:** <التاريخ> — <…>` |
 | `  - Changed <date>: waited for <what> → not started, because <…>.` | `  - تغيّر في <التاريخ>: من انتظار <ما هو> إلى لم تبدأ، لأن <…>.` |
 
 ```markdown
