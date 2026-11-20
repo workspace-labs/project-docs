@@ -1,7 +1,7 @@
 # Making a release
 
-> Status: Proposed. Steps 1–7 write down what releases 0.1.0–0.2.2 already did. Steps 8–9 (tag and
-> GitHub release) are new and wait for the owner's yes.
+> Status: In use. Steps 1–7 write down what releases 0.1.0–0.2.2 already did. Steps 8–9 (tag and
+> GitHub release) were first done for 0.9.0 on 2026-11-20 and are part of every release from then on.
 
 project-docs uses semantic versioning: a fix is `0.2.x`, a new behaviour or document section is `0.x.0`.
 Every change after 0.1.0 is a release (see `AGENTS.md`).
@@ -57,10 +57,11 @@ Every change after 0.1.0 is a release (see `AGENTS.md`).
 7. **Commit and push only on the owner's word.** No path from the owner's computer goes into anything
    published.
 
-8. **Tag the release** (Proposed): `git tag -a vx.y.z -m "project-docs x.y.z"`, then push the tag.
+8. **Tag the release on the owner's word**: `git tag -a vx.y.z -m "project-docs x.y.z"` on the pushed
+   release commit, then push the tag.
 
-9. **Publish a GitHub release** (Proposed) for the tag: the CHANGELOG entry as its notes, with
-   `project-docs.zip` attached for Claude app users.
+9. **Publish a GitHub release on the owner's word** for the tag: the CHANGELOG entry as its notes, with
+   the zip from step 6 attached as `project-docs.zip` for Claude app users.
 
 ## Rolling back
 
@@ -68,8 +69,8 @@ Decide this before releasing: the rollback point is the previous version.
 
 - **The repository:** revert the release commit; never rewrite published history.
 - **A user's install:** reinstall the previous version's `skills/project-docs/` folder, or upload the
-  previous release's zip. Until tags exist (none do as of 0.2.2), the previous version is the commit
-  before the release commit.
+  previous release's zip. From 0.9.0 on, the previous version is its tag `vx.y.z` and the zip on its
+  GitHub release. Versions before 0.9.0 have no tag: for them it is the commit before the release commit.
 - **Users' documents** need nothing: the skill writes plain Markdown, and a stamp or `Changed` line written
   by one version stays valid for the next. A release that changes a heading contract says so in its
   CHANGELOG entry, because older documents will still have the old heading.

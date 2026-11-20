@@ -2,6 +2,17 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.9.1] - 2026-11-20
+
+### Fixed
+
+- `docs/operations/release.md` no longer calls tagging and the GitHub release "Proposed". Both were
+  first done for 0.9.0 and are now part of every release, on the owner's word. Rolling back now points
+  to the previous version's tag and release zip; versions before 0.9.0 still roll back to the commit
+  before the release commit. Documentation only: the skill folder is unchanged.
+
+Verification: `node --test` passed 222/222 on macOS arm64 with Node.js 20.20.2, zero skips.
+
 ## [0.9.0] - 2026-11-20
 
 ### Added

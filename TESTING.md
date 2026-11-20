@@ -1,7 +1,13 @@
 # How project-docs was tested
 
-**Last verified 2026-11-20 · version 0.9.0.** All 222 automated tests passed on macOS arm64 with Node.js
-22.14.0, with zero skips.
+**Last verified 2026-11-20 · version 0.9.1.** All 222 automated tests passed on macOS arm64 with Node.js
+20.20.2, with zero skips.
+
+## 0.9.1 — Release steps in use (documentation only)
+
+- **Automated checks.** `node --test` passed 222/222 with zero skips. Only `docs/operations/release.md`
+  and the version records changed; the skill folder, examples and preview are unchanged, so the preview,
+  plan-page, Pandoc and agent-exercise checks of 0.9.0 were not rerun and still stand.
 
 ## 0.9.0 — Speed, per-action cost and release recovery
 
