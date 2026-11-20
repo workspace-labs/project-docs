@@ -66,19 +66,23 @@ test('only a metered action gets a sourced completion estimate with charged retr
       ceiling: /Keep the per-action estimate and any ceiling the person sets separate from \*\*Each month\*\*\. Use the person's amounts and sources/,
       tbd: /use the existing `TBD` rule above\. Skip this line when no part is charged by use/,
       entry: /one completed action, billed units including charged failures and retries, the person's amount and source, and their ceiling if set/,
-      check: /before the step starts paying for it, cite \*\*TRD: Running cost\*\*\. Using the agreed rates, check the cost through completion including charged failures and retries/ },
+      check: /before the step starts paying for it, cite \*\*TRD: Running cost\*\*\. Using the agreed rates, check the cost through completion including charged failures and retries/,
+      compare: /Compare it with the estimate and the ceiling if one was set\./ },
     { lang: 'ar', heading: 'تكلفة التشغيل', guide: /احسب كل الأجزاء المدفوعة ووحدات الفوترة حتى اكتمال الإجراء، بما فيها المحاولات الفاشلة وإعادات المحاولة التي تُحتسب في الفاتورة/,
       ceiling: /افصل تقدير تكلفة الإجراء وأي سقف يحدده الشخص عن مجموع \*\*كل شهر\*\*\. استخدم مبالغ الشخص ومصادرها/,
       tbd: /فاتبع قاعدة «لم يُحسم بعد» أعلاه\. تجاوز هذا السطر إذا لم يكن أي جزء مدفوعًا بحسب الاستخدام/,
       entry: /إجراء واحد مكتمل، ووحدات الفوترة بما فيها الفشل وإعادة المحاولة المدفوعان، ومبلغ الشخص ومصدره، وسقفه إن حدده/,
-      check: /قبل أن يبدأ الدفع في الخطوة، اذكر \*\*TRD: تكلفة التشغيل\*\*\. تحقّق بالأسعار المتفق عليها من التكلفة حتى اكتمال الإجراء، بما فيها الفشل وإعادة المحاولة المدفوعان/ },
+      check: /قبل أن يبدأ الدفع في الخطوة، اذكر \*\*TRD: تكلفة التشغيل\*\*\. تحقّق بالأسعار المتفق عليها من التكلفة حتى اكتمال الإجراء، بما فيها الفشل وإعادة المحاولة المدفوعان/,
+      compare: /وقارنها بالتقدير وبالسقف إن حدده الشخص\./ },
   ];
-  for (const { lang, heading, guide, ceiling, tbd, entry, check } of cases) {
+  for (const { lang, heading, guide, ceiling, tbd, entry, check, compare } of cases) {
     const trd = referenceGuidance('trd.md', lang);
+    const plan = referenceGuidance('plan.md', lang);
     const costs = section(trdTemplate(lang), heading);
     for (const rule of [guide, ceiling, tbd]) assert.match(trd, rule, lang);
     assert.match(costs, entry, `${lang}: per-action fields stay under Running cost`);
-    assert.match(referenceGuidance('plan.md', lang), check, `${lang}: check before starting to pay`);
+    assert.match(plan, check, `${lang}: check before starting to pay`);
+    assert.match(plan, compare, `${lang}: compare the cost against the estimate and any ceiling`);
   }
   const firstPaidStep = planStep(example('notes-digest', 'plan.md'), 1);
   assert.match(firstPaidStep, /^- \*\*Status:\*\* ⛔ waits for TBD: the cost of printing one complete digest$/m);
@@ -89,6 +93,7 @@ test('release recovery belongs in the TRD and the Plan rehearses the safe path i
     { lang: 'en', where: 'Where it lives', label: 'Release recovery', clinic: 'cedar-clinic',
       owner: /Ask the owner once to choose who decides to go back, what signal calls for it, and what to do if the previous release cannot read data saved by the new one/,
       route: /Ask the operator which recovery paths their release channel supports/,
+      skip: /Skip this for a tool that stays on the builder's computer\./,
       check: /cites \*\*Release recovery\*\* under \*\*TRD: Where it lives\*\*\. On a safe copy before release/,
       safety: /Try going back only if the previous release can read the new saved data\. If it cannot, try the agreed alternative/,
       tbd: /A release recovery decision\*\* blocks only the affected release step/,
@@ -96,15 +101,17 @@ test('release recovery belongs in the TRD and the Plan rehearses the safe path i
     { lang: 'ar', where: 'أين يعمل', label: 'التعافي عند الإصدار', clinic: 'cedar-clinic-ar',
       owner: /واسأل المالك مرة واحدة: من يقرر الرجوع، وما الإشارة التي تستدعيه، وماذا يفعل إذا تعذّرت على الإصدار السابق قراءة البيانات التي حفظها الإصدار الجديد/,
       route: /اسأل المشغّل عن طرق التعافي التي تدعمها قناة الإصدار/,
+      skip: /تجاوز هذا السطر إذا بقيت الأداة على حاسوب المطوّر\./,
       check: /أشر إلى \*\*التعافي عند الإصدار\*\* تحت \*\*TRD: أين يعمل\*\*\. قبل الإصدار، جرّب التعافي المتفق عليه على نسخة آمنة/,
       safety: /لا تجرّب الرجوع إلا إذا استطاع الإصدار السابق قراءة البيانات الجديدة المحفوظة\. وإن تعذّر ذلك، فجرّب البديل المتفق عليه/,
       tbd: /فاكتب «لم يُحسم بعد» وعطّل خطوة الإصدار المعنية فقط/,
       exampleWait: 'قرار التعافي عند الإصدار' },
   ];
-  for (const { lang, where, label, clinic, owner, route, check, safety, tbd, exampleWait } of cases) {
+  for (const { lang, where, label, clinic, owner, route, skip, check, safety, tbd, exampleWait } of cases) {
     const trd = referenceGuidance('trd.md', lang);
     const plan = referenceGuidance('plan.md', lang);
     for (const rule of [owner, route, tbd]) assert.match(trd, rule, lang);
+    assert.match(trd, skip, `${lang}: skip release recovery for a local tool`);
     for (const rule of [check, safety]) assert.match(plan, rule, lang);
     const location = section(trdTemplate(lang), where);
     assert.ok(location.split('\n').some((line) => line.startsWith('- <') && line.includes(`**${label}:**`)), `${lang}: optional line in the location template`);

@@ -65,8 +65,8 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
     says.
   A tiny offline project with no saved data gets no restore, service, notice or deployment check merely
   because these examples exist. Skip the speed check where waiting time is not a concern and the cost
-  check where no part is charged by use. Actual run results come from the builder or reviewer, and only
-  the person marks the checks done.
+  check where no part is charged by use. These are proposed checks; actual run results come from the
+  builder or reviewer, and only the person marks them checked.
 - An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
   the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
   needs more than one, name the first in document order (PRD, TRD, Design, Data, Handover); the step's
@@ -267,7 +267,7 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
   والخطوة التي تسمح له بالتصرف وحده تجرّب ما يقوله سطر **عند الخطأ**.
 لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
 تجاوز فحص السرعة إذا لم يكن الانتظار مهمًا، وفحص التكلفة إذا لم يكن أي جزء مدفوعًا بحسب الاستخدام.
-دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
+هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
 
 صفحة الخطة نفسها تعمل بالعربية من اليمين إلى اليسار حين تكون الخطة عربية، ويصنعها النص البرمجي نفسه. والسطران
 اللذان يُضافان أثناء العمل لهما الاسمان في الجدول أدناه: «ما بُني» يكتبه المطوّر مع حالة «بانتظار فحصك»، و«ملاحظتك»
