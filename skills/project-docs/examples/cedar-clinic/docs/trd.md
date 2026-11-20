@@ -1,5 +1,5 @@
 # TRD: Cedar Clinic Booking
-> v3 · Draft
+> v4 · Draft
 
 ## Work rules
 - Must use: the clinic's Microsoft 365 accounts for staff login.
@@ -20,6 +20,7 @@
 
 ## Where it lives
 - The clinic's own in-country server, in a Docker container, because the work rules keep patient data in the country.
+- TBD: the release recovery decision. Decided when the IT lead confirms the available Docker recovery paths and the clinic manager confirms who decides to go back, the signal, and what to do if the previous image cannot read the saved visits.
 
 ## Outside services
 - Microsoft 365 login: staff sign in, because the work rules require it.
@@ -35,6 +36,7 @@
 - Microsoft 365 accounts for staff login: about 450 AED a month (from the clinic manager, the October 2026 invoice); grows with the number of staff accounts. The same accounts serve all the clinic's work, so this is the whole bill, not this project's share.
 - The booking site's web address: about 60 AED a year (from the IT lead, the registrar's renewal notice); fixed.
 - The text-message service: paid per message, so it grows with the number of reminders and sign-in codes; its price comes with the service, which is still open (see Outside services).
+- One delivered reminder or sign-in code: count the messages billed through delivery, including any charged failures and retries. The price and what is billed come with the same open service choice (see Outside services).
 - **Each month:** about 450 AED a month, plus 60 AED a year, paid by the clinic; not counted: the text messages, whose price comes with the service still open.
 
 ## Rules it must follow

@@ -1,5 +1,5 @@
 # Plan: Cedar Clinic Booking
-> v4 · Draft
+> v5 · Draft
 
 ## How to read it
 Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ built, waiting for your check · ✅ checked by you.
@@ -33,9 +33,10 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Status:** not started
 
 ### Step 5: A patient signs in with a code by text
-- **Covers:** M1, M2
+- **Covers:** M1, M2, TRD: Running cost
 - **How we know it works:** a patient asks for a code, it arrives by text, and with it they see only their own visits; 5 wrong codes pause sign-in for 15 minutes. With two made-up patients, signed in as patient A, try to open patient B's visit by its link: it is refused. Only after this step and step 4 are checked does the site go online.
   - Changed 2026-11-11: going online after steps 4 and 5 → going online only after step 10 is also checked; a failed code-service response grants no sign-in and shows the TRD's unavailable message; network connections use HTTPS/TLS with certificate validation, because live collection also needs the owner-supplied notice, recovery and release checks.
+  - Changed 2026-11-20: code-service check → keep that check and, before enabling paid sends, check the cost of delivering one code against TRD: Running cost, including any charged failures and retries, because the service charges per message.
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 6: A patient moves or cancels their own visit
@@ -45,9 +46,10 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 7: The reminder the day before
-- **Covers:** M3
+- **Covers:** M3, TRD: Running cost
 - **How we know it works:** a visit booked for tomorrow gets a text message at 18:00 today, once.
   - Changed 2026-11-11: successful reminder only → the same check plus a failed service response leaves the saved visit unchanged and shows staff a delivery failure rather than a success, because the TRD defines the service-down behavior.
+  - Changed 2026-11-20: reminder-service check → keep that check and, before enabling paid sends, check the cost of delivering one reminder against TRD: Running cost, including any charged failures and retries, because the service charges per message.
 - **Status:** ⛔ waits for TBD: the text-message service for reminders and patient sign-in codes
 
 ### Step 8: Write the API guide
@@ -62,7 +64,7 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 
 ### Step 10: Release safely before collecting real patient data
 - **Covers:** TRD: Where it lives, Work rules, Recovery, Kept in; Data: How long it's kept; Security: Connections, Audit
-- **How we know it works:** after steps 4 and 5, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and return to the previous working image, including database compatibility; try the rollback on that isolated copy without losing its visits or overwriting live data. Give the release a version and a dated line in `CHANGELOG.md`, from the clinic's own git repository. Follow the README from an empty computer as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
+- **How we know it works:** after steps 4 and 5, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes and the release recovery decision. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and try the agreed Release recovery under TRD: Where it lives on that isolated copy, with its signal and decision maker. Try the previous image only if it can read the newly saved visits. Otherwise try the agreed alternative. Give the release a version and a dated line in `CHANGELOG.md`, from the clinic's own git repository. Follow the README from an empty computer as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
 - **Status:** ⛔ waits for TBD: the owner-supplied patient notice
 
 ### Step 11: Functional test

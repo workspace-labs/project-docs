@@ -1,5 +1,5 @@
 # TRD: Notes Digest
-> v1 · Approved 2026-11-16
+> v2 · Draft
 
 ## Work rules
 - None: personal project.
@@ -28,6 +28,7 @@
 
 ## Running cost
 - Quill 2, the hosted language model: about 4 USD a month (from the team lead, Harborline's usage page for October 2026); charged by use, so it grows with the number and the length of the notes.
+- TBD: the cost of printing one complete digest. Decided when the team lead supplies the billing units and prices for the notes, instructions and full output, including whether any failed attempts or retries would be charged.
 - **Each month:** about 4 USD a month, paid by the team lead.
 
 ## Rules it must follow
@@ -35,6 +36,7 @@
 - **Security:** see `docs/security.md`.
 - **Languages:** English.
 - **Speed:** the digest is printed within 30 seconds for notes of up to five pages.
+  - Changed 2026-11-20: the digest is printed within 30 seconds for notes of up to five pages → on the team lead's computer, at most 30 seconds from running the command to the last line of the summary and action list being printed, with one five-page notes file and one run at a time, because v1, approved 2026-11-16, did not say how to measure the time.
 - **Available:** when the team lead runs it.
 - **Accessibility:** None: no screens.
 

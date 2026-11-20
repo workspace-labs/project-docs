@@ -66,6 +66,13 @@ that needs it. With no outside service, keep `None` and ask nothing about servic
 **Ask the rules first** (online or offline, languages, and which devices people will hold, which goes into
 the Speed line): they change which options fit the other parts. Write the document in its own order.
 
+**Where it lives:** if the project will be deployed or distributed beyond the builder's computer,
+reuse any recovery decision already given. Ask the operator which recovery paths their release channel
+supports. Ask the owner once to choose who decides to go back, what signal calls for it, and what to do
+if the previous release cannot read data saved by the new one. For example, keep the data and ship a
+fix release. Record the answer here under **Release recovery**. Skip this for a tool that stays on the
+builder's computer.
+
 Prices, free plans and limits of hosting and services change often and you cannot look them up: say so,
 and tell the person to check them on the provider's site before they sign up.
 
@@ -105,14 +112,23 @@ A price that depends on a choice still open stays with that choice: say so on it
 part>`. The **Each month** line adds up only the amounts written above it, monthly and yearly apart, and
 names every part it does not count. Nothing is paid for → `None: nothing is paid for`, with the reason.
 
+When an action uses a part charged by use, use the same cost question to record what it takes to
+complete one action and what that costs. Count all paid parts and their billed units, including
+failed attempts and retries that are charged. Keep the per-action estimate and any ceiling the person
+sets separate from **Each month**. Use the person's amounts and sources. If the amount is still open,
+use the existing `TBD` rule above. Skip this line when no part is charged by use.
+
 Two parts are smart defaults, not questions, unless the work rules or the person say otherwise:
 
 - **How the code is written:** the usual tools of the chosen language (its standard formatter and checker),
   one job per file, tests beside the code. Show them in the read-back as your picks; the person's "yes,
   that's it" makes them theirs, written with "(on the AI's recommendation)" like any pick left to you (the
   Speed line too), and they can change any of them.
-- **Speed:** "every page or screen opens in under 2 seconds on an ordinary phone or computer", unless the
-  PRD or the meeting form says more.
+- **Speed:** if it fits and the PRD or meeting form gives no other target, propose "every page or screen
+  opens in under 2 seconds on an ordinary phone or computer" for the person to confirm in the read-back.
+  When waiting time matters for a flow the person named, reuse what they already said and confirm any
+  gaps together: the flow, when the clock starts, what counts as finished, on which device, and at what
+  load. Put those conditions and the agreed target on the Speed line.
 - **Accessibility:** "readable contrast, works with the keyboard, respects reduced motion (see DESIGN.md)",
   unless the meeting form says more. No screens → "None: no screens".
 
@@ -146,6 +162,8 @@ the TRD is written:
 - **The AI part** blocks only the steps that build or use it: the rest of the product can be built.
 - **A running cost** blocks only the step that starts paying for it (putting it online, or signing up for
   the service): everything before that step can be built.
+- **A speed target or its test conditions** block only a step that needs that speed check.
+- **A release recovery decision** blocks only the affected release step.
 
 ## The pointer line (only on the person's yes)
 
@@ -192,6 +210,7 @@ the old one (see SKILL.md).
 
 ## Where it lives
 - <choice>, because <reason>.
+- <only for deployment or distribution beyond the builder's computer: **Release recovery:** who decides to go back, the signal, and the route if the previous release cannot read new saved data>
 
 ## Outside services
 - <service: what it is for; sends …; expects …; if unavailable …>, because <reason>.
@@ -205,13 +224,14 @@ the old one (see SKILL.md).
 
 ## Running cost
 - <each paid part: what it is, about <amount> a month or a year (from <where the price came from>), and what makes it grow, or "fixed">
+- <only for a part charged by use: one completed action, billed units including charged failures and retries, the person's amount and source, and their ceiling if set>
 - **Each month:** <about <the monthly amounts added up> a month, plus <the yearly amounts added up> a year, paid by <who>; not counted: <each part with no amount yet> / None: nothing is paid for, because <reason>>
 
 ## Rules it must follow
 - **Online or offline:** <…>
 - **Security:** <…>
 - **Languages:** <…>
-- **Speed:** <…>
+- **Speed:** <agreed target; where waiting matters: flow, start, finish, device and load>
 - **Available:** <the hours it must work, and what happens when it is down>
 - **Accessibility:** <…>
 
@@ -235,6 +255,19 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 دون عناوين جديدة. لا تفترض متجرًا أو واجبًا قانونيًا أو ادعاء مطابقة. اسأل فقط إذا غيّر المجهول القرار
 الحالي، واستخدم «لم يُحسم بعد» للقرار المفتوح. لا تضف استبيانًا إلزاميًا، ولا تكتب المتطلب كأنه فحص ناجح؛
 دليل التنفيذ مسؤولية المطوّر أو المراجع لاحقًا.
+
+**أين يعمل:** إذا كان المشروع سيُنشر أو يوزّع خارج حاسوب المطوّر، فأعد استخدام أي قرار سبق أن اتخذه
+المالك بشأن التعافي. اسأل المشغّل عن طرق التعافي التي تدعمها قناة الإصدار، واسأل المالك مرة واحدة:
+من يقرر الرجوع، وما الإشارة التي تستدعيه، وماذا يفعل إذا تعذّرت على الإصدار السابق قراءة البيانات
+التي حفظها الإصدار الجديد؟ قد يكون الحل إبقاء البيانات وإصدار تحديث إصلاحي. سجّل الجواب هنا تحت
+**التعافي عند الإصدار**. تجاوز هذا السطر إذا بقيت الأداة على حاسوب المطوّر. وإذا بقي قرار التعافي
+مفتوحًا، فاكتب «لم يُحسم بعد» وعطّل خطوة الإصدار المعنية فقط.
+
+**السرعة:** إذا كان الهدف مناسبًا ولم يرد هدف آخر في PRD أو استمارة الاجتماع، فاقترح «تفتح كل صفحة
+أو شاشة في أقل من ثانيتين على هاتف أو حاسوب عادي» وأكّده مع الشخص عند إعادة عرض الإجابات عليه.
+عندما يكون زمن الانتظار مهمًا لمسار سمّاه الشخص، أعد استخدام ما ذكره وأكّد معه ما ينقص: المسار،
+ومتى يبدأ القياس، وما الذي يُعدّ اكتمالًا، وعلى أي جهاز، وتحت أي حمل. اكتب الشروط والهدف المتفق
+عليه في سطر السرعة. وما بقي مفتوحًا يُكتب «لم يُحسم بعد» ويعطّل فقط الخطوة التي تحتاج فحص السرعة.
 
 لكل **خدمة خارجية**، أكمل السؤال نفسه بما يرسله المنتج وما يجب أن يعود به، وما يراه المستخدم أو
 يستطيع فعله عند تعطّل الخدمة أو فشل الرد. تبقى هذه التفاصيل في سطر الخدمة الحالي، ويعيد الأمان
@@ -276,6 +309,12 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 عندها الدفع. وسطر **كل شهر** يجمع فقط المبالغ المكتوبة فوقه، الشهري وحده والسنوي وحده، ويسمّي كل جزء لم
 يحسبه. وإن لم يُدفع شيء فاكتب «لا شيء: لا يُدفع شيء» مع السبب.
 
+للجزء الذي يُدفع بحسب الاستخدام، استخدم سؤال التكلفة نفسه لتسجيل ما يتطلبه إكمال إجراء واحد وما
+يكلّفه. احسب كل الأجزاء المدفوعة ووحدات الفوترة حتى اكتمال الإجراء، بما فيها المحاولات الفاشلة
+وإعادات المحاولة التي تُحتسب في الفاتورة. افصل تقدير تكلفة الإجراء وأي سقف يحدده الشخص عن مجموع
+**كل شهر**. استخدم مبالغ الشخص ومصادرها. وإذا بقي المبلغ مفتوحًا، فاتبع قاعدة «لم يُحسم بعد» أعلاه.
+تجاوز هذا السطر إذا لم يكن أي جزء مدفوعًا بحسب الاستخدام.
+
 **مكان الكود** ليس خيارًا افتراضيًا: اسأل أين يُحفظ الكود وتاريخه وأين نسخته الثانية، حتى لا يضيع
 المشروع بضياع حاسوب واحد. قواعد العمل أولًا، والشخص هو من يختار؛ وإن بقي مفتوحًا فهو «لم يُحسم بعد»
 ويعطّل خطوة الإصدار أو التسليم فقط.
@@ -306,6 +345,7 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 
 ## أين يعمل
 - <الاختيار>، لأن <السبب>.
+- <فقط للنشر أو التوزيع خارج حاسوب المطوّر: **التعافي عند الإصدار:** من يقرر الرجوع، وما الإشارة، وما المسار إذا لم يقرأ الإصدار السابق البيانات الجديدة المحفوظة>
 
 ## الخدمات الخارجية
 - <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …>، لأن <السبب>.
@@ -319,13 +359,14 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 
 ## تكلفة التشغيل
 - <كل جزء مدفوع: ما هو، نحو <المبلغ> في الشهر أو السنة (من <مصدر السعر>)، وما الذي يزيده، أو «ثابت»>
+- <فقط للجزء المدفوع بحسب الاستخدام: إجراء واحد مكتمل، ووحدات الفوترة بما فيها الفشل وإعادة المحاولة المدفوعان، ومبلغ الشخص ومصدره، وسقفه إن حدده>
 - **كل شهر:** <نحو <مجموع المبالغ الشهرية> في الشهر، إضافةً إلى <مجموع المبالغ السنوية> في السنة، يدفعه <من>؛ غير محسوب: <كل جزء بلا مبلغ بعد> / لا شيء: لا يُدفع شيء، لأن <السبب>>
 
 ## القواعد التي يلتزم بها
 - **متصل أو دون اتصال:** <…>
 - **الأمان:** <…>
 - **اللغات:** <…>
-- **السرعة:** <…>
+- **السرعة:** <الهدف المتفق عليه؛ وحيث يهم الانتظار: المسار، والبداية، والاكتمال، والجهاز، والحمل>
 - **التوفر:** <الساعات التي يجب أن يعمل فيها، وماذا يحدث عندما يتوقف>
 - **سهولة الوصول:** <…>
 

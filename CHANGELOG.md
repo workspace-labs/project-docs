@@ -2,6 +2,21 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.9.0] - 2026-11-20
+
+### Added
+
+- The TRD records the agreed timing conditions for a flow where waiting matters. The Plan measures
+  it in the first step that makes the flow usable and records pass or fail.
+- For actions charged by use, the TRD records the cost through completion, including charged failures
+  and retries. The per-action amount and any ceiling stay separate from the monthly total.
+- For releases beyond the builder's computer, the TRD records who decides to go back, the signal, and
+  the agreed route if the previous release cannot read newly saved data. The Plan rehearses that
+  route on a safe copy.
+
+These additions use the existing English and Arabic TRD and Plan sections and apply only where needed.
+Verification on macOS with Node.js 22.14.0 passed all 222 tests with zero skips. See [TESTING.md](TESTING.md).
+
 ## [0.8.0] - 2026-11-19
 
 The owner wanted to see the plan before anything is built, and later to ask "where are we?" and see the

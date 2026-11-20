@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const documentChecks = ['tests/documents.test.js', 'tests/speed-cost-recovery.test.js'];
 
 for (const [name, ending] of [['LF', '\n'], ['CRLF', '\r\n']]) {
   test(`all document checks pass with ${name} references and examples`, () => {
@@ -12,7 +13,9 @@ for (const [name, ending] of [['LF', '\n'], ['CRLF', '\r\n']]) {
     const work = fs.mkdtempSync(path.join(os.tmpdir(), 'project-docs العربية '));
     try {
       fs.mkdirSync(path.join(work, 'tests'));
-      fs.copyFileSync(path.join(__dirname, 'documents.test.js'), path.join(work, 'tests', 'documents.test.js'));
+      for (const file of documentChecks) {
+        fs.copyFileSync(path.join(__dirname, '..', file), path.join(work, file));
+      }
       const skill = path.join(work, 'skills', 'project-docs');
       fs.cpSync(path.join(__dirname, '..', 'skills', 'project-docs'), skill, { recursive: true });
       function convert(folder) {
@@ -28,7 +31,7 @@ for (const [name, ending] of [['LF', '\n'], ['CRLF', '\r\n']]) {
       fs.cpSync(path.join(__dirname, 'fixtures'), path.join(work, 'tests', 'fixtures'), { recursive: true });
       convert(skill);
       convert(path.join(work, 'tests', 'fixtures'));
-      const result = spawnSync(process.execPath, ['--test', 'tests/documents.test.js'], {
+      const result = spawnSync(process.execPath, ['--test', ...documentChecks], {
         cwd: work, encoding: 'utf8', timeout: 30000,
         // This is an independent test run, not a child managed by the parent Node test runner.
         env: Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== 'NODE_TEST_CONTEXT')),

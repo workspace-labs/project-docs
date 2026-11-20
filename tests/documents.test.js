@@ -1393,7 +1393,7 @@ test('the Notes Digest example shows a product that uses AI, and its documents a
   assert.deepStrictEqual(aiProblems(ai, AI.en, L), []);
   const line = (label) => ai.split('\n').find((l) => l.startsWith(`- **${label}:** `)) || '';
   assert.deepStrictEqual(AI.en.labels.filter((label) => !line(label)), [], 'all five lines are answered, none left open');
-  assert.deepStrictEqual(openTbds(trd, L), [], 'nothing in this TRD is open');
+  assert.deepStrictEqual(openTbds(trd, L).map(({ name }) => name), ['the cost of printing one complete digest'], 'only the per-digest cost is open');
 
   // A hosted model is one outside service, with what is sent, what comes back and what happens when it is down;
   // the Model line points there instead of repeating it.

@@ -1,7 +1,23 @@
 # How project-docs was tested
 
-**Last verified 2026-11-19 · version 0.8.0, round 11.** There are 218 automated tests. All passed on
-six Node.js versions, with one existing design-preview failure on Node.js 26.13.1.
+**Last verified 2026-11-20 · version 0.9.0.** All 222 automated tests passed on macOS arm64 with Node.js
+22.14.0, with zero skips.
+
+## 0.9.0 — Speed, per-action cost and release recovery
+
+- **Automated checks.** `node --test` passed 222/222, up from 218/218 on the same Node.js
+  version. Four new tests cover named speed targets and their Plan checks, metered costs, release
+  recovery, and the tiny offline example. Six separate removals of the new guidance in an isolated copy
+  each failed the matching test and its LF and CRLF reruns. The suite checks that the generated example
+  pages match their Markdown. The skill validator and the bundled font range check passed.
+- **Isolated agent exercises.** Three Codex subagents used copies of the skill with synthetic requests.
+  One proposed measuring Search at 800 ms or less on the named phone and workload. The Arabic exercise
+  counted a billed failed attempt and retry, kept the per-action ceiling separate from monthly costs,
+  and proposed rehearsing a fix release if the older image could not read new receipts. The tiny offline
+  converter got a functional check and no added speed, paid-action or release-recovery check.
+- **Coverage.** The exercises produced proposed documents and questions. Measurements, paid calls
+  and release rehearsals require a future build. This round used macOS and covered example page
+  generation. Platform and visual preview results from earlier releases are recorded below.
 
 ## 0.8.0: the plan page, 2026-11-19
 

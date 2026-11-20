@@ -37,15 +37,23 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
 - **Add applicable checks to the step that needs them, not new document types.** Reuse the approved
   answers; if a missing choice affects the check, settle it in its owning document through the normal
   `TBD` and approval process. Keep these within **Covers** and **How we know it works**:
+  - Waiting time matters for a named flow: in the first step that makes it usable, cite **TRD: Speed**.
+    Time the flow from the agreed start to finish on the device and under the load named there. Record
+    the measured time and pass or fail against the agreed target when the check is run.
+  - An action uses a part charged by use: before the step starts paying for it, cite **TRD: Running cost**.
+    Using the agreed rates, check the cost through completion including charged failures and retries.
+    Compare it with the estimate and the ceiling if one was set.
   - Saved data that cannot reasonably be recreated: before first entrusting it to the product, restore
     a backup into a separate safe copy and read the records back; never overwrite live data for a test.
   - Someone besides the author will run it, or it will be set up again on another computer: when it
     becomes runnable, write the README how-to from an empty computer to running (what to install, its
     settings, how to start it) and try its instructions that way, as that user.
-  - It is deployed or distributed beyond the builder's computer: that step names how to release it,
-    how to return to the previous working release and what happens to saved data; try the rollback on
-    a safe copy before release. Each release gets a version and a dated line in `CHANGELOG.md` saying
-    what changed for the people who use it, and its code is in the place the TRD names under **Kept in**.
+  - It is deployed or distributed beyond the builder's computer: that step names how to release it and
+    cites **Release recovery** under **TRD: Where it lives**. On a safe copy before release, try the
+    agreed recovery, including the signal, who decides, and what happens to saved data. Try going back
+    only if the previous release can read the new saved data. If it cannot, try the agreed alternative
+    on the copy. Each release gets a version and a dated line in `CHANGELOG.md` saying what changed for
+    the people who use it, and its code is in the place the TRD names under **Kept in**.
   - It collects personal data from its users: the owner supplies the notice shown before collection;
     check that the product shows the supplied text. Do not draft a legal policy, infer a legal duty,
     create `docs/privacy.md` or block unrelated work while that text is awaited.
@@ -56,8 +64,9 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
     or its instructions runs them again. The step that lets it act alone tries what **When it is wrong**
     says.
   A tiny offline project with no saved data gets no restore, service, notice or deployment check merely
-  because these examples exist. These are proposed checks; actual run results come from the builder or
-  reviewer, and only the person marks them checked.
+  because these examples exist. Skip the speed check where waiting time is not a concern and the cost
+  check where no part is charged by use. Actual run results come from the builder or reviewer, and only
+  the person marks the checks done.
 - An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
   the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
   needs more than one, name the first in document order (PRD, TRD, Design, Data, Handover); the step's
@@ -149,8 +158,8 @@ approves the order.
 > 7. The reminder → a text arrives at 18:00 the day before the visit (waits for the text-message service).
 > 8. The API guide → a new developer can follow every request in `docs/api.md`.
 > 9. Arabic → every page reads right to left, with nothing left in English.
-> 10. The safe release → a backup restores and the release can be rolled back (waits for the patient
->    notice).
+> 10. The safe release → a backup restores and the agreed recovery is tried on a safe copy (waits for
+>    the patient notice and the release recovery decision).
 > 11–18. Delivery: functional test, security test, UAT by the front desk lead on a test copy, guides and
 >    training, install on the clinic's server, live test, go-live by early December, handover to the clinic
 >    manager.
@@ -233,13 +242,21 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 أضف الفحوص المشروطة إلى الخطوة التي تحتاجها، داخل **تغطي** و**كيف نعرف أنها تعمل**، دون أنواع وثائق
 جديدة. أعد استخدام الإجابات المعتمدة؛ وإذا غاب قرار يؤثر في الفحص، فاحسمه في وثيقته بالطريقة
 المعتادة مع «لم يُحسم بعد» والاعتماد:
+- زمن الانتظار مهم لمسار محدّد: في أول خطوة تجعله قابلًا للاستخدام، اذكر **TRD: السرعة**. قِس الزمن من
+  البداية إلى الاكتمال المتفق عليهما، على الجهاز وتحت الحمل المذكورين هناك. عند تنفيذ الفحص، سجّل
+  الزمن المقاس ونجاح الفحص أو فشله حسب الهدف المتفق عليه.
+- إجراء يستخدم جزءًا مدفوعًا بحسب الاستخدام: قبل أن يبدأ الدفع في الخطوة، اذكر **TRD: تكلفة التشغيل**.
+  تحقّق بالأسعار المتفق عليها من التكلفة حتى اكتمال الإجراء، بما فيها الفشل وإعادة المحاولة
+  المدفوعان، وقارنها بالتقدير وبالسقف إن حدده الشخص.
 - بيانات محفوظة لا يمكن إعادة إنشائها عمليًا: قبل الاعتماد على المنتج لحفظها، استعد نسخة احتياطية
   في نسخة آمنة منفصلة واقرأ السجلات مجددًا؛ لا تستبدل البيانات الحية للاختبار.
 - سيشغّله شخص غير مؤلفه، أو سيُجهَّز من جديد على حاسوب آخر: عند أول نسخة قابلة للتشغيل، اكتب إرشادات
   README من حاسوب فارغ إلى التشغيل (ما يُثبَّت، وإعداداته، وكيف يبدأ) وجرّب اتباعها مثل ذلك المستخدم.
-- سينشر أو يوزّع خارج حاسوب المطوّر: سمِّ طريقة الإصدار والعودة إلى الإصدار السابق الذي يعمل، وما
-  يحدث للبيانات المحفوظة؛ جرّب الرجوع على نسخة آمنة قبل الإصدار. لكل إصدار رقم وسطر مؤرّخ في
-  `CHANGELOG.md` يقول ما تغيّر لمن يستخدمونه، وكوده في المكان الذي يسمّيه TRD تحت **مكان الكود**.
+- سيُنشر أو يوزّع خارج حاسوب المطوّر: سمِّ طريقة الإصدار وأشر إلى **التعافي عند الإصدار** تحت
+  **TRD: أين يعمل**. قبل الإصدار، جرّب التعافي المتفق عليه على نسخة آمنة، بما في ذلك الإشارة ومن
+  يقرر وما يحدث للبيانات المحفوظة. لا تجرّب الرجوع إلا إذا استطاع الإصدار السابق قراءة البيانات
+  الجديدة المحفوظة. وإن تعذّر ذلك، فجرّب البديل المتفق عليه على النسخة. لكل إصدار رقم وسطر مؤرّخ
+  في `CHANGELOG.md` يقول ما تغيّر لمن يستخدمونه، وكوده في المكان الذي يسمّيه TRD تحت **مكان الكود**.
 - يجمع بيانات شخصية من مستخدميه: يقدّم المالك نص الإشعار الذي يظهر قبل الجمع؛ افحص ظهور النص الذي
   قدّمه. لا تكتب سياسة قانونية، ولا تفترض واجبًا قانونيًا، ولا تنشئ `docs/privacy.md`، ولا تعطّل العمل
   المستقل في انتظار النص.
@@ -249,7 +266,8 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
   مرة الأمثلة المذكورة تحت **يُفحص بـ** وتعرض النتيجة، وتعيدها أي خطوة لاحقة تغيّر النموذج أو تعليماته.
   والخطوة التي تسمح له بالتصرف وحده تجرّب ما يقوله سطر **عند الخطأ**.
 لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
-هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
+تجاوز فحص السرعة إذا لم يكن الانتظار مهمًا، وفحص التكلفة إذا لم يكن أي جزء مدفوعًا بحسب الاستخدام.
+دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
 
 صفحة الخطة نفسها تعمل بالعربية من اليمين إلى اليسار حين تكون الخطة عربية، ويصنعها النص البرمجي نفسه. والسطران
 اللذان يُضافان أثناء العمل لهما الاسمان في الجدول أدناه: «ما بُني» يكتبه المطوّر مع حالة «بانتظار فحصك»، و«ملاحظتك»
