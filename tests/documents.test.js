@@ -1393,7 +1393,7 @@ test('the Notes Digest example shows a product that uses AI, and its documents a
   assert.deepStrictEqual(aiProblems(ai, AI.en, L), []);
   const line = (label) => ai.split('\n').find((l) => l.startsWith(`- **${label}:** `)) || '';
   assert.deepStrictEqual(AI.en.labels.filter((label) => !line(label)), [], 'all five lines are answered, none left open');
-  assert.deepStrictEqual(openTbds(trd, L).map(({ name }) => name), ['the cost of printing one complete digest'], 'only the per-digest cost is open');
+  assert.deepStrictEqual(openTbds(trd, L), [], 'the per-digest cost is settled');
 
   // A hosted model is one outside service, with what is sent, what comes back and what happens when it is down;
   // the Model line points there instead of repeating it.
@@ -1420,6 +1420,13 @@ test('the Notes Digest example shows a product that uses AI, and its documents a
   assert.deepStrictEqual(costProblems(costs, COST.en), []);
   assert.strictEqual([...costs.matchAll(COST.en.amount)].length, 1, 'one sourced amount');
   assert.ok(/language model: about .+ a month \(from /.test(costs) && costs.includes('charged by use'), 'the model is the paid part, charged by use');
+  const digestCost = costs.match(/^- TBD: the cost of printing one complete digest\. Decided when .+\n  - Changed 2026-11-20: TBD → (.+)$/m)?.[1] || '';
+  assert.match(digestCost, /^0\.04 USD per completed digest with no billed failures or retries \(/, 'the estimate settles the original TBD in place');
+  assert.match(digestCost, /3,000 input tokens for the notes and instructions at 0\.01 USD per 1,000 input tokens/);
+  assert.match(digestCost, /500 output tokens for the full summary and action list at 0\.02 USD per 1,000 output tokens/);
+  assert.match(digestCost, /the team lead supplied the rates and usage from Harborline's usage page for October 2026/);
+  assert.match(digestCost, /Failed attempts and retries are billed at the same rates for any tokens used\./);
+  assert.match(trd, /^> v3 · Approved 2026-11-20$/m);
 
   // Security names the same service and what it receives; the key is a secret; the connection is protected.
   const security = doc('security.md');

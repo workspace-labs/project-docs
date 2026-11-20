@@ -1,5 +1,5 @@
 # Plan: Notes Digest
-> v2 · Draft
+> v3 · Approved 2026-11-20
 
 ## How to read it
 Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ built, waiting for your check · ✅ checked by you.
@@ -10,7 +10,8 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Covers:** M1, M3, M4, TRD: AI part, TRD: Outside services, TRD: Running cost
 - **How we know it works:** run it on a notes file; the first line says the digest was written by AI and must be checked, and a summary of five lines or fewer follows. Run it with the network off; one line says the service is unavailable and nothing else is printed (TRD: Outside services). Run the ten kept notes files (TRD: Checked by) and compare each summary with the one the team lead accepts. Read one digest against its notes and correct a wrong summary line before copying it (TRD: When it is wrong).
   - Changed 2026-11-20: first model call → before the first paid call, check the cost of one complete digest against TRD: Running cost using the team lead's billing units and prices, including any charged failures and retries, because the cost of one digest is still open.
-- **Status:** ⛔ waits for TBD: the cost of printing one complete digest
+  - Changed 2026-11-20: waited for the cost of printing one complete digest → not started, because the TRD settled it as 0.04 USD per completed digest with no billed failures or retries.
+- **Status:** not started
 
 ### Step 2: The actions and who took them
 - **Covers:** M2, TRD: AI part, TRD: Speed

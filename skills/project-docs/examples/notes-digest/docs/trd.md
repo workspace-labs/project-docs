@@ -1,5 +1,5 @@
 # TRD: Notes Digest
-> v2 · Draft
+> v3 · Approved 2026-11-20
 
 ## Work rules
 - None: personal project.
@@ -29,6 +29,7 @@
 ## Running cost
 - Quill 2, the hosted language model: about 4 USD a month (from the team lead, Harborline's usage page for October 2026); charged by use, so it grows with the number and the length of the notes.
 - TBD: the cost of printing one complete digest. Decided when the team lead supplies the billing units and prices for the notes, instructions and full output, including whether any failed attempts or retries would be charged.
+  - Changed 2026-11-20: TBD → 0.04 USD per completed digest with no billed failures or retries (3,000 input tokens for the notes and instructions at 0.01 USD per 1,000 input tokens, plus 500 output tokens for the full summary and action list at 0.02 USD per 1,000 output tokens), because the team lead supplied the rates and usage from Harborline's usage page for October 2026. Failed attempts and retries are billed at the same rates for any tokens used. October had about 100 digests at that size and no billed failures or retries, which accounts for the monthly total above.
 - **Each month:** about 4 USD a month, paid by the team lead.
 
 ## Rules it must follow

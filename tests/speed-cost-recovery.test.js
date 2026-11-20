@@ -84,8 +84,11 @@ test('only a metered action gets a sourced completion estimate with charged retr
     assert.match(plan, check, `${lang}: check before starting to pay`);
     assert.match(plan, compare, `${lang}: compare the cost against the estimate and any ceiling`);
   }
-  const firstPaidStep = planStep(example('notes-digest', 'plan.md'), 1);
-  assert.match(firstPaidStep, /^- \*\*Status:\*\* ⛔ waits for TBD: the cost of printing one complete digest$/m);
+  const digestPlan = example('notes-digest', 'plan.md');
+  const firstPaidStep = planStep(digestPlan, 1);
+  assert.match(firstPaidStep, /^- \*\*Status:\*\* not started$/m, 'the settled cost unblocks step 1');
+  assert.match(firstPaidStep, /^  - Changed 2026-11-20: waited for the cost of printing one complete digest → not started, because the TRD settled it as 0\.04 USD per completed digest with no billed failures or retries\.$/m);
+  assert.match(digestPlan, /^> v3 · Approved 2026-11-20$/m);
 });
 
 test('release recovery belongs in the TRD and the Plan rehearses the safe path in both languages', () => {
