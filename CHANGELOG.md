@@ -2,6 +2,33 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.10.0] - 2026-11-21
+
+### Added
+
+- **The reader page.** `scripts/read-page.js` makes `docs/read.html` from all of a project's documents, so
+  the person reads a calm page instead of raw Markdown: an Overview (counts, the plan step in hand, every
+  document with its stamp, every open `TBD`, the plan's progress), then each document as panes. Label
+  lines become tiles, `TBD` lines are marked as open questions, `Check:` and `Changed` lines sit under
+  their line, tables keep a colour square beside each hex colour, and plan steps fold to one line each,
+  with the step waiting for the person's check open. Every word of each of the seven planning documents
+  is in its own view, in order (the client meeting form is not on the page). Open questions follow their
+  latest `Changed` line, step states come from the plan page's own reader, and "approved" only from a
+  real stamp. It writes only to an `.html` file it made itself, never over a document or a link.
+  English and Arabic (right to left); works with JavaScript off, with a visible keyboard focus ring;
+  fonts inside the file, nothing loaded from the network; **WorkSpace Labs** at the bottom. The look is
+  the owner's Pearl design.
+- **Phone reader layout.** At 820 px and below, the Overview puts its title and counts above a
+  full-width document list, followed by open questions, the current step and plan progress. Each row
+  opens its document at the top and shows an open count when there are open questions. **‹ Overview**
+  returns to the Overview. The desktop tiles use the same in-page links. Links and disclosure
+  summaries show a visible focus ring during keyboard navigation.
+- `references/read-page.md`, a step 8 in `SKILL.md` (and the generated pages named as an exception to
+  "touch only the project's documents"), the Newsreader and Outfit fonts with their licences in
+  `assets/read/`, a `docs/read.html` for each example, and `tests/read-page.test.js` (74 reader tests,
+  296 tests in all). `tools/check-read-page-webkit.js` checks scrolling, keyboard focus and layout
+  with JavaScript disabled.
+
 ## [0.9.1] - 2026-11-20
 
 ### Fixed

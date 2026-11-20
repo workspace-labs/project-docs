@@ -15,7 +15,7 @@ the look, and a small script that draws the plan page. **Nothing to install** to
 documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
 coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.9.1** · 222 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.10.0** · 296 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -33,6 +33,7 @@ In your project:
 | `docs/handover.md` | **Handover**: what is handed over (and who owns the code), who receives it, how it is announced, the first weeks after go-live, who runs it and who pays for it from then on, maintenance and updates, how it is retired | when it is handed to someone |
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
 | `docs/plan.html` | **The plan page**: the plan as a board (Done · Waiting for your check · Next · Waiting for a decision) with "You are here"; every card opens to its plan, what was built and your decisions. Kept current after every step, opened when you ask "where are we?", and it works on a phone | always, made by a script (needs Node.js) |
+| `docs/read.html` | **The reader page** shows the seven planning documents as panes, with an Overview of counts, documents, open questions, the current step and plan progress. On a phone, tap a row to open its document at the top and use **‹ Overview** to return. Plan steps fold to one line each. Works offline in English and Arabic and is refreshed after each document change. | always, made by a script (needs Node.js) |
 
 Before the first document, when you are about to meet a client: `docs/meeting-form.md`, a **blank client
 meeting form** to print and fill in over **four meetings**: (1) the goal, who decides, dates and budget; (2) the

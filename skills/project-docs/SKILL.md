@@ -83,6 +83,9 @@ Load **only** the reference file of the document you are writing: its questions 
    what will decide it (a `TBD` with a `Changed` line settling it underneath is closed, not open), and the
    first step to build. If a `TBD` blocks step 1, say so first. For a builder handoff, read
    [references/engineering-handoff.md](references/engineering-handoff.md); this skill still writes documents only.
+8. **The reader page.** Refresh `docs/read.html` with the script each time a document is written, approved
+   or changed. Open it when the person asks to read the documents. If the script refuses or Node.js is
+   missing, follow [references/read-page.md](references/read-page.md).
 
 ## The stamp
 
@@ -147,8 +150,9 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 - **Never install anything** and never make a network call. The one exception: the Design preview page
   may load a font online, and only when the person says yes to that font.
 - **Never change an existing look or a locked choice** without the person's yes.
-- **Touch only the project's documents.** The one exception: the TRD's pointer line in `AGENTS.md` or
-  `CLAUDE.md`, only on a yes to that file (a general "you pick" is not one).
+- **Touch only the project's documents.** The exceptions: the two pages the scripts make from them
+  (`docs/plan.html`, `docs/read.html`), and the TRD's pointer line in `AGENTS.md` or `CLAUDE.md`, only on a
+  yes to that file (a general "you pick" is not one).
 - **Smart defaults, the person decides.** Always suggest the best way and say why. The person can always
   say "no, do it my way". Only real limits cannot be overruled, and you explain them plainly.
 
@@ -160,4 +164,5 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 | `references/meeting-form.md` | the blank client meeting form for the four meetings, and how its answers start the PRD |
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
 | `scripts/plan-page.js` | makes `docs/plan.html` from `docs/plan.md`: the plan as a board whose cards open (Node.js, no packages); `scripts/markdown-blocks.js` reads the plan's Markdown for it |
+| `scripts/read-page.js` | makes `docs/read.html` from the seven planning documents, with an Overview and a view for each document, in the Pearl look (Node.js, no packages) |
 | `examples/` | `cedar-clinic/`: a meeting form filled over four meetings and all seven documents for a website that saves personal data · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a tiny terminal tool for one student, with no screens, nothing saved and nobody to hand it to, so it has no DESIGN.md, no data document, no handover and no delivery steps · `notes-digest/`: a small terminal tool that uses an AI model, with the five lines of its AI part filled, the model as an outside service and its bill in the running cost |

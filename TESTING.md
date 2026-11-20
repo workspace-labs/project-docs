@@ -1,7 +1,175 @@
 # How project-docs was tested
 
-**Last verified 2026-11-20 · version 0.9.1.** All 222 automated tests passed on macOS arm64 with Node.js
-20.20.2, with zero skips.
+**Last verified 2026-11-21 · version 0.10.0.** All 296 automated tests passed on macOS arm64 with Node.js
+18.20.8, 20.20.2 and 22.23.1, with zero skips on each.
+
+## 0.10.0 — The reader page
+
+### Release, 2026-11-21
+
+- Claude's independent review of rounds 4, 5 and 6 (Codex the builder) ended APPROVED. The owner tried
+  the page on his own iPhone, opened from Files, and approved it. ADR 0012 accepted on his word.
+- At release: `node --test` 296/296 (Node 20.20.2), `node tools/font-ranges.js --check` passed,
+  `git diff --check` clean. The upload zip has one `project-docs/` root and 85 files, the same count as
+  the source folder, with no test files, PDFs or `.DS_Store`. `plan-page.js` and `markdown-blocks.js`
+  are unchanged, so the plan-page and Pandoc checks of 0.8.0/0.9.0 stand.
+
+### Round 6, reader focus and open counts (R01, R02)
+
+- **Automated checks.** The two Round 6 assertions both failed on the incoming script
+  (`5f9fd9f4d82c63df92c2971bda7069ff192e5761`) and both passed after the fix. R01 checks the
+  generated focus rules for articles, links and summaries. R02 checks all four examples for zero
+  open counts in English and Arabic. The reader suite passed 74/74. The full `node --test` suite
+  passed 296/296 on Node.js 18.20.8, 20.20.2 and 22.23.1, with zero skips.
+- **R01 in WebKit.** With JavaScript disabled, clicks, taps and Enter moved focus to the target
+  article. Its article and header had no outline. Option+Tab still showed the 2 px ring on desktop
+  tiles, document and question links, **Open the plan**, **‹ Overview** and a Plan disclosure summary.
+  The 1280 px TRD click screenshot pair differed only around the header, where the old outline was
+  removed. `tools/check-read-page-webkit.js` saves `after-click-trd-1280.png` while the TRD article
+  still has focus.
+- **R02 in WebKit.** Positive counts were visible, and the 320 px check found them below their stamp
+  chips. The 390 px Cedar TRD test measured 400 → 0 px on both rounds. All 44 document taps reached
+  0 px at 320 and 390 px. The Overview links returned to the top, the 16 question links and Plan
+  disclosures worked, and the page stayed within the viewport.
+- **Desktop and examples.** All 52 pairs of resting screenshots at 821 and 1280 px matched the
+  Round 5 baseline byte for byte. Regenerated all four examples, and `git diff --check` passed.
+  To reproduce the comparison, pass a copy of the Round 5 example tree as the argument to
+  `node tools/check-read-page-webkit.js`.
+- **Not run.** Physical iPhone and Files, screen-reader speech, Safari as an app, other browser
+  engines and print. The physical Files check belongs to the owner.
+
+### Round 5, phone layout
+
+- **Automated checks.** `node --test` passed 294/294 on each of Node.js 18.20.8, 20.20.2 and 22.23.1.
+  The reader suite passed 72/72 on 20.20.2. The three new structure tests cover the default Overview,
+  the localized return link on each view, and the document and question rows, their order and targets.
+  All three failed against the incoming reader. Updated switching tests cover the focusable fragment
+  targets and keep the checks for offline operation and escaping document text.
+- **Scroll regression.** With WebKit 26.5 (build 2370), JavaScript disabled and local files at 390 × 640 px,
+  scroll the English Cedar Overview to 400 px and tap the visible part of the TRD row. The radio-based
+  reader stayed at 400 px. The fragment link landed at 0 px. At 320 and 390 px, all 44 document-row taps
+  across the four examples landed at 0 px from starting positions of 242–737 px.
+- **Phone checks.** Each example returned to the Overview from every view. All 16 open-question taps
+  and each **Open the plan** link reached the matching document. Plan disclosures opened and closed.
+  The document and body matched the viewport width in every view. A range check caught text
+  crossing into the neighboring row column at 320 px in the first build. It passed after the stamp
+  and count were stacked at 360 px and below.
+- **Keyboard and desktop.** In this WebKit configuration, Option+Tab reached links when plain Tab
+  skipped them. Enter moved visible focus to the title of the opened document or Overview. All 52
+  pairs of full-page screenshots matched at 821 and 1280 px across all four examples with focus cleared.
+  WebKit can also outline the focused heading after mouse or touch activation.
+- **Examples and skill.** Regenerated all four example pages. The reader's document bodies and footer
+  matched the incoming output after accounting for the return links and heading IDs. The skill
+  validator passed and the static audit reported zero findings. `git diff --check` passed.
+- **Reproduce the browser checks** with an existing Playwright module and WebKit browser.
+  `node tools/check-read-page-webkit.js` runs the local-file checks and saves screenshots.
+  Set `PLAYWRIGHT_MODULE` and `WEBKIT_EXECUTABLE` to use existing custom paths.
+  Pass the directory containing a copy of the incoming example tree to compare desktop screenshots and
+  replay the old scroll behavior. The automation reads scroll and layout from WebKit with page JavaScript
+  disabled.
+- **Not run.** The owner's physical iPhone and its Files preview, Safari as an app, other browser
+  engines, print, Windows and Pandoc. Only the owner can check this build on his iPhone in Files.
+
+### Round 4, after the third independent review (F01–F06, F08, F09, F13)
+
+- **Automated checks.** Each Node.js version passed 291/291. The reader suite passed 69/69 on Node.js
+  20.20.2. The 23 tests named `round 4` cover these cases:
+  - F01 preserves every byte of an empty output file and a foreign HTML file that quotes the generator marker.
+  - F02 keeps nested decisions independent and quoted examples in their own scope. An empty target is
+    refused at its line. Quoted old values can include English and Arabic separators.
+  - F03 excludes checked archived steps from the Overview count and waiting archived steps from its
+    current-step card. Live Plan headings keep their badges.
+  - F04 reads the approval stamp below a multiline setext title in English and Arabic.
+  - F05 keeps literal greater-than signs in quoted fences, including fences in a list in an existing quote.
+  - F06 keeps each history record in one disclosure, including a closing tag in a fence or comment and a
+    record nested in a quoted list. An unmatched opener leaves later sections visible.
+  - F08 keeps a list starting at 7 in an existing quote with space or tab indentation.
+  - F09 keeps quoted H1, H2 and H3 at distinct, consecutive ranks.
+  - F13 distinguishes project, output and source errors and reports whether a prior reader is available.
+- **Old-fails proof.** The same 23 tests failed on the saved round-3 script and passed on the round-4
+  script with `node --test --test-name-pattern='round 4' tests/read-page.test.js`. The baseline ran
+  in a scratch copy with the same test file, helper scripts and fonts.
+- **Examples.** Regenerated Cedar Clinic, Cedar Clinic Arabic, Study Timer and Notes Digest with the CLI.
+  All four outputs matched the pre-edit files byte for byte and passed the up-to-date tests.
+- **Browser.** WebKit 26.5 (Playwright build 2370) passed at 320, 390 and 1280 px in English and Arabic,
+  offline with JavaScript disabled. Touch, mouse and keyboard switched views. The 2 px focus ring
+  stayed visible after Option+Tab and arrow keys, the phone grid fit, and Plan and code disclosures
+  opened and closed. The page and body stayed within the viewport in every view and both disclosure
+  states. Embedded fonts loaded with zero HTTP requests. The Pearl CSS, fonts and WorkSpace Labs footer
+  matched the baseline, as did all 12 browser screenshots.
+- **Not run.** Physical devices, the Safari app, other browsers, Windows, print, the Pandoc comparison
+  and a live agent following step 8.
+
+### Round 3, after the second independent review (F01–F09, F11, F13–F15)
+
+- **Automated checks.** `node --test` passed 268/268 with zero skips. `tests/read-page.test.js` now has
+  46 tests. The new cases:
+  - F01: a linked docs folder, a linked folder inside the project, and a hard link to the PRD are
+    refused, with nothing written; the page is now opened once without following a link, and checked on
+    that open file before it is written.
+  - F02: the settled Notes Digest price is drawn "Settled"; an arrow to TBD in a reason does not reopen;
+    a change one level deeper counts; a change under an open question written another way is refused
+    with its line.
+  - F03: a badge goes to the step with the same number and title.
+  - F04: v0, الإصدار 0, a stamp after a blank line, and one split over two lines are not approved.
+  - F05: code and HTML on a list item's own line lose only the container marks.
+  - F06: a record on an item's line, a closing tag inside code, and text right after the record.
+  - F07: short rows padded; extra cells kept, under an empty header.
+  - F08: a nested marker on its parent's line.
+  - F09: H5 and H6 distinct; a comment above the title.
+  - F11 and F15: phone tiles wrap in rows; no cut-off card text.
+  - F13 and F14: the wording in SKILL.md and the reference.
+- **Old-fails proof.** The round-3 tests for F01–F09 fail on the round-2 script.
+- **Deliberate breaks.** Sixteen breaks of the round-3 script, each in a throwaway copy, each fail the
+  tests. One ("the reason read as the new value") was missed at first; a case with "because" twice in the
+  reason was added.
+- **Looked at.** Headless Chrome: the Arabic Overview at 600 px (tiles in two rows) and the Notes Digest
+  Overview at 1440 px (the whole step text on the card).
+- **Not run.** WebKit, keyboard focus in a real browser (the ring now uses `:focus`, which WebKit keeps
+  after arrows switch the radio), a physical iPhone, Windows, print, Node.js other than 20.20.2, a live
+  agent following step 8.
+
+### Round 2, after the first independent review (F01–F14)
+
+- **Automated checks.** `node --test` passed 259/259 with zero skips. `tests/read-page.test.js` now has
+  37 tests. Each review finding has a test that asserts exact placement, cells, counts, states or file
+  contents: no output over a document, a link or a foreign file, and the docs folder made (F01); settled
+  and reopened questions in English and Arabic, nested ones too, and the Notes Digest price settled (F02);
+  states from the plan page's reader, a broken plan showing none, and no fold outside the plan (F03); only
+  a real stamp counts (F04); a fence inside an item, a heading and list inside a quote, and text after a
+  child item, all in order (F05); one disclosure for a history record with blank lines (F06); escaped
+  pipes, dash-only rows and pipe prose (F07); list starts and boundaries (F08); each view's full title and
+  heading levels (F09); an underlined Arabic title (F10); a focus ring per view (F11); 4.5:1 for the small
+  text colours (F12); the meeting form left out (F14). The word check now looks inside each document's
+  own view.
+- **Old-fails proof.** On the round-1 script, kept in a scratch copy, the tests for F01–F10 fail; F12 and
+  F14 check the page and the project, not the script.
+- **Deliberate breaks.** Twelve breaks of the round-2 script, each in a throwaway copy, each fail the
+  tests: a settled question counted, a link followed, a foreign file overwritten, any quote taken as a
+  stamp, nested code dropped, a history record split, escaped pipes split, list starts lost, headings
+  flattened, the focus ring removed, the old low-contrast grey, states not from the plan page.
+- **Looked at.** Headless Chrome: the English PRD view and the Notes Digest Overview at 1440 px (a long
+  step text overlapped the card's Covers line and was fixed), and the Arabic Plan at 600 px.
+- **Not run.** WebKit, keyboard focus in a real browser, a physical iPhone, Windows, print, Node.js other
+  than 20.20.2, and a live agent following step 8.
+
+### Round 1
+
+- **Automated checks.** `node --test` passed 249/249 with zero skips, up from 222. The 27 new tests in
+  `tests/read-page.test.js` check, for each of the four examples, that its `docs/read.html` matches its
+  documents, that every word of every document is on the page, that views switch and steps fold without
+  JavaScript, that nothing loads from the network, and that WorkSpace Labs is at the bottom; and, once
+  each, the Arabic right-to-left page, counts taken from the documents, document text that tries to
+  become page code, a collapsed history record, an empty folder and an unclosed code fence (both refused
+  with no page written), and the command line.
+- **Deliberate breaks.** Seven breaks of the script, each in a throwaway copy, each fail the tests:
+  history records dropped, `<` not escaped, every step open, open questions not counted, the WorkSpace
+  Labs line removed, sub-items dropped, numbered lists drawn as bullets. The first was missed at first
+  (no example has a history record); the history-record test was added for it.
+- **Looked at.** Headless Chrome on macOS: the English and Arabic clinic Overviews and the Plan view at
+  1440 px, the Study Timer Overview (no Design, Data or Handover), and the Arabic TRD at 600 px.
+- **Not run.** WebKit, a physical iPhone and its Files preview, Windows, printing, and a live agent
+  following step 8.
 
 ## 0.9.1 — Release steps in use (documentation only)
 

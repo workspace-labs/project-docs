@@ -11,8 +11,13 @@ node --test
 ```
 
 Node.js 18 or newer, for the tests. Writing and reading the documents needs nothing but an AI tool, and the
-pages open in any browser. Making or refreshing the plan page (`scripts/plan-page.js`) also uses Node.js 18
-or newer; the skill never installs it.
+pages open in any browser. Making or refreshing the plan page (`scripts/plan-page.js`) or the reader page
+(`scripts/read-page.js`) also uses Node.js 18 or newer; the skill never installs it.
+
+The reader page's look (the owner's Pearl design) is the owner's decision, like the preview's: never change
+it without his yes. After a change to `scripts/read-page.js`, regenerate each example's `docs/read.html`
+(`node skills/project-docs/scripts/read-page.js skills/project-docs/examples/<example>`) and look at one
+at computer and phone width.
 
 ## Look at the preview
 

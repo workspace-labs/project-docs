@@ -12,4 +12,12 @@ next to them in `skills/project-docs/assets/preview/fonts/`.
 | Crimson Pro | The Crimson Pro Project Authors (github.com/Fonthausen/CrimsonPro) |
 | Noto Naskh Arabic | The Noto Project Authors (github.com/notofonts/arabic) |
 
+The reader page carries two more, under the same license, with their license files in
+`skills/project-docs/assets/read/`:
+
+| Font | Authors |
+|---|---|
+| Newsreader | The Newsreader Project Authors (github.com/productiontype/Newsreader) |
+| Outfit | The Outfit Project Authors (github.com/Outfitio/Outfit-Fonts) |
+
 Everything else in this repository is MIT licensed (see `LICENSE`).
