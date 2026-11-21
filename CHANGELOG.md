@@ -2,6 +2,21 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.11.0] - 2026-11-21
+
+### Removed
+
+- **The reader page** added in 0.10.0: `scripts/read-page.js`, `references/read-page.md`, its fonts in
+  `assets/read/`, the examples' `docs/read.html`, its tests and its WebKit check tool, and step 8 in
+  `SKILL.md`. The page carried the owner's own design, and the skill is public, so every user's page would
+  have looked like his. The skill again writes the documents and the plan page only. ADR 0012 is marked
+  deprecated. Projects that already made a `docs/read.html` with 0.10.0 can delete it; nothing reads it.
+  `AGENTS.md`, `CREDITS.md`, `README.md` and `SKILL.md` are back to their 0.9.1 text, apart from the version.
+
+### Verification
+
+`node --test` passed 222/222 with zero skips, the same suite as 0.9.1.
+
 ## [0.10.0] - 2026-11-21
 
 ### Added

@@ -1,9 +1,16 @@
 # How project-docs was tested
 
-**Last verified 2026-11-21 · version 0.10.0.** All 296 automated tests passed on macOS arm64 with Node.js
-18.20.8, 20.20.2 and 22.23.1, with zero skips on each.
+**Last verified 2026-11-21 · version 0.11.0.** All 222 automated tests passed on macOS arm64 with Node.js
+20.20.2, with zero skips.
 
-## 0.10.0 — The reader page
+## 0.11.0 — The reader page removed
+
+- **Automated checks.** `node --test` passed 222/222 with zero skips: the 0.9.1 suite, after the reader
+  page's 74 tests left with it. `node tools/font-ranges.js --check` passed. No file outside the removal
+  changed; `AGENTS.md`, `CREDITS.md`, `README.md` (apart from the version) and `SKILL.md` match 0.9.1.
+- **Not rerun.** The preview, plan-page and Pandoc checks: their files are unchanged since 0.9.1.
+
+## 0.10.0 — The reader page (removed in 0.11.0)
 
 ### Release, 2026-11-21
 

@@ -1,7 +1,10 @@
 # 0012. The documents are read on a generated reader page
 
-- Status: accepted
+- Status: deprecated (2026-11-21, in 0.11.0)
 - Date: 2026-11-20 (accepted 2026-11-21)
+- Deprecated by: the owner, the same day: the skill is public, so every user's reader page would carry
+  his own Pearl design ("everyone will have my design … just remove the form from the skill"). The
+  reader page was removed in 0.11.0; this record stays as history. It shipped only in 0.10.0.
 - Decided by: the owner chose the Pearl look from his own Design Library after three rounds of looks
   ("this one", 2026-11-20), asked for plan steps to fold, and asked for WorkSpace Labs at the bottom.
   He chose the phone's document list after trying it in iPhone Files ("1 better", 2026-11-21).
