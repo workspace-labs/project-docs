@@ -56,10 +56,19 @@ test('the AI part stays five lines and asks what outside text must never make it
   has(read('references', 'trd.md'), [
     'also ask what that text must never be able to make it do, and write the answer on the **Decides alone** line, together with what it may do alone',
     'when it reads text the operator did not write: what that text must never make it do',
-    'ما الذي يجب ألا يستطيع هذا النص أن يجعله يفعله',
+    'ما الذي لا يجوز أن يدفعه هذا النص إلى فعله',
     '**يقرر وحده** مع ما يفعله وحده',
-    'وعندما يقرأ نصًا لم يكتبه المشغّل: ما يجب ألا يجعله هذا النص يفعله',
+    'وعندما يقرأ نصًا لم يكتبه صاحب النظام: ما لا يجوز أن يدفعه هذا النص إلى فعله',
+    'نموذج الاجتماع المعبّأ',
   ], 'trd.md');
+  has(read('references', 'data.md'), ['نموذج الاجتماع المعبّأ'], 'data.md');
+  has(read('references', 'plan.md'), ['ما لا يجوز أن يدفعه النص الخارجي إلى فعله'], 'the Plan reference');
+  for (const file of ['data.md', 'trd.md', 'plan.md']) {
+    const text = read('references', file);
+    for (const old of ['يجعله', 'المعبأ', 'لم يكتبه المشغّل', 'تعليمات المشغّل']) {
+      assert.ok(!text.includes(old.normalize('NFC')), `${file} must not keep the old wording: ${old}`);
+    }
+  }
 });
 
 test('an outside service records keeping and training as two answers, with one named gap per provider', () => {

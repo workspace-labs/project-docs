@@ -2,6 +2,19 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.12.1] - 2026-11-21
+
+### Fixed
+
+- Clearer Arabic in the questions added in 0.12.0: the limit on outside text now reads «ما لا يجوز أن يدفعه
+  هذا النص إلى فعله», the person who wrote the instructions is «صاحب النظام», and «المعبّأ» has its shadda.
+  The meaning is unchanged, and the English is unchanged. The older «المشغّل» in the release recovery rule
+  stays, because it means the person who runs the release.
+
+### Verification
+
+`node --test` passed 230/230 with zero skips.
+
 ## [0.12.0] - 2026-11-21
 
 ### Added

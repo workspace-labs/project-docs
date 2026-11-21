@@ -1,7 +1,14 @@
 # How project-docs was tested
 
-**Last verified 2026-11-21 · version 0.12.0.** All 230 automated tests passed on macOS arm64 with Node.js
+**Last verified 2026-11-21 · version 0.12.1.** All 230 automated tests passed on macOS arm64 with Node.js
 20.20.2, with zero skips.
+
+## 0.12.1 — Clearer Arabic wording
+
+- **Automated checks.** `node --test` passed 230/230 with zero skips. The tests now require the new wording
+  and refuse the old wording in the Arabic Data, TRD and Plan references.
+- **Not run.** A real agent's authoring cycle, the preview and the Pandoc comparison: only Arabic reference
+  text changed. No independent review was run for this wording patch.
 
 ## 0.12.0 — Three decisions a person must make
 
