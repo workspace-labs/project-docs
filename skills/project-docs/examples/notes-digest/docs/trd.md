@@ -1,5 +1,5 @@
 # TRD: Notes Digest
-> v3 · Approved 2026-11-20
+> v4 · Draft
 
 ## Work rules
 - None: personal project.
@@ -18,10 +18,12 @@
 
 ## Outside services
 - Quill 2, the hosted language model from Harborline (made-up names for this example), reached over the internet through Harborline's API: it writes the digest; sends the text of the one notes file and the instructions; expects a summary and an action list as plain text; if unavailable, the tool prints one line saying so and nothing else, because the team lead already has a Harborline account.
+  - Changed 2026-11-21: no line → keeps: the notes for 30 days for abuse checks; trains: no, as the team lead read Harborline's made-up terms, because v3, approved 2026-11-20, was written before this was asked.
 
 ## AI part
 - **Model:** Quill 2 from Harborline, the service named under Outside services, running on Harborline's servers, because the team lead already has an account there and it reads long English notes well.
 - **Decides alone:** the wording of the summary, and which lines of the notes it lists as actions and for whom; it only prints them on the team lead's screen.
+  - Changed 2026-11-21: what it may decide alone → the wording of the summary, and which lines of the notes it lists as actions and for whom; it only prints them on the team lead's screen; text inside the notes must never make it do anything except write the digest of that one file, because v3, approved 2026-11-20, did not say what text in the notes must not be able to do.
 - **A person approves:** everything that leaves the screen: the team lead reads the digest against the notes and copies only what they accept.
 - **When it is wrong:** the team lead notices when reading the digest against the notes, and corrects the text before pasting it; the first printed line says the digest was written by AI and must be checked.
 - **Checked by:** ten past notes files, each with the summary and the actions the team lead accepts, kept by the team lead beside the tests, and run before first use and after any change of the model or its instructions.

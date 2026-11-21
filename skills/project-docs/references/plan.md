@@ -43,8 +43,9 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
   - An action uses a part charged by use: before the step starts paying for it, cite **TRD: Running cost**.
     Using the agreed rates, check the cost through completion including charged failures and retries.
     Compare it with the estimate and the ceiling if one was set.
-  - Saved data that cannot reasonably be recreated: before first entrusting it to the product, restore
-    a backup into a separate safe copy and read the records back; never overwrite live data for a test.
+  - Saved data that cannot reasonably be recreated: before first entrusting it to the product, cite
+    **Data: If this copy is lost**, restore the copy it names into a separate safe copy, read the records
+    back and check that no more than the agreed loss is at risk; never overwrite live data for a test.
   - Someone besides the author will run it, or it will be set up again on another computer: when it
     becomes runnable, write the README how-to from an empty computer to running (what to install, its
     settings, how to start it) and try its instructions that way, as that user.
@@ -62,7 +63,8 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
   - An AI model is used (the TRD's **AI part** is not `None`): the step that first builds it runs the
     examples named under **Checked by** and shows the result, and any later step that changes the model
     or its instructions runs them again. The step that lets it act alone tries what **When it is wrong**
-    says.
+    says. When **Decides alone** limits what outside text can make it do, the step that first reads that
+    text tries such a text and cites that line.
   A tiny offline project with no saved data gets no restore, service, notice or deployment check merely
   because these examples exist. Skip the speed check where waiting time is not a concern and the cost
   check where no part is charged by use. These are proposed checks; actual run results come from the
@@ -118,7 +120,7 @@ Exactly one of these, on the step's **Status** line:
 | Status | Means | Who sets it |
 |---|---|---|
 | `not started` | nothing done yet | the AI, when writing the plan |
-| `⛔ waits for TBD: <what>` | it needs a choice a document left open | the AI; back to `not started` once that choice is made |
+| `⛔ waits for TBD: <what>` | it needs a choice a document left open | the AI; back to `not started` only once nothing it needs is still open |
 | `◐ waiting for your check (ran: <what you ran>, <date>)` | built, and its check was run | the AI, **only after running the check**, in the same edit as the step's **Built** line |
 | `✅ checked <date>` | the person tried it and it works | **only the person**: the AI types it only when the person says it works |
 
@@ -130,7 +132,11 @@ choice. Block affected unchecked steps, including ones waiting for the person's 
 run and its date as historical text beneath the step's check, with only one current Status line. When
 several choices block a step, keep its existing open TBD label first and name the others in its check.
 
-When the choice a step waited for is settled, set its Status back to `not started` and keep the wait as one
+When the choice a step waited for is settled, first check what else the step needs. **If another `TBD` it
+needs is still open,** keep it blocked: set its Status to `⛔ waits for TBD: <the next open one, in document
+order>` and keep the move as one line under **Status**:
+`  - Changed <date>: waited for <what> → waits for <the next one>, because <the document> settled it as <the choice>.`
+**Only when nothing it needs is still open,** set its Status back to `not started` and keep the wait as one
 line under **How we know it works**. Use `  - Changed <date>: waited for <what> → not started, because
 <the document> settled it as <the choice>.` If the wait's name contains `→`, quote the name, for example
 `waited for “draft → sent”`. The page records a wait with extra unquoted arrows as written. The words
@@ -248,8 +254,9 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 - إجراء يستخدم جزءًا مدفوعًا بحسب الاستخدام: قبل أن يبدأ الدفع في الخطوة، اذكر **TRD: تكلفة التشغيل**.
   تحقّق بالأسعار المتفق عليها من التكلفة حتى اكتمال الإجراء، بما فيها الفشل وإعادة المحاولة
   المدفوعان، وقارنها بالتقدير وبالسقف إن حدده الشخص.
-- بيانات محفوظة لا يمكن إعادة إنشائها عمليًا: قبل الاعتماد على المنتج لحفظها، استعد نسخة احتياطية
-  في نسخة آمنة منفصلة واقرأ السجلات مجددًا؛ لا تستبدل البيانات الحية للاختبار.
+- بيانات محفوظة لا يمكن إعادة إنشائها عمليًا: قبل الاعتماد على المنتج لحفظها، اذكر **البيانات: إذا ضاعت
+  هذه النسخة**، واستعد النسخة التي يسمّيها في نسخة آمنة منفصلة، واقرأ السجلات مجددًا، وتحقق من أن ما قد يضيع
+  لا يتجاوز المتفق عليه؛ لا تستبدل البيانات الحية للاختبار.
 - سيشغّله شخص غير مؤلفه، أو سيُجهَّز من جديد على حاسوب آخر: عند أول نسخة قابلة للتشغيل، اكتب إرشادات
   README من حاسوب فارغ إلى التشغيل (ما يُثبَّت، وإعداداته، وكيف يبدأ) وجرّب اتباعها مثل ذلك المستخدم.
 - سيُنشر أو يوزّع خارج حاسوب المطوّر: سمِّ طريقة الإصدار وأشر إلى **التعافي عند الإصدار** تحت
@@ -264,7 +271,8 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
   أيضًا قاعدة التهديد أو سجل التدقيق ذات الصلة في الأمان.
 - يستخدم نموذج ذكاء اصطناعي (**جزء الذكاء الاصطناعي** في TRD ليس «لا شيء»): تشغّل الخطوة التي تبنيه أول
   مرة الأمثلة المذكورة تحت **يُفحص بـ** وتعرض النتيجة، وتعيدها أي خطوة لاحقة تغيّر النموذج أو تعليماته.
-  والخطوة التي تسمح له بالتصرف وحده تجرّب ما يقوله سطر **عند الخطأ**.
+  والخطوة التي تسمح له بالتصرف وحده تجرّب ما يقوله سطر **عند الخطأ**. وإذا حدّد **يقرر وحده** ما لا يستطيع
+  النص الخارجي أن يجعله يفعله، فالخطوة التي تقرأ ذلك النص أول مرة تجرّب نصًا كهذا وتذكر ذلك السطر.
 لا تفرض على أداة صغيرة دون اتصال ولا حفظ فحوص الاستعادة والخدمات والإشعار والنشر لمجرد ورودها هنا.
 تجاوز فحص السرعة إذا لم يكن الانتظار مهمًا، وفحص التكلفة إذا لم يكن أي جزء مدفوعًا بحسب الاستخدام.
 هذه فحوص مقترحة؛ دليل التنفيذ من المطوّر أو المراجع، ولا يضع علامة «فُحصت» إلا الشخص.
@@ -273,6 +281,11 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 اللذان يُضافان أثناء العمل لهما الاسمان في الجدول أدناه: «ما بُني» يكتبه المطوّر مع حالة «بانتظار فحصك»، و«ملاحظتك»
 بكلمات الشخص وحده. اكتب تاريخًا صحيحًا بالأرقام الغربية بصيغة `YYYY-MM-DD` في كل سطر يبدأ بـ«تغيّر في».
 إذا رفض النص البرمجي السطر بسبب التاريخ، يذكر اسم الخطوة.
+
+عند حسم القرار الذي تنتظره الخطوة، انظر أولًا ما تحتاجه أيضًا. **إن بقي قرار آخر تحتاجه مفتوحًا** فأبقها معطّلة: اجعل
+حالتها `⛔ تنتظر ما لم يُحسم: <التالي المفتوح بترتيب الوثائق>`، واحفظ الانتقال في سطر واحد تحت **الحالة**:
+`  - تغيّر في <التاريخ>: من انتظار <ما هو> إلى انتظار <التالي>، لأن <الوثيقة> حسمته بأنه <الاختيار>.`
+**ولا تعود إلى «لم تبدأ» إلا حين لا يبقى شيء تحتاجه مفتوحًا.**
 
 ضع تغييرات الفحص وسجلّ الانتقال إلى «لم تبدأ» بعد حسم الانتظار تحت سطر **كيف نعرف أنها تعمل**. تحت أي حقل
 آخر، أو إذا التبس معنى الانتقال، يُعرض السطر كما كُتب. إذا احتوى اسم ما تنتظره الخطوة على كلمة «إلى»،
@@ -299,6 +312,7 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 | `- **Built:** <…>` | `- **ما بُني:** <…>` |
 | `- **Your note:** <date> — <…>` | `- **ملاحظتك:** <التاريخ> — <…>` |
 | `  - Changed <date>: waited for <what> → not started, because <…>.` | `  - تغيّر في <التاريخ>: من انتظار <ما هو> إلى لم تبدأ، لأن <…>.` |
+| `  - Changed <date>: waited for <what> → waits for <the next one>, because <…>.` | `  - تغيّر في <التاريخ>: من انتظار <ما هو> إلى انتظار <التالي>، لأن <…>.` |
 
 ```markdown
 # خطة التنفيذ: <اسم المشروع>

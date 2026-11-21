@@ -63,6 +63,15 @@ on the service's existing line; Security reuses what it receives. Do not invent 
 or new saved data. An unresolved choice follows the existing `TBD` process and blocks only the work
 that needs it. With no outside service, keep `None` and ask nothing about service failures.
 
+When a service receives the client's or users' information (including the client's own work notes, even
+when they are about other people), ask two separate questions: **may the provider keep it, and for how
+long**, and **may it use it to train**? Reuse a filled meeting form's answers. Keep both answers on the
+service's line. They come from the provider's terms or the client's contract, as the person read them:
+never guess from what providers usually do. Anything not confirmed yet → one line for that provider,
+`- TBD: what <service> may keep or train on. Decided when <the person has read its terms>.`, until every
+answer is confirmed. Every step that sends it real information waits for that name; a step that uses only
+made-up data does not. A service that receives nothing of theirs is not asked.
+
 **Ask the rules first** (online or offline, languages, and which devices people will hold, which goes into
 the Speed line): they change which options fit the other parts. Write the document in its own order.
 
@@ -86,7 +95,11 @@ ask nothing more. Otherwise write its five lines:
   here. A model that runs on the project's own computer sends nothing outside: say so.
 - **Decides alone** and **A person approves** are never a default and never "you pick": how far the AI may
   go without a person is the client's responsibility. Go through the PRD's `M` lines the AI takes part in
-  and ask, for each, whether it acts alone or a person approves first, and who that person is.
+  and ask, for each, whether it acts alone or a person approves first, and who that person is. When the
+  model reads text the operator did not write (a user's message, a file, a web page, another system), also
+  ask what that text must never be able to make it do, and write the answer on the **Decides alone** line,
+  together with what it may do alone.
+  Never a default. When it reads only the operator's own instructions, do not ask.
 - **When it is wrong:** ask how a wrong answer is noticed, who corrects it, and what the user is told (that
   an answer came from AI, how to report a wrong one). Never promise that it will not be wrong.
 - **Checked by:** ask for the examples it must get right (real questions with the answer the client
@@ -213,11 +226,11 @@ the old one (see SKILL.md).
 - <only for deployment or distribution beyond the builder's computer: **Release recovery:** who decides to go back, the signal, and the route if the previous release cannot read new saved data>
 
 ## Outside services
-- <service: what it is for; sends …; expects …; if unavailable …>, because <reason>.
+- <service: what it is for; sends …; expects …; if unavailable …; when it receives the client's or users' information: keeps …; trains …>, because <reason>.
 
 ## AI part
 - **Model:** <which model, and where it runs>, because <reason>.
-- **Decides alone:** <what it may do with no person checking / Nothing: a person approves everything>
+- **Decides alone:** <what it may do with no person checking / Nothing: a person approves everything; when it reads text the operator did not write: what that text must never make it do>
 - **A person approves:** <what waits for a person, and who approves it / Nothing: see Decides alone>
 - **When it is wrong:** <how a wrong answer is noticed, who corrects it, what the user is told>
 - **Checked by:** <the examples it must get right, who keeps them, and when they are run again>
@@ -274,6 +287,14 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 استخدام ما تستقبله. لا تخترع إعادة محاولة أو خدمة بديلة أو بيانات محفوظة جديدة. القرار المفتوح يتبع
 «لم يُحسم بعد» ويعطّل العمل الذي يحتاجه فقط. دون خدمة خارجية، أبقِ «لا شيء» ولا تسأل عن تعطّلها.
 
+عندما تستقبل الخدمة معلومات العميل أو مستخدميه (بما فيها ملاحظات عمل العميل نفسه، ولو كانت عن أشخاص آخرين)،
+اسأل سؤالين منفصلين: **هل يحق للمزوّد الاحتفاظ بها، وإلى متى**، و**هل يحق له التدريب عليها**؟ أعد استخدام
+إجابات نموذج الاجتماع المعبأ. يبقى الجوابان في سطر الخدمة. ومصدرهما شروط المزوّد أو عقد العميل كما قرأها الشخص،
+ولا تخمّنهما مما يفعله المزوّدون عادةً. وما لم يتأكد بعد يبقى له سطر واحد لذلك المزوّد:
+`- لم يُحسم بعد: ما يحق لـ<الخدمة> الاحتفاظ به أو التدريب عليه. يُحسم عندما <يقرأ الشخص شروطها>.` حتى تتأكد كل
+الإجابات. وتنتظر بهذا الاسم كل خطوة ترسل إليها معلومات حقيقية؛ أما الخطوة التي تستخدم بيانات مختلَقة فقط فلا
+تنتظر. والخدمة التي لا تستقبل شيئًا من معلوماتهم لا يُسأل عنها.
+
 **جزء الذكاء الاصطناعي:** فقط عندما يستخدم المنتج نفسه نموذج ذكاء اصطناعي ليجيب أو يصوغ أو يصنّف أو
 يوصي أو يتصرف. أداة الذكاء الاصطناعي التي تساعد في بناء المشروع ليست هذا الجزء. إن لم يوجد نموذج
 فاكتب سطرًا واحدًا «لا شيء: لا يستخدم الذكاء الاصطناعي» ولا تسأل أكثر. وإلا فاكتب أسطره الخمسة:
@@ -284,7 +305,9 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
   لا يرسل شيئًا إلى الخارج: اذكر ذلك.
 - **يقرر وحده** و**يعتمده إنسان** ليسا خيارًا افتراضيًا ولا «اختر أنت»: مدى تصرف الذكاء الاصطناعي دون إنسان
   مسؤولية العميل. مرّ على أسطر `M` في PRD التي يشارك فيها الذكاء الاصطناعي، واسأل عن كل سطر: هل يتصرف
-  وحده أم يعتمده إنسان أولًا، ومن هو ذلك الإنسان.
+  وحده أم يعتمده إنسان أولًا، ومن هو ذلك الإنسان. وعندما يقرأ النموذج نصًا لم يكتبه المشغّل (رسالة مستخدم، ملف،
+  صفحة ويب، نظام آخر)، اسأل أيضًا: ما الذي يجب ألا يستطيع هذا النص أن يجعله يفعله؟ واكتب الجواب في سطر
+  **يقرر وحده** مع ما يفعله وحده. ليس هذا خيارًا افتراضيًا. وإن كان لا يقرأ إلا تعليمات المشغّل نفسه فلا تسأل.
 - **عند الخطأ:** اسأل كيف يُلاحَظ الجواب الخاطئ، ومن يصحّحه، وماذا يُقال للمستخدم (أن الجواب من الذكاء
   الاصطناعي، وكيف يبلّغ عن جواب خاطئ). ولا تعد بأنه لن يخطئ.
 - **يُفحص بـ:** اسأل عن الأمثلة التي يجب أن يجيب عنها صحيحًا (أسئلة حقيقية مع الجواب الذي يقبله العميل)،
@@ -348,11 +371,11 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 - <فقط للنشر أو التوزيع خارج حاسوب المطوّر: **التعافي عند الإصدار:** من يقرر الرجوع، وما الإشارة، وما المسار إذا لم يقرأ الإصدار السابق البيانات الجديدة المحفوظة>
 
 ## الخدمات الخارجية
-- <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …>، لأن <السبب>.
+- <الخدمة: الغرض منها؛ يرسل …؛ ينتظر …؛ عند التعطّل …؛ عندما تستقبل معلومات العميل أو المستخدمين: يحتفظ …؛ يدرّب …>، لأن <السبب>.
 
 ## جزء الذكاء الاصطناعي
 - **النموذج:** <أي نموذج، وأين يعمل>، لأن <السبب>.
-- **يقرر وحده:** <ما يفعله دون مراجعة إنسان / لا شيء: يعتمد إنسان كل شيء>
+- **يقرر وحده:** <ما يفعله دون مراجعة إنسان / لا شيء: يعتمد إنسان كل شيء؛ وعندما يقرأ نصًا لم يكتبه المشغّل: ما يجب ألا يجعله هذا النص يفعله>
 - **يعتمده إنسان:** <ما ينتظر إنسانًا، ومن يعتمده / لا شيء: انظر يقرر وحده>
 - **عند الخطأ:** <كيف يُلاحَظ الجواب الخاطئ، ومن يصحّحه، وماذا يُقال للمستخدم>
 - **يُفحص بـ:** <الأمثلة التي يجب أن يجيب عنها صحيحًا، ومن يحتفظ بها، ومتى تُعاد>

@@ -2,6 +2,36 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.12.0] - 2026-11-21
+
+### Added
+
+Three decisions a person must make, each asked only when its condition is true. No new document or heading.
+
+- **Data, "If this copy is lost":** when saved records cannot easily be typed in again, where a readable copy
+  is and how much of the latest work may be lost. An open answer is one named `TBD` that Plan steps can wait
+  for. The Handover reuses the decision and asks only who makes the agreed copy.
+- **AI part, text the operator did not write:** what that text must never be able to make the AI do. The
+  answer is part of the current **Decides alone** line, so the AI part stays five lines.
+- **Outside services, keeping and training:** when a service receives the client's or users' information, may
+  the provider keep it and for how long, and may it use it to train. These are two answers, taken from the
+  terms or contract as the person read them, or one named `TBD` per provider. Every step that sends real
+  information waits for it; a step using only made-up data does not.
+- The client meeting form asks the data-loss and provider questions only when they apply, in English and Arabic.
+- The Plan's existing restore and AI checks now cite the decisions that own them.
+- A Plan step that needs two open decisions stays blocked until the last one is settled, and records each move.
+
+### Changed
+
+- An approved document that lacks one of these answers, even inside a line it already has, is treated as not
+  approved when the skill next opens it. Earlier answers, `Changed` lines and approval history are kept.
+- The Cedar Clinic examples (English and Arabic) answer the new questions. The Notes Digest TRD and Plan return
+  to `v4 · Draft`, and their `Changed` lines keep the record of v3, approved 2026-11-20.
+
+### Verification
+
+`node --test` passed 230/230 with zero skips, up from 222.
+
 ## [0.11.0] - 2026-11-21
 
 ### Removed

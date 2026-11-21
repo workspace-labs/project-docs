@@ -57,6 +57,14 @@ how long a row is kept, and how a personal row is removed. Keep this in the same
   runs". If the person doesn't know, write `TBD` and Security will carry it.
 - **Old records:** when the meeting form says records move in from paper or an old system, ask where
   from, how many, and who checks them after the move. Write it under **How long it's kept**, or `TBD`.
+- **If this copy is lost:** when the saved records cannot easily be typed in again (a thousand paper
+  records that take weeks to retype cannot), ask once where a copy
+  someone can read is, and how much of the latest work may be lost. Reuse a filled meeting form's answer.
+  The person decides: never assume a backup exists. Keep this line with whatever is confirmed. For anything
+  still open, write `open: see the TBD below` in its place and add right under it one
+  `- TBD: how the saved records are recovered. Decided when <…>.` Settle it with a `Changed` line. Until then,
+  every Plan step that entrusts real records to the product waits for that exact name. When they can easily be
+  typed in again, write `None: it can easily be typed in again`.
 - **Linked rows:** when a sheet points at another (`book_id`), ask what happens to its rows when the row they
   point at is removed: they go with it, or they stay. Write the answer under **How the sheets link**.
 
@@ -80,6 +88,7 @@ name in the code in brackets (`### Orders (orders)`), its table and its lines. I
 
 ## What it saves
 <One or two sentences, then the sheets in one line.>
+- **If this copy is lost:** <where a copy someone can read is, and how much of the latest work may be lost / None: it can easily be typed in again>
 
 ## Sheets
 
@@ -126,6 +135,13 @@ after its Arabic name.
 اذكر القيد المركّب أو المشروط بوضوح، وطبّق القيود نفسها في الكود الجاهز. جدول التدقيق الصغير لا يُضاف
 إلا لقاعدة أمان متفق عليها؛ معرّفاته الشخصية لها رؤية ومدة حفظ وطريقة حذف أيضًا. لا تضف جولة أسئلة.
 
+**إذا ضاعت هذه النسخة:** عندما لا يمكن إدخال السجلات المحفوظة من جديد بسهولة (ألف سجل ورقي تحتاج إعادة كتابته أسابيع لا يُعد سهلًا)، اسأل مرة واحدة: أين توجد نسخة
+يستطيع أحد قراءتها، وكم من آخر العمل قد يضيع؟ أعد استخدام جواب نموذج الاجتماع المعبأ. الشخص هو من يقرر، ولا
+تفترض وجود نسخة احتياطية. أبقِ هذا السطر بما تأكّد منه. وما بقي مفتوحًا فاكتب مكانه «مفتوح: انظر ما لم يُحسم أدناه»،
+وأضف تحته مباشرة `- لم يُحسم بعد: كيف تُستعاد السجلات المحفوظة. يُحسم عندما <…>.` ويُحسم بسطر «تغيّر في». وحتى
+ذلك تنتظر بهذا الاسم نفسه كل خطوة في الخطة تعتمد على المنتج لحفظ سجلات حقيقية. وإن سهُل إدخالها من جديد فاكتب
+«لا شيء: يمكن إدخالها من جديد بسهولة».
+
 | English | Arabic |
 |---|---|
 | `🔒 personal` | `🔒 شخصي` |
@@ -138,6 +154,7 @@ after its Arabic name.
 
 ## ما يحفظه
 <جملة أو جملتان، ثم الجداول في سطر واحد.>
+- **إذا ضاعت هذه النسخة:** <أين توجد نسخة يستطيع أحد قراءتها، وكم من آخر العمل قد يضيع / لا شيء: يمكن إدخالها من جديد بسهولة>
 
 ## الجداول
 

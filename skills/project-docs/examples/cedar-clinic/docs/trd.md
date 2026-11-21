@@ -1,5 +1,5 @@
 # TRD: Cedar Clinic Booking
-> v4 · Draft
+> v5 · Draft
 
 ## Work rules
 - Must use: the clinic's Microsoft 365 accounts for staff login.
@@ -25,7 +25,8 @@
 ## Outside services
 - Microsoft 365 login: staff sign in, because the work rules require it.
   - Changed 2026-11-11: staff sign-in only → staff sign-in sends the login request and expects a verified signed answer with the stable account ID; failed or unavailable login creates no session and explains that sign-in is unavailable, because a failed identity check must not grant staff access.
-- TBD: the text-message service for reminders and patient sign-in codes. Decided when the clinic's IT lead has approved one that keeps data in the country.
+  - Changed 2026-11-21: no line → keeps: the staff sign-in records for 90 days; trains: no, as the IT lead read the clinic's Microsoft agreement (a made-up term for this example), because v4 was written before this was asked.
+- TBD: the text-message service for reminders and patient sign-in codes. Decided when the clinic's IT lead has approved one that keeps data in the country and has confirmed from its terms how long it keeps the phone numbers and texts and whether it may train on them.
   The proposed contract sends the patient's phone number and the code or reminder text, expects a delivery-acceptance or failure response, and reports a failed code request without signing the patient in. A failed reminder leaves the saved visit unchanged and shows staff that delivery failed; it never says the message was delivered without confirmation.
 
 ## AI part

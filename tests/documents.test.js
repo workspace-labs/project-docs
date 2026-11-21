@@ -1009,7 +1009,7 @@ const AI = {
 //   - uses AI: the five lines, each answered or with a named choice standing in its place.
 // A value that is the bare TBD word is none of these, whether it was written that way or reached through a
 // Changed line: reopening keeps the old record collapsed and puts a named TBD in its place (SKILL.md).
-function aiProblems(ai, A, L) {
+function aiProblems(ai, A, L, { template = false } = {}) {
   const nfc = (s) => s.normalize('NFC');
   const records = [];
   const problems = [];
@@ -1039,6 +1039,7 @@ function aiProblems(ai, A, L) {
     if (labelled) {
       const value = now === null ? labelled[2] : now;
       if (isTbd(value)) return { kind: 'unfinished', what: labelled[1], label: labelled[1] };
+      if (!template && /<[^>\n]+>/.test(value)) problems.push(`${labelled[1]}: a template placeholder was left in a filled line`);
       return { kind: 'label', label: labelled[1], turnedNone: now !== null && isNone(now) };
     }
     return { kind: 'other', line: record.line };
@@ -1068,6 +1069,20 @@ function aiProblems(ai, A, L) {
   return problems;
 }
 
+// What one AI line says today. A "no line →" history entry only records how the line came to be.
+function currentAiAnswer(ai, label, A, L) {
+  const lines = ai.replace(/<details data-project-docs-history>[\s\S]*?<\/details>/g, '').split('\n');
+  const prefix = `- **${label}:** `;
+  const at = lines.findIndex((l) => l.startsWith(prefix));
+  if (at < 0) return '';
+  let value = lines[at].slice(prefix.length);
+  for (let i = at + 1; i < lines.length && lines[i].startsWith('  - '); i += 1) {
+    const change = lines[i].match(L.change);
+    if (change && change[1].trim() !== A.noLine) value = change[2].trim();
+  }
+  return value;
+}
+
 test('the TRD has an AI part: five lines when the product uses AI, one line when it does not', () => {
   const nfc = (s) => s.normalize('NFC');
   const flat = (file) => nfc(readMarkdown(path.join(SKILL, 'references', file)).replace(/\s+/g, ' '));
@@ -1075,7 +1090,7 @@ test('the TRD has an AI part: five lines when the product uses AI, one line when
   const plan = flat('plan.md');
   for (const [L, A, examples] of [[LANGS.en, AI.en, ['cedar-clinic', 'study-timer']], [LANGS.ar, AI.ar, ['cedar-clinic-ar']]]) {
     const shape = section(template('trd.md', L.templateHeading).join('\n'), A.heading);
-    assert.deepStrictEqual(aiProblems(shape, A, L), [], `the ${A.heading} template has its five lines`);
+    assert.deepStrictEqual(aiProblems(shape, A, L, { template: true }), [], `the ${A.heading} template has its five lines`);
     assert.deepStrictEqual(shape.split('\n').filter((l) => l.startsWith('- **')).length, 5);
     for (const folder of examples) {
       const ai = section(read(`${folder}/docs/trd.md`), A.heading);
@@ -1393,6 +1408,16 @@ test('the Notes Digest example shows a product that uses AI, and its documents a
   assert.deepStrictEqual(aiProblems(ai, AI.en, L), []);
   const line = (label) => ai.split('\n').find((l) => l.startsWith(`- **${label}:** `)) || '';
   assert.deepStrictEqual(AI.en.labels.filter((label) => !line(label)), [], 'all five lines are answered, none left open');
+  // The limit on outside text is part of today's Decides alone answer, beside what it may do alone.
+  const limit = 'text inside the notes must never make it do anything except write the digest of that one file';
+  const decides = currentAiAnswer(ai, 'Decides alone', AI.en, L);
+  for (const part of [limit, 'the wording of the summary', 'which lines of the notes it lists as actions and for whom', "it only prints them on the team lead's screen"]) {
+    assert.ok(decides.includes(part), `the current answer keeps: ${part}`);
+  }
+  const history = ai.split('\n').find((l) => l.includes(limit));
+  const archived = ai.replace(history, `<details data-project-docs-history>\n${history}\n</details>`);
+  assert.ok(!currentAiAnswer(archived, 'Decides alone', AI.en, L).includes(limit), 'caught: the limit moved into collapsed history');
+  assert.ok(aiProblems(ai.replace(line('Checked by'), '- **Checked by:** <the examples it must get right>'), AI.en, L).length > 0, 'caught: a template placeholder in a filled line');
   assert.deepStrictEqual(openTbds(trd, L), [], 'the per-digest cost is settled');
 
   // A hosted model is one outside service, with what is sent, what comes back and what happens when it is down;
@@ -1426,7 +1451,8 @@ test('the Notes Digest example shows a product that uses AI, and its documents a
   assert.match(digestCost, /500 output tokens for the full summary and action list at 0\.02 USD per 1,000 output tokens/);
   assert.match(digestCost, /the team lead supplied the rates and usage from Harborline's usage page for October 2026/);
   assert.match(digestCost, /Failed attempts and retries are billed at the same rates for any tokens used\./);
-  assert.match(trd, /^> v3 · Approved 2026-11-20$/m);
+  assert.match(trd, /^> v4 · Draft$/m);
+  assert.ok(trd.includes('v3, approved 2026-11-20'), 'the earlier approval stays in the history');
 
   // Security names the same service and what it receives; the key is a secret; the connection is protected.
   const security = doc('security.md');

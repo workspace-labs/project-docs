@@ -164,7 +164,8 @@ Date and place: · Present (name and job of each):
 
 ### 7. Later stages: ask now
 - **Data:** does it keep personal or sensitive information? What kind? Any rule on where it must stay, or
-  how long it may be kept?
+  how long it may be kept? If its records could not easily be typed in again: if this copy is lost, where
+  is another someone can read, and how much of the latest work may be lost?
 - **Old records:** do records from today's paper or system move into it? How many, and who checks them?
 - **Where it must run:** the client's own network or servers, a cloud, or devices? Is the internet allowed?
   Who gives us access?
@@ -174,7 +175,8 @@ Date and place: · Present (name and job of each):
 - **Languages:** which languages it must offer.
 - **Brand:** is there a logo, colours or brand rules to follow?
 - **Accessibility:** does anyone need large text, a screen reader or the keyboard only?
-- **Links to other systems:** which systems must it talk to, what goes between them, who owns them?
+- **Links to other systems:** which systems must it talk to, what goes between them, who owns them? If it sends the client's or users' information to an outside provider: may the provider
+  keep it, for how long, and may it use it to train?
 - **Sign-in:** who signs in, and with which accounts (existing work accounts)?
 - **Security:** any security rules, reviews or approvals it must pass?
 - **Rules and policies:** any law or policy it must follow?
@@ -311,7 +313,7 @@ When the person asks for Arabic, write the same form in Arabic with these headin
 - **كيف نعرف أنه نجح؟** (فحوص يستطيع أي أحد تجربتها: "يحجز موعدًا في أقل من دقيقتين")
 
 ### 7. المراحل اللاحقة: نسأل الآن
-- **البيانات:** هل يحفظ معلومات شخصية أو حساسة؟ من أي نوع؟ هل هناك قاعدة لمكان بقائها، أو لمدة الاحتفاظ بها؟
+- **البيانات:** هل يحفظ معلومات شخصية أو حساسة؟ من أي نوع؟ هل هناك قاعدة لمكان بقائها، أو لمدة الاحتفاظ بها؟ وإن لم يسهل إدخال سجلاته من جديد: إذا ضاعت هذه النسخة، فأين توجد نسخة أخرى يستطيع أحد قراءتها، وكم من آخر العمل قد يضيع؟
 - **السجلات القديمة:** هل تُنقل إليه سجلات من الورق أو النظام الحالي؟ كم عددها، ومن يراجعها؟
 - **أين يجب أن يعمل:** على شبكة العميل أو خوادمه، أم في سحابة، أم على أجهزة؟ هل الإنترنت مسموح؟ ومن يمنحنا الوصول؟
 - **التوفر:** في أي ساعات يجب أن يعمل؟ وماذا يحدث عندما يتوقف؟
@@ -320,7 +322,7 @@ When the person asks for Arabic, write the same form in Arabic with these headin
 - **اللغات:** ما اللغات التي يجب أن يقدّمها؟
 - **الهوية:** هل هناك شعار أو ألوان أو قواعد هوية يجب اتباعها؟
 - **سهولة الوصول:** هل يحتاج أحد إلى خط كبير أو قارئ شاشة أو لوحة المفاتيح فقط؟
-- **الربط بأنظمة أخرى:** ما الأنظمة التي يجب أن يتصل بها، وما الذي يُتبادل بينها، ومن يملكها؟
+- **الربط بأنظمة أخرى:** ما الأنظمة التي يجب أن يتصل بها، وما الذي يُتبادل بينها، ومن يملكها؟ وإذا أرسل معلومات العميل أو المستخدمين إلى مزوّد خارجي: هل يحق للمزوّد الاحتفاظ بها، وإلى متى، وهل يحق له التدريب عليها؟
 - **الدخول:** من يدخل، وبأي حسابات (حسابات العمل الحالية)؟
 - **الأمان:** هل هناك قواعد أو مراجعات أو موافقات أمنية يجب أن يجتازها؟
 - **القواعد والسياسات:** هل هناك قانون أو سياسة يجب أن يلتزم بها؟

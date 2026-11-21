@@ -16,6 +16,8 @@ Gather first · The questions · The read-back · The document · In Arabic
 - **TRD → Running cost:** what is paid to keep it running and who pays it now. Never ask it again: the
   Handover only says who pays and renews from the handover on.
 - **Data → How long it's kept:** what happens to the data when the project is retired.
+- **Data → If this copy is lost:** where the readable copy is and how much may be lost. Never ask it again:
+  the Handover only says who makes that copy.
 - **Security → If something goes wrong:** who is told first, to check it matches who looks after it.
 - Any `TBD` in those places: quote it with the document that holds it, never fill it in. Who receives,
   runs, supports and pays for it are facts about the client and the agreement with them: never "you pick".
@@ -37,7 +39,9 @@ Round 2 has four questions, so it takes two rounds when none is answered yet.
 **Round 2: after the handover**
 4. **The first weeks after go-live:** who fixes problems at first (often the builder), for how long, and
    when the old way (a paper list, a spreadsheet) stops.
-5. **Who runs it day to day?** Who keeps it switched on, checks it works, and makes the backups, and where.
+5. **Who runs it day to day?** Who keeps it switched on, checks it works, and makes the copy Data agreed.
+   With no Data document, or when Data says the records can easily be typed in again, skip the copy. When that
+   decision is open in Data, carry its `TBD` forward.
    When the TRD's **Running cost** names a paid part: who pays it and renews it from the handover on.
 6. **Who fixes problems and makes updates after that?** How a problem or a change request reaches them, how
    fast it is answered, and how an update is tested before it goes live.
@@ -79,7 +83,7 @@ Write exactly these headings, in this order. A heading with nothing under it say
 - <who fixes problems at first, for how long; when the old way stops>
 
 ## Running it
-- <who runs it day to day, where, backups>
+- <who runs it day to day, where, and who makes the copy Data agreed (skip the copy when Data needs none)>
 - <who pays the running cost and renews the paid parts from the handover on (TRD: Running cost) / None: nothing is paid for>
 
 ## Maintenance and updates
@@ -112,7 +116,7 @@ says so in one line ("لا شيء: لن يُعلن عنه.").
 - <من يصلح المشكلات في البداية، ولأي مدة؛ ومتى تتوقف الطريقة القديمة>
 
 ## تشغيله
-- <من يشغّله يوميًا، وأين، والنسخ الاحتياطية>
+- <من يشغّله يوميًا، وأين، ومن يأخذ النسخة التي اتفقت عليها البيانات (تجاوز النسخة إذا لم تحتج إليها البيانات)>
 - <من يدفع تكلفة التشغيل ويجدّد الأجزاء المدفوعة بعد التسليم (TRD: تكلفة التشغيل) / لا شيء: لا يُدفع شيء>
 
 ## الصيانة والتحديثات

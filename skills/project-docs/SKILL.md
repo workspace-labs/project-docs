@@ -39,8 +39,11 @@ Load **only** the reference file of the document you are writing: its questions 
 3. A document that exists but has no stamp (the person wrote it before): read it, keep everything in it,
    ask only about what is missing under the fixed headings, then stamp it. An **approved** document that
    lacks headings or fixed lines its reference now has (written by an older version of this skill: a PRD
-   with no **Who decides** or no `Check:` lines, a TRD with no **Available** line): treat it as the first
-   document that is not approved. Keep every line, its stamp history and its `Changed` lines; ask only for the missing parts, or write `TBD`. Never
+   with no **Who decides** or no `Check:` lines, a TRD with no **Available** line), or that lacks an answer now
+   needed inside a line it already has (a service receiving the client's or users' information with no keeps
+   and trains answers; a model reading text the operator did not write with no limit on **Decides alone**):
+   treat it as the first document that is not approved. Keep every line, its stamp history and its `Changed`
+   lines; reuse what another document already answers; ask only for the missing parts, or write `TBD`. Never
    invent an approver, a check or an approval. Then raise the version, set it to `Draft`, and approve it the
    normal way, before writing anything that needs the new parts (the Handover, the delivery steps).
 4. A project that already has code: write what you find and mark it `(found in code)`. Ask only about the

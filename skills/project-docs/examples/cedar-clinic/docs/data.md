@@ -1,9 +1,11 @@
 # Data: Cedar Clinic Booking
-> v4 · Draft
+> v5 · Draft
 
 ## What it saves
 Who the patients are, which doctors take visits, every visit, and the staff who use the front desk list.
 Sheets: Patients · Doctors · Visits · Staff · Audit events (the Security rule).
+- **If this copy is lost:** the IT lead's nightly copy on the second disk at the clinic can be read back; up to one day of visits may be lost.
+  - Changed 2026-11-21: no line → the nightly copy, with up to one day of visits at risk, because v4 was written before this line was asked.
 
 ## Sheets
 

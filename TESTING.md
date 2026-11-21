@@ -1,7 +1,17 @@
 # How project-docs was tested
 
-**Last verified 2026-11-21 · version 0.11.0.** All 222 automated tests passed on macOS arm64 with Node.js
+**Last verified 2026-11-21 · version 0.12.0.** All 230 automated tests passed on macOS arm64 with Node.js
 20.20.2, with zero skips.
+
+## 0.12.0 — Three decisions a person must make
+
+- **Automated checks.** `node --test` passed 230/230 with zero skips, up from 222. The eight new tests are in
+  `tests/human-decisions.test.js`. One traces a step through two open decisions, in either order and both
+  languages, through the real plan-page reader. Undoing the review fixes in a throwaway copy made the tests fail.
+- **Independent review.** Codex approved the change on 2026-11-21 after four review rounds.
+- **Upload zip.** 75 files under one `project-docs/` root, with no tests, PDFs or `.DS_Store` files.
+- **Not run.** A real agent's full authoring and approval cycle with the changed questions, a visual look at
+  the preview, and the standalone Pandoc comparison. `assets/preview/` and `scripts/` are unchanged.
 
 ## 0.11.0 — The reader page removed
 

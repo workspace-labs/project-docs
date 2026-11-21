@@ -1,5 +1,5 @@
 # Plan: Cedar Clinic Booking
-> v5 · Draft
+> v6 · Draft
 
 ## How to read it
 Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ built, waiting for your check · ✅ checked by you.
@@ -63,8 +63,9 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 - **Status:** not started
 
 ### Step 10: Release safely before collecting real patient data
-- **Covers:** TRD: Where it lives, Work rules, Recovery, Kept in; Data: How long it's kept; Security: Connections, Audit
+- **Covers:** TRD: Where it lives, Work rules, Recovery, Kept in; Data: How long it's kept, If this copy is lost; Security: Connections, Audit
 - **How we know it works:** after steps 4 and 5, show the clinic manager's supplied patient notice before collecting personal data. This also waits for the text-message service for reminders and patient sign-in codes and the release recovery decision. On isolated made-up records, restore a backup into a separate database and read the same visits back. Document the Docker release and try the agreed Release recovery under TRD: Where it lives on that isolated copy, with its signal and decision maker. Try the previous image only if it can read the newly saved visits. Otherwise try the agreed alternative. Give the release a version and a dated line in `CHANGELOG.md`, from the clinic's own git repository. Follow the README from an empty computer as another operator and check that only the IT lead can read audit records, expired audit records are removed at 90 days, and the public doctor list does not create protected-record audit events. These are checks to run, not claimed results.
+  - Changed 2026-11-21: generic restore → keep that check, restoring the IT lead's nightly copy from the second disk into the separate database, and confirm that at most one day of visits would be lost (Data: If this copy is lost), because Data now names the copy and the allowed loss.
 - **Status:** ⛔ waits for TBD: the owner-supplied patient notice
 
 ### Step 11: Functional test
