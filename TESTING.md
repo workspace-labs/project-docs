@@ -1,10 +1,17 @@
 # How project-docs was tested
 
-**Last verified 2026-11-21 · version 0.12.1.** All 230 automated tests passed on macOS arm64 with Node.js
+**Last verified 2026-11-22 · version 0.13.0.** All 230 automated tests passed on macOS arm64 with Node.js
 20.20.2, with zero skips.
+
+## 0.13.0 — Three-step chain for whole projects
+
+- **Automated checks.** `node --test` passed 230/230 with zero skips. `node tools/font-ranges.js --check` passed.
+- **Upload zip.** 94 files under one `project-docs/` root, with no tests, PDFs or `.DS_Store` files.
+- **NOT RUN.** Real agent behavior on a whole project and Windows.
 
 ## 0.12.1 — Clearer Arabic wording
 
+- **Environment.** macOS arm64 with Node.js 20.20.2.
 - **Automated checks.** `node --test` passed 230/230 with zero skips. The tests now require the new wording
   and refuse the old wording in the Arabic Data, TRD and Plan references.
 - **Not run.** A real agent's authoring cycle, the preview and the Pandoc comparison: only Arabic reference

@@ -155,6 +155,13 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 - **Smart defaults, the person decides.** Always suggest the best way and say why. The person can always
   say "no, do it my way". Only real limits cannot be overruled, and you explain them plainly.
 
+## The three-step chain
+
+For a whole project, never a small fix: **1. project-docs** (nothing is built before the client approves),
+**2. software-engineering-build-standard** (builds only from the approved documents and the plan),
+**3. checkflow** (nothing is deployed or handed over before its check is clean). When the documents are
+approved, name step 2. If a skill in the chain is not installed, say so and ask how to continue.
+
 ## Files
 
 | File | What it is |

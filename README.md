@@ -15,7 +15,7 @@ the look, and a small script that draws the plan page. **Nothing to install** to
 documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
 coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.12.1** · 230 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.13.0** · 230 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 

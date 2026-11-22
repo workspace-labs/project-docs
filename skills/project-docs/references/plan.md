@@ -102,6 +102,9 @@ starts with its fixed name, exactly as written here, and may add a few words aft
 | **Go-live** | next | Handover | the announcement goes out, people start using it, the old way stops as the Handover says; a "How we know it worked" check that needs time is looked at when its time comes |
 | **Handover** | last | Handover | everything under "What is handed over" is delivered, and the person who receives it signs |
 
+If the `checkflow` skill is installed, offer to run it after the Security test and before the Acceptance
+test. It is not a plan step of its own, and a plan without these steps offers it before the handover.
+
 **A prototype never waits for the database.** When step 1 waits for a `TBD` the screens do not need (most
 often the data storage), the Prototype comes first instead, as step 1: the same path on the builder's
 computer, with made-up data kept only in the screens, and its check says so.

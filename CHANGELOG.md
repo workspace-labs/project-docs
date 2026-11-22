@@ -2,6 +2,19 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.13.0] - 2026-11-22
+
+### Added
+
+- Place project-docs first in the three-step chain for whole projects, followed by
+  software-engineering-build-standard and checkflow. Confirm client approval before building.
+- Offer to run checkflow when installed after the Security test and before the Acceptance test.
+  For plans without those steps, offer it before handover.
+
+### Verification
+
+`node --test` passed 230/230 with zero skips.
+
 ## [0.12.1] - 2026-11-21
 
 ### Fixed
