@@ -1,7 +1,12 @@
 # How project-docs was tested
 
-**Last verified 2026-11-22 · version 0.14.0.** All 257 automated tests passed on macOS arm64 with Node.js
+**Last verified 2026-11-22 · version 0.14.1.** All 257 automated tests passed on macOS arm64 with Node.js
 18.20.8 and 20.20.2, with zero skips.
+
+## 0.14.1 — New README picture and accepted decision
+
+- **Automated checks.** `node --test` passed 257/257 with zero skips on Node.js 20.20.2.
+- **Unchanged.** The skill folder is identical to 0.14.0, so its browser and print results carry over.
 
 ## 0.14.0 — The form comes first for client projects
 

@@ -1,6 +1,6 @@
 # 0009. Understanding a client project takes four meetings, not one
 
-- Status: accepted
+- Status: Superseded in part by [0013](0013-client-discovery-runs-in-four-stages.md) (the fixed meeting count)
 - Date: 2026-11-13
 - Decided by: the owner ("go", 2026-11-13, after reading the research summary)
 

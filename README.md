@@ -1,6 +1,6 @@
 # project-docs
 
-![project-docs: four client meetings (the goal, today's work, the needs, approve or stop), then seven documents (PRD, TRD, Design, Data, Security, Handover, Plan), then Build; beside it a PRD card where every must-do line has a check](media/project-docs-hero-v2.png)
+![project-docs, from the first meeting to the build: meet the client, ask only what is open, write and approve seven documents, then build from the plan; beside it a real meeting form and a real plan board](media/project-docs-hero-v3.png)
 
 **The documents your project needs, written with you before anyone builds it.**
 
@@ -15,7 +15,7 @@ the look, and a small script that draws the plan page. **Nothing to install** to
 documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
 coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.14.0** · 251 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.14.1** · 257 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 

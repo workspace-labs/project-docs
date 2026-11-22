@@ -2,6 +2,25 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.14.1] - 2026-11-22
+
+### Changed
+
+- New picture at the top of the README: the path from the first meeting to the build, with a real meeting
+  form and a real plan board.
+- ADR 0013 (four stages, as many meetings as needed) is accepted, and ADR 0009 names it as its successor
+  for the meeting count.
+
+### Fixed
+
+- The README and the 0.14.0 entry named 251 tests. The released suite has 257.
+
+The skill folder is unchanged from 0.14.0.
+
+### Verification
+
+`node --test` passed 257/257 with zero skips.
+
 ## [0.14.0] - 2026-11-22
 
 ### Added
@@ -28,7 +47,7 @@ All notable changes to this project. The version is the one named in `README.md`
 
 ### Verification
 
-`node --test` passed 251/251 with zero skips on Node.js 18.20.8 and 20.20.2. Review checks also ran in
+`node --test` passed 257/257 with zero skips on Node.js 18.20.8 and 20.20.2. Review checks also ran in
 Chrome and WebKit and on a real exFAT image.
 
 ## [0.13.0] - 2026-11-22

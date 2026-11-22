@@ -1,7 +1,8 @@
 # 0013. Client discovery runs in four stages
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-11-22
+- Decided by: the owner ("approve", 2026-11-22)
 - Replaces: the fixed meeting count in [ADR 0009](0009-understanding-a-client-project-takes-four-meetings.md)
 
 ## Context
