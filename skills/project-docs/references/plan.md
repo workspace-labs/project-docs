@@ -6,7 +6,7 @@ continue from there.
 
 ## Contents
 
-Gather first · How to make the steps · Delivery steps · The status of a step · The read-back · The plan page · The document · In Arabic
+Gather first · How to make the steps · Delivery steps · The status of a step · The read-back · The plan page · The agent instructions · The document · In Arabic
 
 ## Gather first
 
@@ -217,6 +217,42 @@ we know it works** and its history lines, before **Target** and **Status**:
 - `- **Your note:** <date> — <the person's words>`: a decision or comment the person gave about this step,
   one line each, in the order given. Only the person's own words; never invent one, and never put the AI's
   opinion there.
+
+## The agent instructions
+
+After the Plan is approved, offer once: "Shall I add a short block so every AI reads these documents the right way?"
+Only on a yes to that file, write the block below in English, whatever the documents' language. A general
+"you pick" does not grant permission. When a case touches both files, name both in the offer and get a yes to each.
+
+```markdown
+<!-- project-docs:start -->
+## This project is built from approved documents
+
+1. Start at docs/plan.md and find the next step that is not done.
+2. Read only what that step needs: docs/prd.md for what to build, docs/trd.md for what it is built with, DESIGN.md for the look, docs/data.md for what is saved, docs/security.md for the protection rules, docs/handover.md for what happens after it is built.
+3. Only documents stamped Approved count. A Draft is not a decision.
+4. Build only that step. If something is missing or two documents disagree, stop and ask the owner.
+5. Never change an approved document, and never mark a step as checked. A finished step waits for the owner's check.
+<!-- project-docs:end -->
+```
+
+| Project has | Do |
+|---|---|
+| Neither file | create `AGENTS.md` with the block, and `CLAUDE.md` holding only `@AGENTS.md` |
+| `AGENTS.md` only | add the block; create `CLAUDE.md` holding only `@AGENTS.md` |
+| `CLAUDE.md` only | create `AGENTS.md` with the block; add `@AGENTS.md` to `CLAUDE.md` |
+| Both | add the block to `AGENTS.md`; add `@AGENTS.md` to `CLAUDE.md` unless it is already there |
+
+In `AGENTS.md`, replace only what is between the markers if they are already present.
+If there are no markers, replace the old one-line pointer if present:
+
+```text
+Before writing code, read the project documents in docs/ and DESIGN.md. Locked choices there change only with the owner's yes.
+```
+
+Otherwise, add the block. In `CLAUDE.md`, replace the old one-line pointer with the `@AGENTS.md` import
+in the `CLAUDE.md`-only and Both cases. If the import already exists, keep it and remove only the old pointer.
+Change nothing else in either file.
 
 ## The document
 

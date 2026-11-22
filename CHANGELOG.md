@@ -2,6 +2,35 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.14.0] - 2026-11-22
+
+### Added
+
+- Generate a printable, editable meeting form in English or Arabic. It keeps typing locally, exports
+  quoted Markdown answers and can show only the questions still open.
+
+### Changed
+
+- Start client projects with the form. Use four discovery stages and hold meetings until the person
+  confirms the answers are ready for a PRD draft. Keep the scope decision in a separate meeting.
+- Offer the marked instructions block after Plan approval so Claude and Codex follow the approved
+  documents and work on one Plan step at a time.
+
+### Fixed in review
+
+- Isolate drafts by page path, project, client and meeting. Save answers as literal Markdown text so
+  details like email addresses and URLs survive exactly as typed.
+- Report unanswered questions when Still open is empty. Reserve the scope signature for the Stage 4
+  decision sheet or the Stage 4 section of the full blank form.
+- Create pages on disks without hard links while preserving exclusive first writes.
+- Document how to carry a 0.13.0 form forward with its answers intact, including when an old Stop ends
+  the work. Give both agents the Plan instructions even when the project starts with only `CLAUDE.md`.
+
+### Verification
+
+`node --test` passed 251/251 with zero skips on Node.js 18.20.8 and 20.20.2. Review checks also ran in
+Chrome and WebKit and on a real exFAT image.
+
 ## [0.13.0] - 2026-11-22
 
 ### Added

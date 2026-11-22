@@ -17,6 +17,7 @@ change it: a new record replaces it, and the old one names its successor.
 | [0010](0010-the-plan-is-shown-as-a-generated-html-board.md) | The plan is shown as a generated HTML board | Accepted | 2026-11-19 |
 | [0011](0011-the-plan-page-reads-markdown-as-commonmark-does-or-refuses.md) | The plan page reads Markdown the way CommonMark does, or refuses | Accepted | 2026-11-19 |
 | [0012](0012-the-documents-are-read-on-a-generated-reader-page.md) | The documents are read on a generated reader page | Deprecated | 2026-11-21 |
+| [0013](0013-client-discovery-runs-in-four-stages.md) | Client discovery runs in four stages | Proposed | 2026-11-22 |
 
 0004–0007 record decisions already in the shipped skill. They were written down and accepted by the owner
 on 2026-11-04.

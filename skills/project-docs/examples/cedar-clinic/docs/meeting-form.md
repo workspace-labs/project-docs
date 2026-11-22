@@ -5,12 +5,24 @@
 | Client (organisation, department) | Cedar Family Clinic, front desk |
 | Met by (our team) | the builder |
 
-Four meetings before anything is built: 1 the goal · 2 the people and today's work · 3 the needs and the new
-way · 4 approve the scope, or stop. Write what the client says, in their words. Never guess: write "not
-decided".
+Four stages before anything is built, with as many meetings as each needs. Write what the client says,
+in their words. If something has not been decided, write "not decided".
 
-## Meeting 1: the goal
-Date and place: 2026-10-01, at the clinic · Present (name and job of each): the clinic manager; the builder
+## Meetings held
+
+| # | Date and place | Stage | Who came (name and job) | What was decided |
+|---|---|---|---|---|
+| 1 | 2026-10-01, at the clinic | 1 | the clinic manager; the builder | |
+| 2 | 2026-10-02, at the front desk | 2 | the clinic manager; the front desk lead; the two front desk staff; the builder | |
+| 3 | 2026-10-06, at the clinic | 3 | the clinic manager; the front desk lead; the clinic's IT lead; the builder | |
+| 4 | 2026-10-08, at the clinic | 4 | the clinic manager; the builder | Approved |
+
+## Still open
+
+| # | Question | Why open (missing or conflict) | Blocks the work? (yes or can wait) | Who answers | Raised in meeting |
+|---|---|---|---|---|---|
+
+## Stage 1: the goal
 
 ### 1. The project
 - **What is it, in two or three sentences?** Patients book, move and cancel their own visits from their phone. The front desk sees the day in one list.
@@ -30,8 +42,7 @@ Date and place: 2026-10-01, at the clinic · Present (name and job of each): the
 - **Who only needs to be told about it?** The doctors.
 - **One contact person on each side:** the front desk lead; the builder.
 
-## Meeting 2: the people and today's work
-Date and place: 2026-10-02, at the front desk · Present (name and job of each): the clinic manager; the front desk lead; the two front desk staff; the builder
+## Stage 2: the people and today's work
 
 ### 3. Who will use it
 | Kind of user | What they need from it | How many, and how many at the busiest time |
@@ -53,16 +64,15 @@ Date and place: 2026-10-02, at the front desk · Present (name and job of each):
 - **Unusual cases:** a doctor off sick: the desk phones every patient that day.
 - **Papers, forms or files used today:** the paper diary (copy of one week taken).
 
-### Signatures: the notes of meetings 1 and 2
-These notes match what was said. They do not approve the scope: that is meeting 4.
+### Signatures: the notes of stages 1 and 2
+These notes match what was said. The scope is approved separately in Stage 4.
 
 | | Name | Signature | Date |
 |---|---|---|---|
 | For the client | the clinic manager | signed | 2026-10-02 |
 | For our team | the builder | signed | 2026-10-02 |
 
-## Meeting 3: the needs and the new way
-Date and place: 2026-10-06, at the clinic · Present (name and job of each): the clinic manager; the front desk lead; the clinic's IT lead; the builder
+## Stage 3: the needs and the new way
 
 ### 5. How the work will run with it
 | # | Step | Who does it |
@@ -117,16 +127,15 @@ Date and place: 2026-10-06, at the clinic · Present (name and job of each): the
 ### 9. Open questions and notes
 - Which text-message service: the IT lead will look for one that keeps data in the country.
 
-## Meeting 4: approve the scope, or stop
-Date and place: 2026-10-08, at the clinic · Present (name and job of each): the clinic manager; the builder
+## Stage 4: approve the scope, or stop
 
-Bring the draft PRD, written from meetings 1 to 3. Read it back to the person who approves the scope.
+Bring the draft PRD, written from stages 1 to 3. Read it back to the person who approves the scope.
 
 ### 10. The decision
 | Decision | ✓ |
 |---|---|
 | Approved | ✓ |
-| Changes first (listed below, then another meeting 4) | |
+| Changes first (listed below, then another Stage 4 meeting) | |
 | Stop (why, below) | |
 
 - **Changes asked, or why it stops:** none.

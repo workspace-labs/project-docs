@@ -1,7 +1,54 @@
 # How project-docs was tested
 
-**Last verified 2026-11-22 · version 0.13.0.** All 230 automated tests passed on macOS arm64 with Node.js
-20.20.2, with zero skips.
+**Last verified 2026-11-22 · version 0.14.0.** All 257 automated tests passed on macOS arm64 with Node.js
+18.20.8 and 20.20.2, with zero skips.
+
+## 0.14.0 — The form comes first for client projects
+
+- **Automated checks.** The baseline at `0577954` passed 230/230. The updated suite covers the bilingual
+  form shape, page modes, local storage and blocked storage, safe Markdown downloads, output refusal rules,
+  the exact Plan instructions and the 173-line skill limit. The static skill audit reported zero findings.
+- **Real browsers.** Chrome 157.0.8103.80 and WebKit 27.2 ran locally at 1280 and 390 px. Tested the filled
+  English Cedar page and English and Arabic pages generated from the blank templates, including an Arabic
+  open-question form. Each run checked keyboard focus, typing, the close warning, reload recovery, the
+  downloaded Markdown, and Clear. Both engines also saved successfully with browser storage blocked.
+- **A4 print.** Printed the same four cases from both widths in Chromium and in native macOS WebKit. Typed
+  notes, writing space and signature grids appeared in both engines. In the Arabic full form in native
+  WebKit, the Section 6 title lands at the end of page 4 and the first answer field starts page 5.
+- **Not run.** A full live discovery and approval cycle, physical phones, and Windows. The optional
+  Python skill validator requires PyYAML, which was unavailable. Ruby parsed the YAML frontmatter and the
+  static skill audit checked the packaged skill.
+
+### Review 1 corrections
+
+- Chrome and WebKit both reproduced the shared draft between two same-name forms on the reviewed build.
+  On the corrected build the second client opened empty and the first client's typing survived reload.
+  Reusing the same file path for a different client also opened an empty draft. Old drafts with the
+  shared storage key are not imported.
+- Both browsers saved the same literal answer text, including contact details, Markdown punctuation,
+  HTML-like text, whitespace and Arabic. Pandoc in CommonMark and GFM modes read the answer verbatim and
+  produced only the intended headings.
+- A single answer and an empty Still open table reported 50 blanks. A fully answered fixture showed the
+  all-clear. Native WebKit printed A4 discovery and Stage 4 sheets in English and Arabic with only the
+  relevant labelled signature grid on each.
+- A real exFAT image reproduced the old link failure. The corrected generator created a page, replaced its
+  own marked output and refused a foreign file without changing it. A regression test also places a
+  foreign file at the destination during first write and verifies that its bytes are preserved.
+- The 0.13.0 Cedar form generated after following the upgrade guide. The Markdown retained every answer
+  and moved all four recorded meetings. A documentation test checks the old Stop rule and the Plan
+  file placement rules for both agents.
+
+### Review 2 corrections
+
+- Cedar's existing later requirement with no check now shows the all-clear. In English and Arabic,
+  a missing check on a now requirement still adds one blank to the count.
+- Chrome and WebKit reproduced the encoded email in the question heading. The corrected downloads were
+  byte-identical. CommonMark and GFM preserved question text, table context and answers as literal text,
+  including email, URLs, Markdown punctuation, HTML-like text and Arabic. In both browsers, the second
+  client's form still opened empty and the first client's draft returned after reload.
+- Eight native WebKit A4 prints covered fully signed, partly signed, unsigned and Section 10 sheets in
+  English and Arabic. Signed notes kept their recorded names, signatures and dates. The Section 10
+  sheets printed blank scope signature grids.
 
 ## 0.13.0 — Three-step chain for whole projects
 

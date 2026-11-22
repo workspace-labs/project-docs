@@ -738,7 +738,7 @@ test('a missing, misplaced or extra delivery step is caught, in both languages',
   assert.ok(decidesProblems(half, L).problems.length > 0, 'two of the five lines are caught');
 });
 
-// The meeting form has no stamp: it is checked on its own. It is four meetings with ten numbered sections;
+// The meeting form has no stamp: it is checked on its own. Four stages hold ten numbered sections;
 // both templates share one shape, and the filled example keeps every heading and role row of the English one.
 test('the meeting form templates match each other, and the filled example keeps the form', () => {
   const formHeadings = (lines) => lines.filter((l) => /^#{1,3} /.test(l));
@@ -749,9 +749,11 @@ test('the meeting form templates match each other, and the filled example keeps 
   };
   const en = template('meeting-form.md', 'The form');
   const ar = template('meeting-form.md', 'In Arabic');
-  const want = ['#', '##1', '###1', '###2', '##2', '###3', '###4', '###', '##3', '###5', '###6', '###7', '###8', '###9', '##4', '###10'];
-  assert.deepStrictEqual(shape(en), want, 'four meetings, ten sections, the notes signature after meeting 2');
+  const want = ['#', '##', '##', '##1', '###1', '###2', '##2', '###3', '###4', '###', '##3', '###5', '###6', '###7', '###8', '###9', '##4', '###10'];
+  assert.deepStrictEqual(shape(en), want, 'meeting history, open questions, four stages and ten numbered sections');
   assert.deepStrictEqual(shape(ar), want, 'the Arabic form has the same shape');
+  assert.deepStrictEqual(formHeadings(en).slice(1, 3), ['## Meetings held', '## Still open']);
+  assert.deepStrictEqual(formHeadings(ar).slice(1, 3), ['## الاجتماعات التي عُقدت', '## ما زال مفتوحًا']);
   assert.strictEqual(roles(en).length, 5, 'five roles, as in the PRD');
   assert.strictEqual(roles(ar).length, 5, 'five roles in Arabic');
   const filled = read('cedar-clinic/docs/meeting-form.md').split('\n');
@@ -762,6 +764,54 @@ test('the meeting form templates match each other, and the filled example keeps 
   const questions = (lines) => lines.filter((l) => /^- \*\*/.test(l)).length;
   assert.strictEqual(questions(ar), questions(en), 'the Arabic form asks the same number of questions');
   assert.strictEqual(questions(filled), questions(en), 'the filled form answers every question');
+});
+
+test('the approved Plan offers the exact instructions and all four placement cases for both agents', () => {
+  const plan = fs.readFileSync(path.join(SKILL, 'references', 'plan.md'), 'utf8').replace(/\r\n/g, '\n');
+  const trd = fs.readFileSync(path.join(SKILL, 'references', 'trd.md'), 'utf8');
+  const block = [
+    '<!-- project-docs:start -->',
+    '## This project is built from approved documents',
+    '',
+    '1. Start at docs/plan.md and find the next step that is not done.',
+    '2. Read only what that step needs: docs/prd.md for what to build, docs/trd.md for what it is built with, DESIGN.md for the look, docs/data.md for what is saved, docs/security.md for the protection rules, docs/handover.md for what happens after it is built.',
+    '3. Only documents stamped Approved count. A Draft is not a decision.',
+    '4. Build only that step. If something is missing or two documents disagree, stop and ask the owner.',
+    "5. Never change an approved document, and never mark a step as checked. A finished step waits for the owner's check.",
+    '<!-- project-docs:end -->',
+  ].join('\n');
+  const placement = [
+    '| Neither file | create `AGENTS.md` with the block, and `CLAUDE.md` holding only `@AGENTS.md` |',
+    '| `AGENTS.md` only | add the block; create `CLAUDE.md` holding only `@AGENTS.md` |',
+    '| `CLAUDE.md` only | create `AGENTS.md` with the block; add `@AGENTS.md` to `CLAUDE.md` |',
+    '| Both | add the block to `AGENTS.md`; add `@AGENTS.md` to `CLAUDE.md` unless it is already there |',
+  ].join('\n');
+  const instructions = plan.split('\n## The agent instructions\n')[1]?.split('\n## The document\n')[0];
+  assert.ok(instructions, 'one Plan reference section for the instructions');
+  assert.ok(instructions.includes('```markdown\n' + block + '\n```'));
+  assert.ok(instructions.includes(placement));
+  assert.ok(instructions.includes('Shall I add a short block so every AI reads these documents the right way?'));
+  assert.match(instructions, /After the Plan is approved, offer once/);
+  assert.match(instructions, /Only on a yes to that file/);
+  assert.match(instructions, /In `CLAUDE\.md`, replace the old one-line pointer with the `@AGENTS\.md` import/);
+  assert.match(instructions, /If the import already exists, keep it and remove only the old pointer/);
+  assert.doesNotMatch(trd, /The pointer line/i);
+});
+
+test('the meeting reference gives a lossless upgrade from 0.13.0 and honors the old Stop', () => {
+  const reference = fs.readFileSync(path.join(SKILL, 'references', 'meeting-form.md'), 'utf8').replace(/\r\n/g, '\n');
+  const upgrade = reference.split('\n## Upgrading a 0.13.0 form\n')[1]?.split('\n## ')[0].replace(/\s+/g, ' ');
+  assert.ok(upgrade, 'the reference routes older forms to an upgrade');
+  assert.match(upgrade, /Meeting 4[\s\S]*?\*\*Stop\*\*[\s\S]*?end the work without changing the form/);
+  assert.match(upgrade, /Move each old meeting to its matching stage[\s\S]*?Keep every answer verbatim/);
+  assert.match(upgrade, /Move its recorded date, place and attendees to \*\*Meetings held\*\*/);
+  assert.match(upgrade, /Leave missing dates, places and people blank/);
+  assert.match(upgrade, /Show the person the updated Markdown form[\s\S]*?Then generate the HTML page/);
+});
+
+test('SKILL.md stays within the 173-line limit', () => {
+  const skill = fs.readFileSync(path.join(SKILL, 'SKILL.md'), 'utf8');
+  assert.ok(skill.replace(/\n$/, '').split('\n').length <= 173);
 });
 
 test('the stamp rules reject a broken stamp', () => {

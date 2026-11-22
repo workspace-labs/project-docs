@@ -1,0 +1,218 @@
+<!doctype html>
+<!-- project-docs:meeting-page -->
+<html lang="en" dir="ltr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'; script-src 'sha256-hDLjMUAdkcooeheSJksAjCE9scYJxKvzLEE7+HPP8hg='; style-src 'sha256-5rTENR/jSm4HOQDt682wR5WXBcPw18l4b4RDOpZzLHM='">
+<title>Cedar Clinic Booking · Meeting 5</title>
+<style>
+* { box-sizing: border-box; }
+:root {
+  color: #202625;
+  background: #f4f5f3;
+  font: 100%/1.55 system-ui, sans-serif;
+}
+body { margin: 0; }
+main { max-inline-size: 52rem; padding: clamp(1rem, 4vw, 3rem); margin-inline: auto; }
+h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
+h1 { font-size: clamp(1.75rem, 5vw, 2.6rem); margin: 0; }
+h2 { font-size: 1.35rem; margin: 0 0 1rem; }
+h3 { font-size: 1.1rem; margin: 1.5rem 0 .65rem; }
+p { margin-block: .5rem; }
+.meeting-number { color: #48534e; margin-block: .45rem 0; }
+section {
+  margin-block-start: 1.5rem; padding: clamp(1rem, 3vw, 1.65rem);
+  background: #fff; border: 1px solid #bcc6be; border-block-start: 3px solid #24604d;
+}
+.project-details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .25rem 1rem; }
+.project-details dt { font-weight: 650; }
+.project-details dd { margin: 0; overflow-wrap: anywhere; }
+.meeting-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: .8rem; }
+.meeting-fields .field:last-child { grid-column: 1 / -1; }
+.field { display: grid; align-content: start; gap: .35rem; margin-block: .8rem; min-inline-size: 0; }
+label { font-weight: 600; overflow-wrap: anywhere; }
+input, textarea, button { font: inherit; color: inherit; }
+input, textarea {
+  inline-size: 100%; padding: .6rem .75rem; background: #fff;
+  border: 1px solid #717e76; border-radius: .3rem;
+}
+input { min-block-size: 2.75rem; }
+textarea { min-block-size: 4rem; resize: vertical; }
+fieldset { min-inline-size: 0; border: 1px solid #bcc6be; margin: .8rem 0; padding: .2rem .85rem; }
+legend { font-weight: 600; padding-inline: .4rem; }
+.table-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: .65rem; }
+.table-fields .field { margin-block: .5rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-block: 1rem .65rem; }
+button {
+  min-block-size: 2.75rem; padding: .6rem 1rem; background: #fff;
+  border: 1px solid #717e76; border-radius: .3rem; font-weight: 650; cursor: pointer;
+}
+button:first-child { background: #205541; color: #fff; border-color: #205541; }
+button:first-child:hover { background: #174032; }
+button + button:hover { background: #e9ede9; }
+input:focus, textarea:focus, button:focus { outline: 3px solid #225ba2; outline-offset: 3px; }
+.hint { color: #48534e; }
+#storage-warning { border-inline-start: 3px solid #9b5b22; padding-inline-start: .7rem; }
+table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-block: .65rem; }
+th, td {
+  border: 1px solid #717e76; padding: .45rem; text-align: start;
+  overflow-wrap: anywhere; vertical-align: top;
+}
+thead { background: #25352f; color: white; }
+thead th { border-inline-color: #25352f; }
+tbody tr:nth-child(even) { background: #f4f5f3; }
+tbody tr:last-child { border-block-end: 2px solid #717e76; }
+.signature-table { break-inside: avoid; }
+.signature-table caption { text-align: start; font-weight: 600; }
+.only-paper, .paper-answer { display: none; }
+@media screen and (max-width: 35rem) {
+  .meeting-fields, .project-details { grid-template-columns: 1fr; gap: 0; }
+  .project-details dd { margin-block-end: .5rem; }
+}
+@page { size: A4; margin: 14mm; }
+@media print {
+  :root { color: black; background: white; font-size: 10.5pt; }
+  main { max-inline-size: none; padding: 0; }
+  h1 { font-size: 22pt; }
+  section { padding: 0; border: 0; margin-block-start: .9rem; }
+  h2, h3, legend { break-after: avoid; page-break-after: avoid; }
+  fieldset, .paper-keep, .field, .signature-table { break-inside: avoid; page-break-inside: avoid; }
+  fieldset { padding: .1rem .55rem; }
+  input, textarea, .screen-only { display: none !important; }
+  .only-paper, .paper-answer { display: block; }
+  .field { display: block; }
+  .paper-answer {
+    min-block-size: 2.65rem; border-block-end: 1px solid #727272;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .meeting-fields .paper-answer { min-block-size: 1.65rem; }
+  .signature-table td { height: 2.4rem; }
+  thead { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style></head><body>
+<main data-mode="clear"><header><h1>Cedar Clinic Booking</h1><p class="meeting-number">Meeting 5</p></header>
+<form id="meeting-sheet" data-project="Cedar Clinic Booking" data-client="Cedar Family Clinic, front desk" data-project-label="Project" data-answers-title="Meeting 5 answers" data-question-label="Question" data-context-label="Context" data-answer-label="Answer" data-number="5" data-confirm="Clear the typing for this meeting from this browser?" data-saved="Answers downloaded." data-cleared="Typing cleared." autocomplete="off">
+<section><h2>Meeting details</h2>
+<dl class="project-details"><dt>Client (organisation, department)</dt><dd>Cedar Family Clinic, front desk</dd><dt>Met by (our team)</dt><dd>the builder</dd></dl>
+<div class="meeting-fields">
+<div class="field"><label for="meeting-date">Date</label><input id="meeting-date" data-answer="meeting-date" data-question="Date" data-context="" dir="auto" type="date"><div class="paper-answer" aria-hidden="true"></div></div>
+<div class="field"><label for="meeting-place">Place</label><input id="meeting-place" data-answer="meeting-place" data-question="Place" data-context="" dir="auto" type="text"><div class="paper-answer" aria-hidden="true"></div></div>
+<div class="field"><label for="meeting-attendees">Who came (name and job)</label><textarea id="meeting-attendees" data-answer="meeting-attendees" data-question="Who came (name and job)" data-context="" dir="auto" rows="2"></textarea><div class="paper-answer" aria-hidden="true"></div></div>
+</div></section>
+<p class="hint">Nothing is open.</p>
+<section><div class="field"><label for="meeting-new">Anything new the client said</label><textarea id="meeting-new" data-answer="meeting-new" data-question="Anything new the client said" data-context="" dir="auto" rows="2"></textarea><div class="paper-answer" aria-hidden="true"></div></div>
+</section>
+<div class="screen-only"><div class="actions"><button type="button" id="save-answers">Save answers</button><button type="button" id="clear-answers">Clear saved typing</button></div><p class="hint">Client answers stay in this browser until cleared.</p><p id="storage-warning" role="status" hidden>Browser storage is unavailable. Typing will not survive closing or reloading this tab. Save your answers before leaving.</p><p id="save-status" role="status"></p></div>
+<section class="only-paper paper-keep"><h2>Signatures: the notes of stages 1 and 2</h2><table class="signature-table" aria-label="Signatures: the notes of stages 1 and 2"><thead><tr><th scope="col"></th><th scope="col">Name</th><th scope="col">Signature</th><th scope="col">Date</th></tr></thead><tbody><tr><th scope="row">For the client</th><td>the clinic manager</td><td>signed</td><td>2026-10-02</td></tr><tr><th scope="row">For our team</th><td>the builder</td><td>signed</td><td>2026-10-02</td></tr></tbody></table></section></form></main>
+<script>(function runForm() {
+  const sheet = document.getElementById('meeting-sheet');
+  const copy = sheet.dataset;
+  const fields = [...document.querySelectorAll('[data-answer]')];
+  const warning = document.getElementById('storage-warning');
+  const status = document.getElementById('save-status');
+  // Some browsers share localStorage among different file:// pages.
+  const pageUrl = window.location.href.split(/[?#]/, 1)[0];
+  const key = JSON.stringify(['project-docs:meeting', pageUrl, copy.project, copy.client, copy.number]);
+  let dirty = false;
+
+  function warnBeforeLeaving(event) {
+    event.preventDefault();
+    event.returnValue = '';
+  }
+
+  function markDirty(value) {
+    if (dirty === value) return;
+    dirty = value;
+    if (dirty) window.addEventListener('beforeunload', warnBeforeLeaving);
+    else window.removeEventListener('beforeunload', warnBeforeLeaving);
+  }
+
+  function updatePrint(field) {
+    if (field.nextElementSibling) field.nextElementSibling.textContent = field.value;
+  }
+
+  function storeTyping() {
+    const values = Object.fromEntries(fields.map((field) => [field.dataset.answer, field.value]));
+    try {
+      window.localStorage.setItem(key, JSON.stringify({ values, dirty }));
+      warning.hidden = true;
+    } catch {
+      warning.hidden = false;
+    }
+  }
+
+  function quote(text) {
+    // A longer fence keeps every character literal without opening Markdown or HTML structures.
+    const longestRun = [...text.matchAll(/~+/g)].reduce((length, [run]) => Math.max(length, run.length), 2);
+    const fence = '~'.repeat(longestRun + 1);
+    return [fence, ...text.split('\n'), fence].map((line) => '> ' + line).join('\n');
+  }
+
+  function save() {
+    const lines = [`# ${copy.answersTitle}`, '', `## ${copy.projectLabel}`, '', quote(copy.project), ''];
+    for (const field of fields) {
+      const { question, context } = field.dataset;
+      if (field.id.startsWith('answer-')) {
+        const questionNumber = field.id.slice('answer-'.length);
+        lines.push(`## ${copy.questionLabel} ${questionNumber}`, '', quote(question), '');
+        if (context) lines.push(`**${copy.contextLabel}**`, '', quote(context), '');
+        lines.push(`**${copy.answerLabel}**`, '');
+      } else {
+        // Meeting details and new notes use the built-in field labels.
+        lines.push(`## ${question}`, '');
+      }
+      lines.push(quote(field.value), '');
+    }
+    const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `meeting-${copy.number}-answers.md`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    markDirty(false);
+    storeTyping();
+    status.textContent = copy.saved;
+  }
+
+  function clear() {
+    if (!window.confirm(copy.confirm)) return;
+    try {
+      window.localStorage.removeItem(key);
+      warning.hidden = true;
+    } catch {
+      warning.hidden = false;
+    }
+    for (const field of fields) {
+      field.value = '';
+      updatePrint(field);
+    }
+    markDirty(false);
+    status.textContent = copy.cleared;
+  }
+
+  try {
+    const entry = JSON.parse(window.localStorage.getItem(key));
+    for (const field of fields) {
+      const value = entry?.values?.[field.dataset.answer];
+      if (typeof value === 'string') field.value = value;
+      updatePrint(field);
+    }
+    markDirty(entry?.dirty === true && fields.some((field) => field.value));
+  } catch {
+    warning.hidden = false;
+  }
+
+  for (const field of fields) {
+    field.addEventListener('input', () => {
+      updatePrint(field);
+      markDirty(true);
+      status.textContent = '';
+      storeTyping();
+    });
+  }
+  sheet.addEventListener('submit', (event) => event.preventDefault());
+  document.getElementById('save-answers').addEventListener('click', save);
+  document.getElementById('clear-answers').addEventListener('click', clear);
+})();</script></body></html>

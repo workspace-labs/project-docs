@@ -3,9 +3,10 @@
 ## What it does
 
 - Writes the documents a project needs **before anyone builds it**, in this order:
-  0. *(Before the PRD, when meeting a client: a blank **client meeting form**, `docs/meeting-form.md`, to print
-     and fill in over four meetings: the goal, today's work, the needs, approve the scope or stop. Not an
-     approved document; its answers start the PRD.)*
+  0. *(For a client project, make the **client meeting form** first, as `docs/meeting-form.md` and a printable,
+     editable `docs/meeting-form.html`. Four stages take as many meetings as needed. After each meeting,
+     only open questions go to the next one. The person decides when its answers are ready for a draft PRD.
+     Stage 4 is a separate scope decision after that draft. Personal projects start at the PRD.)*
   1. **PRD** (`docs/prd.md`): what it is, why, who it's for, who decides (owner, scope, prototype, acceptance,
      others), how the work runs today and with it, what it must do (each with a check), what it will NOT do, what
      comes later, assumptions and risks, how we know it worked, dates and budget.
@@ -28,6 +29,8 @@
   8. **Plan** (`docs/plan.md`): small steps you can see work, each with a check, then, when someone else
      decides, the fixed delivery steps: prototype, functional test, security test, acceptance test (UAT) on a
      test copy, guides and training, install, live test, go-live, handover.
+- After Plan approval, offers the agent instructions once. With permission for each file, writes the marked
+  block to `AGENTS.md` or `CLAUDE.md`, and adds `@AGENTS.md` to `CLAUDE.md` when the placement calls for it.
 - An optional closing handoff carries approved documents, current decisions, open choices and existing
   Plan checks to a separately authorized builder. Applicable engineering tasks/evidence belong in the
   current Plan; this adds no required document or approval round for unchanged decisions.
@@ -60,8 +63,8 @@
 
 - **Same shape everywhere.** Every document has fixed headings, so any AI on any computer writes it the same way.
 - **Nothing to install.** Documents are plain markdown; the preview page opens in any browser, with its fonts inside.
-  The plan page is made by a script that needs Node.js; without it the plan stays in `docs/plan.md`, and the
-  skill never installs Node.js.
+  The meeting and plan pages are made by scripts that need Node.js 18 or newer. The Markdown works on its
+  own, and the skill never installs Node.js.
 - **Readable looks only.** The preview page checks text contrast and never shows a look that fails.
 - **Private by default.** Personal and secret data are marked in data.md and collected in security.md.
 - **Proven.** The preview page's checks and the example documents have automatic tests; the owner looks at

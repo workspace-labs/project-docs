@@ -9,10 +9,11 @@ Gather first · The questions · The read-back · The document · In Arabic
 
 ## Gather first
 
-Before asking, read what already says what the project is: a filled `docs/meeting-form.md` (the client
-meeting, see [meeting-form.md](meeting-form.md)), `docs/scope.md`, `README.md`, the person's own
-description of the idea in this conversation, and the code if there is any. Turn what you find into
-proposed answers, so the person confirms instead of starting from nothing.
+Before asking, read what already says what the project is: a filled `docs/meeting-form.md`, `docs/scope.md`,
+`README.md`, the person's own description of the idea in this conversation, and the code if there is any.
+Turn what you find into proposed answers, so the person confirms instead of starting from nothing. For a
+client project using the [meeting form](meeting-form.md), a Stage 4 **Stop** ends the work. Draft the PRD
+once the person confirms the answers are clear enough. Scope approval takes place in its own Stage 4 meeting.
 
 ## The questions
 

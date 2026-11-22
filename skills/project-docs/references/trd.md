@@ -7,7 +7,7 @@ every AI on every computer follows it.
 
 ## Contents
 
-Gather first · The questions · TBD: an honest gap · The pointer line · The read-back · The document · In Arabic
+Gather first · The questions · TBD: an honest gap · The read-back · The document · In Arabic
 
 ## Gather first
 
@@ -177,18 +177,6 @@ the TRD is written:
   the service): everything before that step can be built.
 - **A speed target or its test conditions** block only a step that needs that speed check.
 - **A release recovery decision** blocks only the affected release step.
-
-## The pointer line (only on the person's yes)
-
-After the TRD is approved, offer once: "Shall I add one line to AGENTS.md / CLAUDE.md so every AI reads these
-documents before coding?" On yes, add this line to whichever of the two files the project has (both if it
-has both; if it has neither, create `AGENTS.md` holding only this line):
-
-```text
-Before writing code, read the project documents in docs/ and DESIGN.md. Locked choices there change only with the owner's yes.
-```
-
-Change nothing else in those files.
 
 ## The read-back
 

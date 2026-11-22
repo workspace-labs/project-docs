@@ -15,7 +15,7 @@ the look, and a small script that draws the plan page. **Nothing to install** to
 documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
 coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.13.0** · 230 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.14.0** · 251 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -34,11 +34,11 @@ In your project:
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
 | `docs/plan.html` | **The plan page**: the plan as a board (Done · Waiting for your check · Next · Waiting for a decision) with "You are here"; every card opens to its plan, what was built and your decisions. Kept current after every step, opened when you ask "where are we?", and it works on a phone | always, made by a script (needs Node.js) |
 
-Before the first document, when you are about to meet a client: `docs/meeting-form.md`, a **blank client
-meeting form** to print and fill in over **four meetings**: (1) the goal, who decides, dates and budget; (2) the
-users and how the work runs today, with the notes signed; (3) how it will run, what it must do and how each
-is checked, questions for later stages, assumptions and risks; (4) approve the scope, or stop. The PRD is
-drafted after meeting 3, so nobody asks the client twice.
+For a new client project, you get the **client meeting form** first, as Markdown and an HTML page you can
+print or type into and save. Discovery follows four stages over as many meetings as needed. After every
+meeting, review what's clear, missing or conflicting, and take only open questions to the next meeting.
+You decide when to draft the PRD. The scope decision has its own meeting after that draft. For a project
+of your own, start with the PRD.
 
 Each document carries a stamp under its title: `> v1 · Draft`, then `> v2 · Approved 2026-10-08`.
 
@@ -65,6 +65,9 @@ None lines. These add no planning document or approval stage.
    mark it checked.
 
 English by default; **Arabic** turns every document, and the preview, right to left.
+
+After you approve the Plan, the skill offers a short block for `AGENTS.md` or `CLAUDE.md` so Claude and
+Codex can find the next step and read the approved documents it needs. The skill asks before editing either file.
 
 If the [frameflow](https://github.com/workspace-labs/frameflow) skill is installed, project-docs offers it
 once between the TRD and the look, to draw the app's screens as a storyboard.
@@ -125,7 +128,7 @@ website before we build it."
 ## See an example
 
 [`skills/project-docs/examples/cedar-clinic/`](skills/project-docs/examples/cedar-clinic/) holds a filled
-meeting form and all seven documents for a made-up clinic booking website, and
+meeting form, its generated HTML page and all seven documents for a made-up clinic booking website, and
 [`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the documents in Arabic.
 [`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing and one
 student builds it for themselves, so it has no data document, no handover and no delivery steps, and its security page is short, with "None" wherever nothing applies.
@@ -164,8 +167,8 @@ review. The current test count, full record and remaining limits are in [`TESTIN
 
 | Where | What lives there |
 |---|---|
-| [`skills/project-docs/`](skills/project-docs/) | the skill itself, installed as it is: `SKILL.md`, `references/`, the preview in `assets/preview/`, `examples/` |
-| [`tests/`](tests/) | automated package checks (`node --test`): documents, preview, font coverage, line endings, reference integrity; separate [live behavior contracts](tests/behavioral-cases.md) |
+| [`skills/project-docs/`](skills/project-docs/) | the skill itself: `SKILL.md`, `references/`, `assets/preview/`, `scripts/meeting-page.js`, `scripts/plan-page.js` and its Markdown reader, and `examples/` |
+| [`tests/`](tests/) | automated package checks (`node --test`): documents, meeting and plan pages, preview, font coverage, line endings, reference integrity; separate [live behavior contracts](tests/behavioral-cases.md) |
 | [`tools/`](tools/) | builder-only helpers: font coverage (`font-ranges.js`) and Mac screenshots (`shot-mac.sh`) |
 | [`docs/`](docs/) | scope, decisions ([`adr/`](docs/adr/)), [architecture](docs/architecture/overview.md), [release steps](docs/operations/release.md), [security](docs/security.md), [risks and debt](docs/risks-and-debt.md) |
 | [`media/`](media/) | the picture at the top of this page |
@@ -174,7 +177,7 @@ There is no server, database or settings file: the skill needs no configuration.
 
 ## Working on project-docs
 
-See [`AGENTS.md`](AGENTS.md). Tests: `node --test` (Node.js 18 or newer, the same version that makes and refreshes the plan page).
+See [`AGENTS.md`](AGENTS.md). Run `node --test` with Node.js 18 or newer, the same requirement as the meeting and plan page generators.
 
 ## Licence
 

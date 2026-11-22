@@ -1,7 +1,7 @@
 # Architecture overview
 
-This repository ships one agent skill. It has no server, database, account or background process. The
-only code that runs for a user is the preview page, in their own browser, from files on their disk.
+This repository ships one agent skill. Its scripts generate local meeting and plan pages. Those pages
+and the look preview run in the browser from files on disk.
 
 ```text
 README.md                          what the skill does, install, examples, limits, project map
@@ -24,8 +24,8 @@ skills/project-docs/               the installed skill: copied or zipped exactly
   references/engineering-handoff.md   optional approved-input summary for a separate builder
   assets/preview/                  the look preview page: preview.html, render.js, check.js,
                                    preview.css, fonts/
-  scripts/                         the plan page: markdown-blocks.js reads the Markdown of docs/plan.md,
-                                   plan-page.js reads the plan from it and writes docs/plan.html
+  scripts/                         plan-page.js uses markdown-blocks.js to make docs/plan.html;
+                                   meeting-page.js makes docs/meeting-form.html from docs/meeting-form.md
   examples/                        cedar-clinic, cedar-clinic-ar, study-timer, notes-digest
 tests/                             node --test: documents, preview, plan page, Markdown blocks, font ranges, line
                                    endings, reference integrity; fixtures/markdown-blocks/: a sample recorded from Pandoc;
@@ -46,6 +46,9 @@ media/                             the README picture
                         │
                         ├──runs────▶ scripts/plan-page.js docs/plan.md → project docs/plan.html
                         │            (markdown-blocks.js → the plan → one page; refuses what it would guess)
+                        │
+                        ├──runs────▶ scripts/meeting-page.js docs/meeting-form.md → project docs/meeting-form.html
+                        │            (browser typing → saved meeting answers → agent updates the form)
                         │
                         └──offers once──▶ frameflow skill (if installed; never installs it)
 

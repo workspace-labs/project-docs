@@ -1,13 +1,12 @@
 ---
 name: project-docs
-description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for the four meetings before building (the goal, today's work, the needs, approve the scope or stop). Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
+description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for four stages before building (the goal, today's work, the needs, approve the scope or stop), with as many meetings as needed. Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
 ---
 
 # project-docs
 
-The documents a project needs **before anyone builds it**, from the first client meeting to the handover,
-written with the person in small rounds of questions, read back, and approved with a date. After that,
-every AI on every computer builds from the same truth.
+The documents a project needs **before anyone builds it**, from the first client meeting to handover.
+Write them in small rounds of questions, read them back and record who approved them and when.
 
 ## The documents, in this order
 
@@ -22,18 +21,18 @@ every AI on every computer builds from the same truth.
 | 6 | **Handover**: after it is built | `docs/handover.md` | when it is handed to someone (short when simple) | [references/handover.md](references/handover.md) |
 | 7 | **Plan**: small steps, then delivery | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
 
-Before the PRD, when the person is meeting a client: the **client meeting form**, `docs/meeting-form.md`,
-a blank form to print and fill in over **four meetings**: the goal, the people and today's work, the needs
-and the new way, then approve the scope or stop. The PRD is drafted after the third and approved, or the
-project stopped, in the fourth ([references/meeting-form.md](references/meeting-form.md)).
+For a client project, make the **client meeting form** and its HTML page first. The form covers four stages
+with as many meetings as needed. See [references/meeting-form.md](references/meeting-form.md) for the form,
+the follow-up after each meeting, and the separate meeting to approve the draft scope or stop.
 
 Load **only** the reference file of the document you are writing: its questions and its exact headings.
 
 ## Start: where are we?
 
-1. Read the project folder: `docs/`, `DESIGN.md`, `README.md`, and the code if there is any. A filled
-   `docs/meeting-form.md` is where the PRD starts (after its meeting 3); a client meeting still ahead →
-   offer the blank form. A form whose meeting 4 says **Stop** ends the work: write nothing more.
+1. Read `docs/`, `DESIGN.md`, `README.md`, and existing code. For a new project with no documents, ask
+   one question first: "Is it for a client, or for yourself?" Client → make `docs/meeting-form.md` and
+   `docs/meeting-form.html` first. For yourself → go straight to the PRD. Follow the meeting reference for
+   ongoing discovery. Draft the PRD when the person says it is clear enough. Stage 4 **Stop** ends the work.
 2. Read the **stamp** of each document that exists (see below). Continue from the **first document that is
    not approved**, or the one the person asks for.
 3. A document that exists but has no stamp (the person wrote it before): read it, keep everything in it,
@@ -69,8 +68,8 @@ Load **only** the reference file of the document you are writing: its questions 
 3. **Read it back** in plain words, short, in the person's own terms. Write nothing until they say "yes,
    that's it". If they correct it, ask again and read it back again.
 4. **Write the document** with the exact headings from its reference file, then show it.
-5. **Approval.** Ask: "Approved, or changes?" The person, or their client, decides. When the PRD's **Who
-   decides** names someone to approve the scope, the PRD is approved only on that person's word.
+5. **Approval.** Ask "Approved, or changes?" For a PRD started from a client meeting form, follow Stage 4
+   instead. When **Who decides** names the scope approver, only that person can approve the PRD.
    - **Approved** → stamp it `Approved` with the date it was given and who gave it (see the stamp).
    - **Changes** → a clear change: make exactly that, and also the lines that only exist because of the old
      value (a check that quotes the old number), saying so when you show it. A vague change, or one that
@@ -80,9 +79,9 @@ Load **only** the reference file of the document you are writing: its questions 
 6. Go on to the next document in the order. If an answer here needs an **approved** earlier document to
    change (a new outside service, a new column), say which one, and change it there the normal way
    (`Changed` line, new version, approved again).
-7. **After the Plan is approved,** make the plan page `docs/plan.html`, open it, ask once whether a PDF is
-   wanted, keep the page current after every step change, and open it when asked "where are we?" (see
-   **The plan page** in [references/plan.md](references/plan.md)). Then **close with a short summary:** the documents written, every open `TBD` with
+7. **After the Plan is approved,** make and open `docs/plan.html`, ask once about a PDF, and offer the agent
+   instructions once (see [references/plan.md](references/plan.md)). Refresh the page after step changes
+   and open it for "where are we?" Then **close with a short summary:** the documents written, every open `TBD` with
    what will decide it (a `TBD` with a `Changed` line settling it underneath is closed, not open), and the
    first step to build. If a `TBD` blocks step 1, say so first. For a builder handoff, read
    [references/engineering-handoff.md](references/engineering-handoff.md); this skill still writes documents only.
@@ -150,8 +149,8 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 - **Never install anything** and never make a network call. The one exception: the Design preview page
   may load a font online, and only when the person says yes to that font.
 - **Never change an existing look or a locked choice** without the person's yes.
-- **Touch only the project's documents.** The one exception: the TRD's pointer line in `AGENTS.md` or
-  `CLAUDE.md`, only on a yes to that file (a general "you pick" is not one).
+- **Touch only the project's documents.** The exceptions are the Plan's marked block in `AGENTS.md` or
+  `CLAUDE.md` and the `@AGENTS.md` import in `CLAUDE.md`, each only on a yes to that file.
 - **Smart defaults, the person decides.** Always suggest the best way and say why. The person can always
   say "no, do it my way". Only real limits cannot be overruled, and you explain them plainly.
 
@@ -167,7 +166,8 @@ approved, name step 2. If a skill in the chain is not installed, say so and ask 
 | File | What it is |
 |---|---|
 | `references/prd.md` … `references/plan.md` | one per document: its questions and its exact headings |
-| `references/meeting-form.md` | the blank client meeting form for the four meetings, and how its answers start the PRD |
+| `references/meeting-form.md` | the client meeting form, its four stages and how its answers start the PRD |
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
 | `scripts/plan-page.js` | makes `docs/plan.html` from `docs/plan.md`: the plan as a board whose cards open (Node.js, no packages); `scripts/markdown-blocks.js` reads the plan's Markdown for it |
-| `examples/` | `cedar-clinic/`: a meeting form filled over four meetings and all seven documents for a website that saves personal data · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a tiny terminal tool for one student, with no screens, nothing saved and nobody to hand it to, so it has no DESIGN.md, no data document, no handover and no delivery steps · `notes-digest/`: a small terminal tool that uses an AI model, with the five lines of its AI part filled, the model as an outside service and its bill in the running cost |
+| `scripts/meeting-page.js` | makes the printable, editable `docs/meeting-form.html` from `docs/meeting-form.md` (Node.js, no packages) |
+| `examples/` | `cedar-clinic/`: a filled four-stage meeting form, its HTML page and seven documents · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a small personal project · `notes-digest/`: a terminal tool with an AI part |

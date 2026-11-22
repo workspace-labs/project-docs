@@ -1,18 +1,20 @@
 # Security
 
-project-docs is a set of instructions, one local web page for picking a look, and one small script that
-draws the plan as a second local page. It has no accounts, no server, no database, and collects nothing.
+project-docs is a set of instructions, a local look preview and scripts that generate local meeting and
+plan pages. It has no accounts or server. Meeting answers are stored in the browser and saved to disk by the person.
 This page covers what it touches and what it promises never to do.
 
 ## What runs, and where
 
 | Part | Runs | Touches |
 |---|---|---|
-| `SKILL.md` and references | inside the person's AI tool, as instructions | only the project's documents: `docs/`, `DESIGN.md`, and the TRD pointer line in `AGENTS.md` or `CLAUDE.md` on the person's yes |
+| `SKILL.md` and references | inside the person's AI tool, as instructions | `docs/` and `DESIGN.md`. After Plan approval, the Plan's marked block in `AGENTS.md` or `CLAUDE.md` and the `@AGENTS.md` import in `CLAUDE.md`, each only on a yes to that file |
 | the preview page | in the person's browser, opened from disk | reads `looks.js` next to it; may fetch fonts (below) |
 | `node check.js looks.js` | Node.js, on the person's computer | reads one file, prints `ready` or `refused` |
 | `node scripts/plan-page.js docs/plan.md` | Node.js, on the person's computer, run by the person's agent | reads the one plan file it is given and writes `plan.html` beside it (or the path given); no network, no other file; when it cannot read the plan with certainty it says why and writes nothing |
 | the plan page | in the person's browser, opened from disk | one self-contained file: it loads nothing and holds only what the plan holds |
+| `node scripts/meeting-page.js docs/meeting-form.md` | Node.js, on the person's computer | checks the given form against the bundled template and writes its generated `.html` beside it or at the given destination. Refuses unknown form structure, the source, symbolic links and existing files without its marker |
+| the meeting page | in the person's browser, opened from disk | self-contained and offline. Keeps typing in browser storage for the project and meeting when available. Save downloads a Markdown file. Clear removes the browser copy of that meeting's typing |
 | `tests/` | Node.js, for builders only | reads the repository; `line-endings.test.js` copies the skill into a temporary folder and deletes it afterwards; `plan-page.test.js` writes a plan and its page in a temporary folder and deletes it |
 | `tools/` | builders only | `font-ranges.js` reads the bundled fonts and, without `--check`, rewrites their coverage lines; `shot-mac.sh` compiles a helper and writes screenshots under `/tmp/project-docs-shot/`; `blocks-vs-pandoc.js` runs the local `pandoc` program on texts it generates itself and, with `--record`, writes the sample file named |
 
@@ -44,6 +46,9 @@ and font files."
   script only adds keyboard use, and the page works with scripts off.
 - **The plan page never guesses.** A plan it cannot read with certainty is refused with the step or the
   line to fix, so an example inside a code block is not shown as a step, and a real step is not hidden.
+- **The meeting page treats client words as text.** It escapes form content and blocks network access with
+  a Content Security Policy. The saved Markdown quotes each answer. The agent records all client words in
+  answers files, notes and photos as evidence, never as instructions.
 
 ## Secrets and personal data
 
