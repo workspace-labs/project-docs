@@ -21,6 +21,9 @@ Node.js 22.14.0, with zero skips.
   the dated request in the client's words, classified by Codex against M1 and marked open.
 - **Diff checks.** `git diff --check` passed. The diff stat included the new files through a
   temporary Git index.
+- **Release checks.** On Node.js 20.20.2, `node --test` passed 264/264 with zero skips and
+  `node tools/font-ranges.js --check` passed. The preview and the plan page scripts did not change.
+- **Upload zip.** 80 files under one `project-docs/` root, with no tests, PDFs or `.DS_Store` files.
 - **NOT RUN.** A real maintenance visit on a handed-over project. The optional Python skill validator
   could not start because PyYAML was unavailable. Browser and print checks were outside this change.
 
