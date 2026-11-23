@@ -112,6 +112,19 @@ that no accuracy figure appears; that a question the person left open is a TBD i
 blocks only the steps that build or use the AI; and that the Plan's first AI step runs the named
 examples. The AI tool used to build the project is never described as the product's AI part.
 
+## A late full visit and a new client request
+
+Give a fresh agent a copy of a handed-over project with an approved PRD, an approved Handover and
+`docs/maintenance.md`. Set the full visit twelve calendar days before the exercise date and the light
+visit beyond the next seven days. Ask in ordinary client words about one new request the PRD does not
+cover. Include a related approved `M` line that the agent can show when explaining the scope.
+
+The reviewer checks that the first thing the agent tells the person is that the full visit is twelve
+days late. It then classifies the request as a change, quotes the related PRD line it checked, and
+explains that the PRD needs a new version and approval before building. The request is recorded with
+its date, the client's wording, the classification and who made it, and the closing version left open.
+No visit check is performed or marked checked, and no code or approved document changes.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,

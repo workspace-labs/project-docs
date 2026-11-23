@@ -25,6 +25,10 @@
 ## Maintenance and updates
 - The front desk reports a problem to the IT lead by email; it is answered within one working day.
 - An update is tried on a copy of the site first, then installed after clinic hours.
+- **Light visit rhythm:** every month.
+- **Full visit rhythm:** every three months.
+- **Serious security fix deadline:** within five calendar days of release for fixes rated critical or high, sooner if attackers already use the weakness.
+- **Visit results go to:** the clinic manager, from the IT lead.
 - TBD: who builds new features after the handover. Decided when the clinic manager has chosen between the builder and the IT lead.
 
 ## Retiring it

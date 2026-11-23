@@ -1,6 +1,6 @@
 # 0008. The skill covers the project from the client meeting to the handover
 
-- Status: accepted
+- Status: Superseded in part by [0014](0014-keep-a-maintenance-record-after-handover.md) (a solo project may have a Handover; the time after the handover)
 - Date: 2026-11-13
 - Decided by: the owner (three choices, 2026-11-13)
 

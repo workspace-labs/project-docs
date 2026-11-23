@@ -87,8 +87,8 @@ Under each `M` line goes one `Check:` line, two spaces in: the acceptance test (
 After approval, a change to the scope is a `Changed` line, approved by the person who approves the scope.
 
 **Who decides** has these five lines, in this order. Someone who builds it only for themselves writes one
-line instead, `- **Owner**: <who>, alone.`, and then the project has no Handover document and its Plan no
-delivery steps (see their references).
+line instead, `- **Owner**: <who>, alone.`. Their Plan skips the delivery steps. They need a
+[Handover](handover.md) only if they ask for a maintenance record.
 
 ```markdown
 # PRD: <Project name>

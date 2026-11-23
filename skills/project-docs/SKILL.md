@@ -1,12 +1,12 @@
 ---
 name: project-docs
-description: "Use when someone wants the documents a project needs before it is built: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for four stages before building (the goal, today's work, the needs, approve the scope or stop), with as many meetings as needed. Also when asked to write, update, continue or approve any of them, or to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
+description: "Use when someone wants a project's documents: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for four stages before building (the goal, today's work, the needs, approve the scope or stop), with as many meetings as needed. After handover, keeps the maintenance record with visit dates, results and client requests. Also when asked to write, update, continue or approve any of the planning documents, to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md or docs/maintenance.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
 ---
 
 # project-docs
 
-The documents a project needs **before anyone builds it**, from the first client meeting to handover.
-Write them in small rounds of questions, read them back and record who approved them and when.
+Prepare the project documents from the first client meeting through the handover plan. Ask in small rounds,
+read back the answers and record approval. After the project is handed over, keep its maintenance record.
 
 ## The documents, in this order
 
@@ -18,23 +18,24 @@ Write them in small rounds of questions, read them back and record who approved 
 | 3 | **Design brief**: the look | `DESIGN.md` (project root) | when it has screens | [references/design.md](references/design.md) |
 | 4 | **Data**: what it saves | `docs/data.md` | only if it saves anything | [references/data.md](references/data.md) |
 | 5 | **Security**: one page | `docs/security.md` | always (short when simple) | [references/security.md](references/security.md) |
-| 6 | **Handover**: after it is built | `docs/handover.md` | when it is handed to someone (short when simple) | [references/handover.md](references/handover.md) |
+| 6 | **Handover**: after it is built | `docs/handover.md` | when handed to someone, or for a solo owner's requested maintenance record | [references/handover.md](references/handover.md) |
 | 7 | **Plan**: small steps, then delivery | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
 
-For a client project, make the **client meeting form** and its HTML page first. The form covers four stages
-with as many meetings as needed. See [references/meeting-form.md](references/meeting-form.md) for the form,
-the follow-up after each meeting, and the separate meeting to approve the draft scope or stop.
+For a client project, make the **client meeting form** and its HTML page first. See [references/meeting-form.md](references/meeting-form.md)
+for the four stages, the follow-up after each meeting, and the separate scope approval or stop meeting.
 
 Load **only** the reference file of the document you are writing: its questions and its exact headings.
 
 ## Start: where are we?
 
-1. Read `docs/`, `DESIGN.md`, `README.md`, and existing code. For a new project with no documents, ask
-   one question first: "Is it for a client, or for yourself?" Client → make `docs/meeting-form.md` and
-   `docs/meeting-form.html` first. For yourself → go straight to the PRD. Follow the meeting reference for
-   ongoing discovery. Draft the PRD when the person says it is clear enough. Stage 4 **Stop** ends the work.
-2. Read the **stamp** of each document that exists (see below). Continue from the **first document that is
-   not approved**, or the one the person asks for.
+1. If `docs/maintenance.md` exists, read its next dates first. Before anything else, report visits due soon or late
+   and by how many calendar days. Due soon means today through the next seven days. Say nothing when neither visit is near.
+2. For maintenance, a request after handover, or confirmation that handover took place, read [references/maintenance.md](references/maintenance.md).
+   Otherwise, read `docs/`, `DESIGN.md`, `README.md` and existing code. For a new project with no documents, ask
+   "Is it for a client, or for yourself?" Client → make `docs/meeting-form.md` and `docs/meeting-form.html` first.
+   For yourself → go straight to the PRD. Follow the meeting reference for discovery and the PRD draft. Stage 4 **Stop** ends the work.
+   Read each numbered document's **stamp** (see below). Continue from the **first document that is not approved**
+   or the one the person asks for. The meeting form and the maintenance record have no stamp.
 3. A document that exists but has no stamp (the person wrote it before): read it, keep everything in it,
    ask only about what is missing under the fixed headings, then stamp it. An **approved** document that
    lacks headings or fixed lines its reference now has (written by an older version of this skill: a PRD
@@ -49,9 +50,8 @@ Load **only** the reference file of the document you are writing: its questions 
    gaps. Nothing found in code is approved until the person confirms it.
 5. A project with a `docs/scope.md`: start the PRD from it. Once `docs/prd.md` exists it is the project's
    scope. Never delete `scope.md`: the person decides what to do with it.
-6. **Language:** English by default. When the person asks for Arabic, write every document in Arabic, with
-   the headings and fixed words from the **In Arabic** section of each reference file. File names, code
-   names and `M1`, `M2`… stay as they are.
+6. **Language:** English by default. For Arabic, use the headings and fixed words from **In Arabic** in each
+   reference. File names, code names and `M1`, `M2`… stay as they are.
 
 ## The loop: every document, the same way
 
@@ -145,7 +145,7 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 - **Never pick the technology yourself.** In the TRD, the person chooses. When they are unsure, show 2 or 3
   options with plain pros, cons and what will be easy or hard to maintain later, recommend one, and let them
   click. "Not sure yet" is written as `TBD`.
-- **Never tick a plan step done.** You mark it waiting for the person's check; only the person ticks it.
+- **Only the person checks off a Plan step or maintenance visit.** Record it as waiting for their check when it is ready.
 - **Never install anything** and never make a network call. The one exception: the Design preview page
   may load a font online, and only when the person says yes to that font.
 - **Never change an existing look or a locked choice** without the person's yes.
@@ -170,4 +170,4 @@ approved, name step 2. If a skill in the chain is not installed, say so and ask 
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
 | `scripts/plan-page.js` | makes `docs/plan.html` from `docs/plan.md`: the plan as a board whose cards open (Node.js, no packages); `scripts/markdown-blocks.js` reads the plan's Markdown for it |
 | `scripts/meeting-page.js` | makes the printable, editable `docs/meeting-form.html` from `docs/meeting-form.md` (Node.js, no packages) |
-| `examples/` | `cedar-clinic/`: a filled four-stage meeting form, its HTML page and seven documents · `cedar-clinic-ar/`: the documents in Arabic · `study-timer/`: a small personal project · `notes-digest/`: a terminal tool with an AI part |
+| `examples/` | `cedar-clinic/`: a filled meeting form, its HTML page, seven documents and a maintenance record · `cedar-clinic-ar/`: the documents and record in Arabic · `study-timer/`: a small personal project · `notes-digest/`: a terminal tool with an AI part |

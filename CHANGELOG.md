@@ -2,6 +2,27 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.15.0] - 2026-11-23
+
+### Added
+
+- Keep a maintenance record after handover, with upcoming visits, results supplied by whoever ran the
+  checks, and client requests sorted with the approved PRD. Report near and overdue visits at project
+  opening and give the person the next date for their calendar.
+- Add English and Arabic maintenance examples. ADR 0014 records the decision and is accepted; ADR 0008
+  names it as its successor for solo projects and the time after the handover.
+- New picture at the top of the README: the path now runs to after the handover, with a fifth step.
+
+### Changed
+
+- Record the agreed light and full visit schedules, serious security fix deadline and result recipient
+  under Maintenance and updates in the Handover. Keep the visit history and moving dates in the separate
+  record. Only the person marks a visit checked.
+
+### Verification
+
+See [the 0.15.0 checks](TESTING.md).
+
 ## [0.14.1] - 2026-11-22
 
 ### Changed

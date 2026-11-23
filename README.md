@@ -1,13 +1,14 @@
 # project-docs
 
-![project-docs, from the first meeting to the build: meet the client, ask only what is open, write and approve seven documents, then build from the plan; beside it a real meeting form and a real plan board](media/project-docs-hero-v3.png)
+![project-docs, from the first meeting to after the handover: meet the client, ask only what is open, write and approve seven documents, build from the plan, then look after it; beside it a real meeting form and a real plan board](media/project-docs-hero-v4.png)
 
-**The documents your project needs, written with you before anyone builds it.**
+**Write your project documents before building and keep a maintenance record after handover.**
 
 An agent skill that asks about your project in small click rounds, reads it back in plain words, and writes
-seven documents in order, from the first client meeting to the handover. The AI **never picks the technology by itself**: you choose, or it is written down
-as an honest "TBD". Each document is approved with a date, and after that every AI on every computer
-builds from the same truth.
+seven planning documents in order, from the first client meeting to the handover. The AI **never picks the
+technology by itself**: you choose, or it is written down as an honest "TBD". Each planning document is
+approved with a date, and after that every AI on every computer builds from the same truth. After handover
+the skill records visit dates, check results and client requests.
 
 The skill is the folder [`skills/project-docs/`](skills/project-docs/): its instructions,
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, a preview page for picking
@@ -15,7 +16,7 @@ the look, and a small script that draws the plan page. **Nothing to install** to
 documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
 coding tools already have; without it the plan stays in `docs/plan.md`.
 
-**Version 0.14.1** · 257 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.15.0** · 264 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -30,9 +31,10 @@ In your project:
 | `DESIGN.md` | **The look**: colors, fonts, shapes, pieces, must-have rules and ready values every AI copies | when it has screens |
 | `docs/data.md` | **Data**: every table and column, with personal 🔒 and secret 🔐 data marked | when it saves anything |
 | `docs/security.md` | **Security**: who gets in, how it's protected, secrets, personal data, outside services, what to do if something goes wrong | always (short when simple) |
-| `docs/handover.md` | **Handover**: what is handed over (and who owns the code), who receives it, how it is announced, the first weeks after go-live, who runs it and who pays for it from then on, maintenance and updates, how it is retired | when it is handed to someone |
+| `docs/handover.md` | **Handover**: what is handed over (and who owns the code), who receives it, how it is announced, the first weeks after go-live, who runs it and who pays for it from then on, the agreed maintenance rule, how it is retired | for a handover, or when needed for a solo owner's requested maintenance record |
 | `docs/plan.md` | **The plan**: small steps you can see work, each with its check | always |
 | `docs/plan.html` | **The plan page**: the plan as a board (Done · Waiting for your check · Next · Waiting for a decision) with "You are here"; every card opens to its plan, what was built and your decisions. Kept current after every step, opened when you ask "where are we?", and it works on a phone | always, made by a script (needs Node.js) |
+| `docs/maintenance.md` | **Maintenance record** with the next light and full visit dates, the results reported by whoever ran the checks, and client requests | at handover or the first maintenance request, with an approved Handover |
 
 For a new client project, you get the **client meeting form** first, as Markdown and an HTML page you can
 print or type into and save. Discovery follows four stages over as many meetings as needed. After every
@@ -40,7 +42,8 @@ meeting, review what's clear, missing or conflicting, and take only open questio
 You decide when to draft the PRD. The scope decision has its own meeting after that draft. For a project
 of your own, start with the PRD.
 
-Each document carries a stamp under its title: `> v1 · Draft`, then `> v2 · Approved 2026-10-08`.
+Each planning document carries a stamp under its title, starting with `> v1 · Draft` and showing a dated
+approval such as `> v2 · Approved 2026-10-08`.
 
 The same documents carry the detail a project actually needs: outside-service responses and failures
 in the TRD; required/unique fields and removal rules in Data; brief threat scenarios, encrypted
@@ -71,6 +74,18 @@ Codex can find the next step and read the approved documents it needs. The skill
 
 If the [frameflow](https://github.com/workspace-labs/frameflow) skill is installed, project-docs offers it
 once between the TRD and the look, to draw the app's screens as a storyboard.
+
+## After the handover
+
+Agree the light and full visit schedule, the serious security fix deadline and who gets each visit's
+results with the client in the Handover. The separate maintenance record keeps dates and history
+without an approval stamp. For a project of your own, ask for a record when you want one. It still needs
+an approved Handover. When you open the project, the skill tells you if either visit is due soon
+or late. It records the results from whoever ran the checks, updates the visit dates and gives you
+the next date for your calendar. Only you mark a visit checked.
+
+For a new client request, the skill refers to the approved PRD when it records a fault, a change or
+routine upkeep. A change needs a new approved PRD version before building starts.
 
 ## Install
 
@@ -129,7 +144,8 @@ website before we build it."
 
 [`skills/project-docs/examples/cedar-clinic/`](skills/project-docs/examples/cedar-clinic/) holds a filled
 meeting form, its generated HTML page and all seven documents for a made-up clinic booking website, and
-[`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the documents in Arabic.
+[`cedar-clinic-ar/`](skills/project-docs/examples/cedar-clinic-ar/) the documents in Arabic. Both include a
+fictional maintenance record.
 [`study-timer/`](skills/project-docs/examples/study-timer/) shows a tiny offline tool: it saves nothing and one
 student builds it for themselves, so it has no data document, no handover and no delivery steps, and its security page is short, with "None" wherever nothing applies.
 [`notes-digest/`](skills/project-docs/examples/notes-digest/) shows a small product that uses an AI model: what the AI

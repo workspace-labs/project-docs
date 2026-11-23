@@ -1,7 +1,28 @@
 # How project-docs was tested
 
-**Last verified 2026-11-22 · version 0.14.1.** All 257 automated tests passed on macOS arm64 with Node.js
-18.20.8 and 20.20.2, with zero skips.
+**Last verified 2026-11-23 · version 0.15.0.** All 264 automated tests passed on macOS arm64 with
+Node.js 22.14.0, with zero skips.
+
+## 0.15.0 — After the handover
+
+- **Automated checks.** The clean baseline at `182e15828b98dbb5d704a229e5531540990770bf` passed
+  257/257. On a copy of that commit with the final maintenance tests added, all seven new tests
+  failed as expected. On the branch, the seven new tests passed and `node --test` passed 264/264
+  with zero failures, cancellations or skips.
+- **Published skill.** `wc -l` counted 173 lines in `SKILL.md`. The packaged skill audit reported
+  zero findings. Ruby parsed the YAML frontmatter. Read both templates and Cedar examples for
+  Arabic wording, fixed headings and the unchanged spelling of `PRD`, `M` identifiers and file names.
+- **Agent exercise.** Fresh Codex subagents in separate local copies handled the same waitlist
+  request on 2026-11-23. The first run put the exact PRD quote in the record. The second quoted it
+  in the reply and called for revised scope approval. After clarifying both reply requirements in
+  the reference, the final run led with the November 11 full visit being 12 days overdue, called
+  the request a change, quoted PRD M1 and said a newly approved version was needed before building.
+  A before-and-after comparison of 14 fixture files found one change. The maintenance record gained
+  the dated request in the client's words, classified by Codex against M1 and marked open.
+- **Diff checks.** `git diff --check` passed. The diff stat included the new files through a
+  temporary Git index.
+- **NOT RUN.** A real maintenance visit on a handed-over project. The optional Python skill validator
+  could not start because PyYAML was unavailable. Browser and print checks were outside this change.
 
 ## 0.14.1 — New README picture and accepted decision
 
