@@ -3,9 +3,9 @@
     "name": "project-docs Skill",
     "accent": "project-docs",
     "client": "Everyone (public skill)",
-    "date": "2026-10-08",
-    "version": "0.1",
-    "summary": "project-docs writes the documents a project needs before anyone builds it: what we build and why (PRD), what it is built with (TRD), the look (DESIGN.md), the data, security and the step-by-step plan. The AI asks first and reads it back, and it never picks the technology by itself. Each document is approved with a date. It works on any computer and in any AI tool.",
+    "date": "2026-11-23",
+    "version": "0.15",
+    "summary": "project-docs prepares a project's documents from the first client meeting to the handover plan: what we build and why (PRD), what it is built with (TRD), the look, the data, security, the handover and the step-by-step plan. After the project is handed over, it keeps the maintenance record.",
     "actors": [
       {
         "name": "Developer",
@@ -24,24 +24,33 @@
         "role": "The docs/ folder and DESIGN.md: the one place the truth lives."
       },
       {
+        "name": "Builder",
+        "role": "The agent or person that builds from the approved plan."
+      },
+      {
         "name": "frameflow skill",
         "role": "Draws the app flow (the screens), if installed."
+      },
+      {
+        "name": "Check runner",
+        "role": "Whoever runs a maintenance visit's checks. Never project-docs."
       }
     ],
     "assumptions": [
-      "Order: PRD, TRD, app flow offer, Design, Data, Security, Plan.",
+      "Order: PRD, TRD, app flow offer, Design, Data, Security, Handover, Plan.",
       "English by default; full right-to-left Arabic when the developer asks.",
-      "Nothing about Backloop or WorkSpace Labs is inside the skill, so it works anywhere.",
-      "When docs/prd.md exists it counts as the project's scope (replaces docs/scope.md).",
-      "The AI never installs anything and never adds the pointer line without a yes.",
-      "frameflow not installed: the AI mentions it once with its link, then goes on to Design."
+      "A project built for oneself skips the meeting form, the Handover and the delivery steps.",
+      "The AI never installs anything and never adds the agent instructions without a yes.",
+      "frameflow not installed: the AI mentions it once with its link, then goes on to Design.",
+      "project-docs writes and records. It never builds, runs a test or runs a visit's checks.",
+      "Small offers are not drawn: the plan as a PDF and the closing builder handoff."
     ],
     "open_questions": []
   },
   "parts": [
     {
-      "title": "Start the project docs",
-      "summary": "Reads what the project already has, then picks the next document to write.",
+      "title": "Start: where are we?",
+      "summary": "The AI reads what the project already has. A maintenance record is read first.",
       "lanes": [
         "Developer",
         "AI"
@@ -51,7 +60,7 @@
           "id": "start",
           "type": "start",
           "lane": "Developer",
-          "title": "Wants the project docs"
+          "title": "Opens the project"
         },
         {
           "id": "read",
@@ -62,42 +71,155 @@
           "result": "What already exists"
         },
         {
-          "id": "has",
+          "id": "rec",
           "type": "decision",
           "lane": "AI",
-          "title": "Docs exist?",
+          "title": "Has a record?",
+          "detail": "a maintenance record",
           "branches": [
             {
               "label": "No",
-              "to": "prd"
+              "to": "has"
             },
             {
               "label": "Yes",
-              "to": "resume"
+              "to": "due"
             }
           ]
         },
         {
-          "id": "resume",
+          "id": "due",
           "type": "step",
           "lane": "AI",
-          "title": "Finds where it stopped",
-          "detail": "first document not approved",
-          "next": "next"
+          "title": "Reports visits due",
+          "detail": "soon or late, said first",
+          "next": "has"
         },
         {
-          "id": "prd",
-          "type": "step",
+          "id": "has",
+          "type": "decision",
           "lane": "AI",
-          "title": "Starts with the PRD",
-          "detail": "what we build and why"
+          "title": "Has documents?",
+          "branches": [
+            {
+              "label": "No",
+              "to": "new"
+            },
+            {
+              "label": "Yes",
+              "to": "next"
+            }
+          ]
+        },
+        {
+          "id": "new",
+          "type": "end",
+          "lane": "AI",
+          "title": "New project",
+          "to_part": 2
         },
         {
           "id": "next",
           "type": "end",
           "lane": "AI",
-          "title": "Document chosen",
-          "to_part": 2
+          "title": "Continues",
+          "detail": "first one not approved",
+          "to_part": 3
+        }
+      ]
+    },
+    {
+      "title": "Meet the client",
+      "summary": "For a client project: a form first, then as many meetings as the four stages need. Only open questions go to the next one.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Client"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "New project"
+        },
+        {
+          "id": "who",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "For a client?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "form"
+            },
+            {
+              "label": "No",
+              "to": "self"
+            }
+          ]
+        },
+        {
+          "id": "self",
+          "type": "end",
+          "lane": "AI",
+          "title": "Starts the PRD",
+          "to_part": 4
+        },
+        {
+          "id": "form",
+          "type": "step",
+          "lane": "AI",
+          "title": "Makes the meeting form",
+          "detail": "Markdown and an HTML page",
+          "result": "The blank form"
+        },
+        {
+          "id": "meet",
+          "type": "step",
+          "lane": "Client",
+          "title": "Answers in a meeting",
+          "detail": "four stages, in order",
+          "result": "The answers"
+        },
+        {
+          "id": "list",
+          "type": "step",
+          "lane": "AI",
+          "title": "Lists what is clear",
+          "detail": "clear, missing, conflicting",
+          "result": "The open questions"
+        },
+        {
+          "id": "clear",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Clear enough?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "done"
+            },
+            {
+              "label": "No",
+              "to": "again"
+            }
+          ]
+        },
+        {
+          "id": "again",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks only what is open",
+          "detail": "a form for the next meeting",
+          "next": "meet"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Ready for the PRD",
+          "to_part": 4
         }
       ]
     },
@@ -121,7 +243,7 @@
           "id": "ask",
           "type": "step",
           "lane": "AI",
-          "title": "Asks 2 or 3 questions",
+          "title": "Asks up to 3 questions",
           "detail": "click answers + Other"
         },
         {
@@ -191,7 +313,8 @@
           "id": "stamp",
           "type": "step",
           "lane": "Project files",
-          "title": "Marked Approved + date",
+          "title": "Marked Approved",
+          "detail": "with the date and who",
           "result": "An approved document"
         },
         {
@@ -204,47 +327,81 @@
     },
     {
       "title": "The PRD: what and why",
-      "summary": "The first document. Everything after it builds on the approved PRD.",
+      "summary": "The first document. The scope is approved in its own meeting, or the work stops.",
       "lanes": [
-        "Developer",
         "AI",
-        "Project files"
+        "Project files",
+        "Client"
       ],
       "nodes": [
         {
           "id": "start",
           "type": "start",
-          "lane": "Developer",
-          "title": "Starts a project"
+          "lane": "AI",
+          "title": "Starts the PRD"
         },
         {
-          "id": "ask",
+          "id": "idea",
           "type": "step",
           "lane": "AI",
-          "title": "Asks the 6 parts",
-          "detail": "what, why, who, must do"
+          "title": "Asks the idea",
+          "detail": "what, why, who it is for"
         },
         {
-          "id": "not",
+          "id": "work",
           "type": "step",
           "lane": "AI",
-          "title": "Asks the limits",
-          "detail": "will NOT do, how we know"
+          "title": "Asks the work",
+          "detail": "today, with it, what it must do"
+        },
+        {
+          "id": "edges",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the edges",
+          "detail": "will NOT do, risks, who decides"
         },
         {
           "id": "write",
           "type": "step",
           "lane": "Project files",
-          "title": "docs/prd.md approved",
-          "detail": "the Part 2 way",
-          "result": "The approved PRD"
+          "title": "docs/prd.md written",
+          "detail": "each must-do has a check",
+          "result": "The draft PRD"
+        },
+        {
+          "id": "ok",
+          "type": "decision",
+          "lane": "Client",
+          "title": "Scope approved?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "done"
+            },
+            {
+              "label": "Changes",
+              "to": "edges"
+            },
+            {
+              "label": "Stop",
+              "to": "stop"
+            }
+          ]
+        },
+        {
+          "id": "stop",
+          "type": "stop",
+          "lane": "Client",
+          "title": "Stops",
+          "detail": "nothing is built"
         },
         {
           "id": "done",
           "type": "end",
           "lane": "AI",
           "title": "PRD approved",
-          "to_part": 4
+          "to_part": 5
         }
       ]
     },
@@ -295,27 +452,11 @@
           "detail": "screen, brain, data, hosting"
         },
         {
-          "id": "knows",
-          "type": "decision",
-          "lane": "Developer",
-          "title": "Knows the pick?",
-          "branches": [
-            {
-              "label": "Yes",
-              "to": "lock"
-            },
-            {
-              "label": "No",
-              "to": "options"
-            }
-          ]
-        },
-        {
           "id": "options",
           "type": "step",
           "lane": "AI",
           "title": "Shows 2 or 3 options",
-          "detail": "pros, cons + its pick"
+          "detail": "when the pick is not known"
         },
         {
           "id": "picks",
@@ -346,7 +487,7 @@
           "type": "step",
           "lane": "Project files",
           "title": "docs/trd.md locked",
-          "detail": "approved the Part 2 way",
+          "detail": "approved the Part 3 way",
           "result": "The locked TRD"
         },
         {
@@ -354,61 +495,6 @@
           "type": "end",
           "lane": "AI",
           "title": "TRD approved",
-          "to_part": 5
-        }
-      ]
-    },
-    {
-      "title": "Lock it for every AI",
-      "summary": "One line tells every AI tool to follow the TRD. Only the developer changes a lock.",
-      "lanes": [
-        "Developer",
-        "AI",
-        "Project files"
-      ],
-      "nodes": [
-        {
-          "id": "start",
-          "type": "start",
-          "lane": "AI",
-          "title": "TRD approved"
-        },
-        {
-          "id": "offer",
-          "type": "step",
-          "lane": "AI",
-          "title": "Offers the pointer line",
-          "detail": "in AGENTS.md / CLAUDE.md"
-        },
-        {
-          "id": "yes",
-          "type": "decision",
-          "lane": "Developer",
-          "title": "Add it?",
-          "branches": [
-            {
-              "label": "Yes",
-              "to": "add"
-            },
-            {
-              "label": "No",
-              "to": "done"
-            }
-          ]
-        },
-        {
-          "id": "add",
-          "type": "step",
-          "lane": "Project files",
-          "title": "Pointer line added",
-          "detail": "read docs/trd.md first",
-          "result": "Every AI reads the TRD"
-        },
-        {
-          "id": "done",
-          "type": "end",
-          "lane": "AI",
-          "title": "Locks in place",
           "to_part": 6
         }
       ]
@@ -426,7 +512,7 @@
           "id": "start",
           "type": "start",
           "lane": "AI",
-          "title": "Locks in place"
+          "title": "TRD approved"
         },
         {
           "id": "screens",
@@ -457,6 +543,7 @@
           "type": "decision",
           "lane": "AI",
           "title": "frameflow there?",
+          "detail": "No: mentions frameflow once, with its link",
           "branches": [
             {
               "label": "Yes",
@@ -466,8 +553,7 @@
               "label": "No",
               "to": "design"
             }
-          ],
-          "detail": "No: mentions frameflow once, with its link"
+          ]
         },
         {
           "id": "offer",
@@ -666,7 +752,7 @@
           "id": "block",
           "type": "step",
           "lane": "Project files",
-          "title": "docs/data.md approved",
+          "title": "Data map approved",
           "detail": "tables + ready block",
           "result": "The data map"
         },
@@ -719,7 +805,7 @@
           "type": "step",
           "lane": "Project files",
           "title": "docs/security.md approved",
-          "detail": "6 parts, the Part 2 way",
+          "detail": "the Part 3 way",
           "result": "The security page"
         },
         {
@@ -732,8 +818,8 @@
       ]
     },
     {
-      "title": "The Plan: small steps",
-      "summary": "Small steps in order, each with a check. Step 1 is the thinnest version that works.",
+      "title": "The Handover: after it is built",
+      "summary": "Written before building, so the people who will run and look after the project agree early.",
       "lanes": [
         "AI",
         "Project files"
@@ -744,6 +830,82 @@
           "type": "start",
           "lane": "AI",
           "title": "Security done"
+        },
+        {
+          "id": "handed",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Handed to someone?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "r1"
+            },
+            {
+              "label": "No",
+              "to": "skip"
+            }
+          ]
+        },
+        {
+          "id": "skip",
+          "type": "end",
+          "lane": "AI",
+          "title": "No handover",
+          "detail": "unless a record is asked for",
+          "to_part": 11
+        },
+        {
+          "id": "r1",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the handing over",
+          "detail": "what, who receives, announcing"
+        },
+        {
+          "id": "r2",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the running",
+          "detail": "first weeks, who runs, who fixes"
+        },
+        {
+          "id": "r3",
+          "type": "step",
+          "lane": "AI",
+          "title": "Asks the regular care",
+          "detail": "visits, security fixes, retiring"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Handover approved",
+          "detail": "the Part 3 way",
+          "result": "The handover plan"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Handover done",
+          "to_part": 11
+        }
+      ]
+    },
+    {
+      "title": "The Plan: small steps",
+      "summary": "Small steps in order, each with a check. Delivery steps follow when someone else decides.",
+      "lanes": [
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Handover done"
         },
         {
           "id": "steps",
@@ -760,7 +922,7 @@
           "branches": [
             {
               "label": "No",
-              "to": "write"
+              "to": "other"
             },
             {
               "label": "Yes",
@@ -774,31 +936,124 @@
           "lane": "AI",
           "title": "Adds an API guide step",
           "detail": "docs/api.md, during build",
-          "next": "write"
+          "next": "other"
+        },
+        {
+          "id": "other",
+          "type": "decision",
+          "lane": "AI",
+          "title": "Someone else decides?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "add"
+            },
+            {
+              "label": "No",
+              "to": "write"
+            }
+          ]
+        },
+        {
+          "id": "add",
+          "type": "step",
+          "lane": "AI",
+          "title": "Adds the delivery steps",
+          "detail": "prototype to handover"
         },
         {
           "id": "write",
           "type": "step",
           "lane": "Project files",
-          "title": "docs/plan.md approved",
-          "detail": "the Part 2 way",
+          "title": "The plan approved",
+          "detail": "the Part 3 way",
           "result": "The approved plan"
         },
         {
           "id": "done",
           "type": "end",
           "lane": "AI",
+          "title": "Plan approved",
+          "to_part": 12
+        }
+      ]
+    },
+    {
+      "title": "After the plan is approved",
+      "summary": "The plan becomes a page to read, and every AI tool is pointed at the approved documents.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "AI",
+          "title": "Plan approved"
+        },
+        {
+          "id": "page",
+          "type": "step",
+          "lane": "Project files",
+          "title": "The plan page made",
+          "detail": "the plan as a board",
+          "result": "The plan page"
+        },
+        {
+          "id": "offer",
+          "type": "step",
+          "lane": "AI",
+          "title": "Offers agent instructions",
+          "detail": "in AGENTS.md or CLAUDE.md"
+        },
+        {
+          "id": "yes",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Add them?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "add"
+            },
+            {
+              "label": "No",
+              "to": "sum"
+            }
+          ]
+        },
+        {
+          "id": "add",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Instructions added",
+          "detail": "a yes for each file",
+          "result": "Every AI reads the plan"
+        },
+        {
+          "id": "sum",
+          "type": "step",
+          "lane": "AI",
+          "title": "Gives the summary",
+          "detail": "open choices, the first step"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
           "title": "Ready to build",
-          "to_part": 11
+          "to_part": 13
         }
       ]
     },
     {
       "title": "Build with the plan",
-      "summary": "The builder never marks its own homework: only the developer turns a step done.",
+      "summary": "project-docs does not build. The builder never marks its own homework: only the developer ticks a step.",
       "lanes": [
         "Developer",
-        "AI",
+        "Builder",
         "Project files"
       ],
       "nodes": [
@@ -811,7 +1066,7 @@
         {
           "id": "tbd",
           "type": "decision",
-          "lane": "AI",
+          "lane": "Builder",
           "title": "Step needs a TBD?",
           "branches": [
             {
@@ -827,21 +1082,21 @@
         {
           "id": "stop",
           "type": "stop",
-          "lane": "AI",
+          "lane": "Builder",
           "title": "Waits",
           "detail": "asks for the choice first"
         },
         {
           "id": "build",
           "type": "step",
-          "lane": "AI",
+          "lane": "Builder",
           "title": "Builds the step",
-          "detail": "follows the locked docs"
+          "detail": "from the approved documents"
         },
         {
           "id": "check",
           "type": "step",
-          "lane": "AI",
+          "lane": "Builder",
           "title": "Runs the step's check",
           "detail": "how we know it works"
         },
@@ -850,7 +1105,7 @@
           "type": "step",
           "lane": "Project files",
           "title": "Marked waiting",
-          "detail": "with what it ran"
+          "detail": "with what was run"
         },
         {
           "id": "ok",
@@ -878,8 +1133,346 @@
         {
           "id": "done",
           "type": "end",
+          "lane": "Builder",
+          "title": "Next step",
+          "to_part": 14
+        }
+      ]
+    },
+    {
+      "title": "Test before delivery",
+      "summary": "Fixed plan steps when someone else decides. project-docs names them. People run them and sign.",
+      "lanes": [
+        "Builder",
+        "AI",
+        "Client"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Builder",
+          "title": "Building steps done"
+        },
+        {
+          "id": "proto",
+          "type": "step",
+          "lane": "Client",
+          "title": "Tries the prototype",
+          "detail": "right after step 1"
+        },
+        {
+          "id": "func",
+          "type": "step",
+          "lane": "Builder",
+          "title": "Functional test",
+          "detail": "every must-do, every link"
+        },
+        {
+          "id": "sec",
+          "type": "step",
+          "lane": "Builder",
+          "title": "Security test",
+          "detail": "every line of the page"
+        },
+        {
+          "id": "cf",
+          "type": "step",
           "lane": "AI",
-          "title": "Next step"
+          "title": "Offers checkflow",
+          "detail": "if it is installed"
+        },
+        {
+          "id": "uat",
+          "type": "step",
+          "lane": "Client",
+          "title": "Acceptance test",
+          "detail": "UAT on a test copy",
+          "result": "A signed test"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "Builder",
+          "title": "Tests passed",
+          "to_part": 15
+        }
+      ]
+    },
+    {
+      "title": "Install and hand over",
+      "summary": "The last fixed steps, on the client's own place. The person who receives it signs.",
+      "lanes": [
+        "Builder",
+        "Client"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Builder",
+          "title": "Tests passed"
+        },
+        {
+          "id": "guides",
+          "type": "step",
+          "lane": "Builder",
+          "title": "Guides and training",
+          "detail": "as the Handover lists"
+        },
+        {
+          "id": "install",
+          "type": "step",
+          "lane": "Builder",
+          "title": "Installs it",
+          "detail": "where the TRD names"
+        },
+        {
+          "id": "live",
+          "type": "step",
+          "lane": "Client",
+          "title": "Live test",
+          "detail": "on the real network"
+        },
+        {
+          "id": "go",
+          "type": "step",
+          "lane": "Client",
+          "title": "Go-live",
+          "detail": "announced, old way stops"
+        },
+        {
+          "id": "hand",
+          "type": "step",
+          "lane": "Client",
+          "title": "Signs the handover",
+          "result": "A signed handover"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "Client",
+          "title": "Handed over",
+          "to_part": 17
+        }
+      ]
+    },
+    {
+      "title": "A change after approval",
+      "summary": "An approved choice never vanishes. The old line stays, with the change and its reason under it.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Client",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Developer",
+          "title": "Wants a change"
+        },
+        {
+          "id": "keep",
+          "type": "step",
+          "lane": "AI",
+          "title": "Keeps the old line",
+          "detail": "adds a Changed line under it"
+        },
+        {
+          "id": "ver",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Version raised",
+          "detail": "back to Draft"
+        },
+        {
+          "id": "ok",
+          "type": "decision",
+          "lane": "Client",
+          "title": "Approved again?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "upd"
+            },
+            {
+              "label": "Changes",
+              "to": "keep"
+            }
+          ]
+        },
+        {
+          "id": "upd",
+          "type": "step",
+          "lane": "AI",
+          "title": "Updates what waited",
+          "detail": "later documents, plan steps"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Change recorded"
+        }
+      ]
+    },
+    {
+      "title": "After the handover: the visits",
+      "summary": "The rule stays in the approved Handover. The record holds the dates. project-docs never runs the checks.",
+      "lanes": [
+        "Developer",
+        "AI",
+        "Check runner",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Developer",
+          "title": "Says it is handed over"
+        },
+        {
+          "id": "rec",
+          "type": "step",
+          "lane": "Project files",
+          "title": "The record is made",
+          "detail": "next light and full visit",
+          "result": "The maintenance record"
+        },
+        {
+          "id": "due",
+          "type": "step",
+          "lane": "AI",
+          "title": "Reports a due visit",
+          "detail": "when the project opens"
+        },
+        {
+          "id": "run",
+          "type": "step",
+          "lane": "Check runner",
+          "title": "Runs the checks",
+          "detail": "the light or the full list",
+          "result": "The results"
+        },
+        {
+          "id": "write",
+          "type": "step",
+          "lane": "AI",
+          "title": "Records the results",
+          "detail": "fine, do now, can wait"
+        },
+        {
+          "id": "ok",
+          "type": "decision",
+          "lane": "Developer",
+          "title": "Visit checked?",
+          "branches": [
+            {
+              "label": "Yes",
+              "to": "next"
+            },
+            {
+              "label": "No",
+              "to": "run"
+            }
+          ]
+        },
+        {
+          "id": "next",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Next dates written",
+          "detail": "one for your calendar"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "Developer",
+          "title": "Next visit planned"
+        }
+      ]
+    },
+    {
+      "title": "After the handover: a request",
+      "summary": "The approved PRD sorts it. When the PRD does not settle it, the developer decides.",
+      "lanes": [
+        "Client",
+        "AI",
+        "Project files"
+      ],
+      "nodes": [
+        {
+          "id": "start",
+          "type": "start",
+          "lane": "Client",
+          "title": "Asks for something"
+        },
+        {
+          "id": "read",
+          "type": "step",
+          "lane": "AI",
+          "title": "Reads the approved PRD",
+          "detail": "quotes the line it used"
+        },
+        {
+          "id": "kind",
+          "type": "decision",
+          "lane": "AI",
+          "title": "What kind?",
+          "branches": [
+            {
+              "label": "Fault",
+              "to": "fault"
+            },
+            {
+              "label": "Change",
+              "to": "change"
+            },
+            {
+              "label": "Health job",
+              "to": "health"
+            }
+          ]
+        },
+        {
+          "id": "fault",
+          "type": "step",
+          "lane": "AI",
+          "title": "Sorts as a fault",
+          "detail": "fixed under the Handover",
+          "next": "rec"
+        },
+        {
+          "id": "change",
+          "type": "step",
+          "lane": "AI",
+          "title": "Sorts as a change",
+          "detail": "a new PRD version first",
+          "next": "rec"
+        },
+        {
+          "id": "health",
+          "type": "step",
+          "lane": "AI",
+          "title": "Adds it to a visit",
+          "next": "rec"
+        },
+        {
+          "id": "rec",
+          "type": "step",
+          "lane": "Project files",
+          "title": "Request recorded",
+          "detail": "date, words, sort, version",
+          "result": "One line in the record"
+        },
+        {
+          "id": "done",
+          "type": "end",
+          "lane": "AI",
+          "title": "Request sorted"
         }
       ]
     }
