@@ -1,6 +1,6 @@
 # project-docs
 
-![The client project path from the first meeting to maintenance, illustrated with an earlier Cedar Clinic form and Plan board](media/project-docs-hero-v4.png)
+![project-docs, from the first meeting to after the handover: meet the client, ask only what is open, write and approve seven documents, build only when ready, then look after it; beside it a printed client meeting form in the Teal look and a real plan board](media/project-docs-hero-v5.png)
 
 **Write your project documents before building and keep a maintenance record after handover.**
 
@@ -17,7 +17,7 @@ the look, and scripts for the meeting and Plan pages. **Nothing to install** to 
 documents or to open the pages. Generating the meeting and Plan pages uses Node.js 18 or newer.
 The Markdown files remain usable on their own.
 
-**Version 0.16.0** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.16.1** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 

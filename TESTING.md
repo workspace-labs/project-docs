@@ -1,7 +1,12 @@
 # How project-docs was tested
 
-**Last verified 2026-11-25 · version 0.16.0.** All 283 automated tests passed on macOS arm64 with
+**Last verified 2026-11-25 · version 0.16.1.** All 283 automated tests passed on macOS arm64 with
 Node.js 22.14.0, with zero skips.
+
+## 0.16.1 — New README picture
+
+- Only `README.md`, `CHANGELOG.md`, this file and the picture changed; `skills/project-docs/` is the same as
+  0.16.0. `node --test` passed 283/283.
 
 ## 0.16.0 — Start, builder check and ready to build
 

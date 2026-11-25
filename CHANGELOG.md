@@ -2,6 +2,11 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.16.1] - 2026-11-25
+
+- New README picture: the steps now include "Ready to build", beside a printed client meeting form in
+  the Teal look and the current Cedar plan board. The skill folder is unchanged from 0.16.0.
+
 ## [0.16.0] - 2026-11-25
 
 - Start a personal project at the PRD. For a client, carry the supplied name and idea into the form and
