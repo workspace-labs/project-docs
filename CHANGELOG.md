@@ -2,6 +2,22 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.16.0] - 2026-11-25
+
+- Start a personal project at the PRD. For a client, carry the supplied name and idea into the form and
+  recommend the first meeting. The form now records dates and flexibility, sample records, and account
+  access. The page can also open forms from 0.14.0 and 0.15.0.
+- Check what a builder would have to guess after each client meeting and before Plan approval. Put open
+  questions in front of the person who can answer them. Have the named client approver approve the PRD,
+  proposed success checks and Handover.
+- Require Approved documents, clear decisions for the step and the owner's word to build. Carry blockers
+  to dependent steps and keep made-up prototype data and screens separate from the product.
+- Apply Design rules to the selected devices. Let Security record a missing fact it owns and simplify
+  the discovery and recovery questions for solo projects.
+- Give the English and Arabic meeting pages the Teal look, with a four-stage strip, ruled A4 writing space and numbered footers.
+
+See [the 0.16.0 checks](TESTING.md#0160--start-builder-check-and-ready-to-build).
+
 ## [0.15.0] - 2026-11-23
 
 ### Added

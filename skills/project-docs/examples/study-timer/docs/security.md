@@ -24,6 +24,6 @@
 - None: personal project.
 
 ## If something goes wrong
-- **Tell first:** nobody else is involved; it is a personal tool.
+- **Tell first:** None: the student is the only user and handles it.
 - **Do first:** delete it and download it again from its release page.
-- **Tell the people affected:** none: it holds no one's data.
+- **Tell the people affected:** None: nobody else's data is involved.

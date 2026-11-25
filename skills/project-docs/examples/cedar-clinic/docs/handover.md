@@ -9,6 +9,7 @@
 
 ## Who receives it
 - The clinic manager receives it and signs the handover; the IT lead receives the code and the keys.
+- This document goes to the clinic manager, named as the owner in the PRD's **Who decides**, for approval.
 
 ## Announcing it
 - A poster at the front desk and one text message to every patient, sent by the clinic manager.

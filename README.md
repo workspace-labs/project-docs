@@ -1,22 +1,23 @@
 # project-docs
 
-![project-docs, from the first meeting to after the handover: meet the client, ask only what is open, write and approve seven documents, build from the plan, then look after it; beside it a real meeting form and a real plan board](media/project-docs-hero-v4.png)
+![The client project path from the first meeting to maintenance, illustrated with an earlier Cedar Clinic form and Plan board](media/project-docs-hero-v4.png)
 
 **Write your project documents before building and keep a maintenance record after handover.**
 
 An agent skill that asks about your project in small click rounds, reads it back in plain words, and writes
 seven planning documents in order, from the first client meeting to the handover. The AI **never picks the
 technology by itself**: you choose, or it is written down as an honest "TBD". Each planning document is
-approved with a date, and after that every AI on every computer builds from the same truth. After handover
-the skill records visit dates, check results and client requests.
+approved with a date. The builder starts a step when the documents it needs are Approved, the decisions
+it needs are settled, and the owner says to build. After handover the skill records visit dates, check
+results and client requests.
 
 The skill is the folder [`skills/project-docs/`](skills/project-docs/): its instructions,
 [`SKILL.md`](skills/project-docs/SKILL.md), one reference file per document, a preview page for picking
-the look, and a small script that draws the plan page. **Nothing to install** to write or read the
-documents, or to open the pages. Making or refreshing the plan page uses Node.js 18 or newer, which most
-coding tools already have; without it the plan stays in `docs/plan.md`.
+the look, and scripts for the meeting and Plan pages. **Nothing to install** to write or read the
+documents or to open the pages. Generating the meeting and Plan pages uses Node.js 18 or newer.
+The Markdown files remain usable on their own.
 
-**Version 0.15.0** · 264 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.16.0** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -36,11 +37,12 @@ In your project:
 | `docs/plan.html` | **The plan page**: the plan as a board (Done · Waiting for your check · Next · Waiting for a decision) with "You are here"; every card opens to its plan, what was built and your decisions. Kept current after every step, opened when you ask "where are we?", and it works on a phone | always, made by a script (needs Node.js) |
 | `docs/maintenance.md` | **Maintenance record** with the next light and full visit dates, the results reported by whoever ran the checks, and client requests | at handover or the first maintenance request, with an approved Handover |
 
-For a new client project, you get the **client meeting form** first, as Markdown and an HTML page you can
-print or type into and save. Discovery follows four stages over as many meetings as needed. After every
-meeting, review what's clear, missing or conflicting, and take only open questions to the next meeting.
-You decide when to draft the PRD. The scope decision has its own meeting after that draft. For a project
-of your own, start with the PRD.
+For a new client project, give the name and idea if you have them. The skill writes them into the
+**client meeting form** and recommends where to start. Use the printable and editable HTML page or
+the Markdown form. The client confirms or corrects the prefill. Discovery follows four stages over
+as many meetings as needed. After each meeting, the skill checks what a builder would still have to
+guess and carries those questions forward. The scope decision has its own meeting after the PRD draft.
+For a project of your own, start with a short PRD conversation.
 
 Each planning document carries a stamp under its title, starting with `> v1 · Draft` and showing a dated
 approval such as `> v2 · Approved 2026-10-08`.
@@ -59,7 +61,8 @@ None lines. These add no planning document or approval stage.
 2. **It asks 2 or 3 questions a round**, with click choices and its recommended pick, never a wall of
    questions. Later documents reuse earlier answers: it never asks twice.
 3. **It reads it back** and writes nothing until you say "yes, that's it".
-4. **You (or your client) approve**, or ask for changes: each round of changes is a new version.
+4. **The named client approver** approves the PRD, its proposed success checks and the Handover.
+   You can approve the technical documents or the documents for your own project. Each round of changes is a new version.
 5. **Locked choices stay visible.** A technology or color that changes keeps its old line, with a dated
    "Changed: X → Y, because …" under it.
 6. **The look is picked by eye**: a preview page shows 2 or 3 looks side by side, filled with your project's
@@ -69,8 +72,9 @@ None lines. These add no planning document or approval stage.
 
 English by default; **Arabic** turns every document, and the preview, right to left.
 
-After you approve the Plan, the skill offers a short block for `AGENTS.md` or `CLAUDE.md` so Claude and
-Codex can find the next step and read the approved documents it needs. The skill asks before editing either file.
+Before Plan approval, the skill shows what the builder would still have to guess and where each answer
+or open choice belongs. After approval, it offers a short block for `AGENTS.md` or `CLAUDE.md` so Claude
+and Codex can see when a step is ready to build. The skill asks before editing either file.
 
 If the [frameflow](https://github.com/workspace-labs/frameflow) skill is installed, project-docs offers it
 once between the TRD and the look, to draw the app's screens as a storyboard.

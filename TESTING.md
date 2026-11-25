@@ -1,7 +1,34 @@
 # How project-docs was tested
 
-**Last verified 2026-11-23 · version 0.15.0.** All 264 automated tests passed on macOS arm64 with
+**Last verified 2026-11-25 · version 0.16.0.** All 283 automated tests passed on macOS arm64 with
 Node.js 22.14.0, with zero skips.
+
+## 0.16.0 — Start, builder check and ready to build
+
+- **Automated checks.** `node --test` at `3c5145570432ce93c8ceec70aa81e2c3f9ab6757` passed 264/264.
+  With the 12 new tests copied in, the selected tests all failed on that baseline. On the branch,
+  `node --test` passed 276/276 with zero failures, cancellations or skips.
+- **Meeting page.** `node skills/project-docs/scripts/meeting-page.js` generated meeting 5 from
+  updated Cedar Markdown and from copies of the Cedar Markdown at 0.14.0 and 0.15.0. The old sources
+  stayed byte-identical. The generated current form matched the checked-in HTML. Tests also cover
+  populated legacy forms and new forms in both languages.
+- **A4 print.** Opened and printed the filled Cedar page in Chrome 158.0.8127.38. Its one-page print
+  includes the prefilled idea and all four timeline rows. Printed the English and Arabic blank
+  templates at A4 as well, eight pages each. The timeline and the date, sample and access prompts fit.
+  Read the Arabic template and Cedar planning examples against their fixed labels.
+- **Fresh agent exercises.** Two separate Codex agents used scratch copies. For Orchard Room Booking,
+  the Markdown and HTML contained the supplied idea verbatim. Comparing Markdown to the template
+  found only the supplied name and idea added. The agent recommended stages 1 and 2, opening questions
+  and reading the idea back. It asked no further intake question. For the Approved Study Timer
+  fixture, the agent identified the pause and resume key and named Mira as the decision-maker.
+  It offered to record her choice in the TRD. `diff -qr` confirmed the project stayed byte-identical.
+- **Package and diff.** `SKILL.md` has 173 lines and its YAML frontmatter parses. The packaged skill
+  audit reported zero findings. `git diff --check` passed. The diff stat included the new ADR using a
+  temporary index.
+- **Review 1.** `node --test` passed 276/276 with zero skips. Scratch copies confirmed that the wording test rejects either old label outside `LEGACY`. The current and 0.15.0 Cedar forms both generated meeting 5 and left each Markdown source byte-identical to its input. `git diff --check` passed.
+- **Round 3, Teal meeting page.** All seven new tests failed on the prior generator and passed after the update. `node --test` passed 283/283 with zero failures or skips, including the offline CSP check. Chrome 158 printed Cedar, both blank forms and bilingual follow-ups at A4 with numbered, mirrored footers where applicable. The follow-ups marked stages 1 and 4. At 390 px, both languages passed typing, Save, reload and Clear in all four modes, with a visible 3 px focus ring and no horizontal overflow. Measured text contrast ranged from 4.83:1 to 17.46:1.
+- **Release.** `node --test` passed 283/283 and `node tools/font-ranges.js --check` matched every TTF. `dist/project-docs.zip` holds 80 files under one `project-docs/` root, with no tests, PDFs or `.DS_Store`. `plan-page.js` and `markdown-blocks.js` are unchanged in this version, so the Pandoc comparison was not rerun. ADR 0015 stays Proposed until the owner accepts it.
+- **NOT RUN.** A real client meeting with the new form, and A4 printing in other browsers.
 
 ## 0.15.0 — After the handover
 

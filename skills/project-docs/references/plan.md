@@ -6,7 +6,7 @@ continue from there.
 
 ## Contents
 
-Gather first · How to make the steps · Delivery steps · The status of a step · The read-back · The plan page · The agent instructions · The document · In Arabic
+Gather first · How to make the steps · Delivery steps · The status of a step · The builder check · The read-back · Ready to build · The plan page · The agent instructions · The document · In Arabic
 
 ## Gather first
 
@@ -24,7 +24,8 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
 
 - **Step 1 is the thinnest version that works end to end**: one real path from start to finish, even if
   plain (one doctor, one day, one booking that really saves and really shows up). When the meeting form
-  says what the client wants to try first, that is the path.
+  says what the client wants to try first, that is the path. Put the core path before the steps that
+  depend on it, including translations, guides and tests of those parts.
 - **Each step finishes in one sitting** and ends with something the person can **try**, not just "code
   written".
 - **Each step names what it covers:** the PRD lines (`M1, M4`), or the TRD rule (`TRD: Languages`).
@@ -70,10 +71,11 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
   check where no part is charged by use. These are proposed checks; actual run results come from the
   builder or reviewer, and only the person marks them checked.
 - An unchecked step that needs a `TBD` choice gets the status `⛔ waits for TBD: <the words of that TBD line>`: exactly
-  the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. If it
-  needs more than one, name the first in document order (PRD, TRD, Design, Data, Handover); the step's
-  check says what else it waits for. A step that itself
-  settles the TBD (signing up for a host decides the account) is not blocked: it says so in its check.
+  the words between `TBD:` and `. Decided when`, never shortened, so the open choice can be found. A step
+  that depends on a blocked step waits for the same open `TBD`, even when the dependency is indirect.
+  If it needs more than one, name the first in document order (PRD, TRD, Design, Data, Security, Handover)
+  and in line order within a document. Say what else it waits for in the step's check. A step can itself
+  settle a `TBD` (signing up with an already agreed host decides the account) and says so in its check.
 - **Personal data stays private from the first step.** A step that shows personal data to anyone comes
   after, or includes, the sign-in that protects it; until then it runs only on the builder's computer.
 - **Every "only their own" rule gets a try with two people.** When Security says someone sees or changes
@@ -81,8 +83,8 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
   change and delete B's data; each try is refused, and B's data is unchanged. The same when only one role
   may see or change something: signed out, or signed in as anyone else, each of its pages and actions is
   refused.
-- **If a `TBD` blocks step 1, nothing can be built.** Say so plainly before asking for approval, and offer to
-  settle it now (back in the document it belongs to) or to start with a step that doesn't need it.
+- **If step 1 is blocked, work cannot start.** Before asking for approval, name the `TBD` and who decides
+  it. Offer to settle it in the document it belongs to or propose a first step that does not need it.
 
 ## Delivery steps
 
@@ -105,14 +107,22 @@ starts with its fixed name, exactly as written here, and may add a few words aft
 If the `checkflow` skill is installed, offer to run it after the Security test and before the Acceptance
 test. It is not a plan step of its own, and a plan without these steps offers it before the handover.
 
-**A prototype never waits for the database.** When step 1 waits for a `TBD` the screens do not need (most
-often the data storage), the Prototype comes first instead, as step 1: the same path on the builder's
-computer, with made-up data kept only in the screens, and its check says so.
+**A prototype can run before the database.** When the first real step waits for a `TBD` the screens do
+not need, the Prototype can come first as step 1, including on a solo project with screens. It shows the
+same path on the builder's computer, using made-up data kept only in the screens. A Prototype that follows
+the first real step uses an isolated test copy. Its made-up data and screens never grow into the product.
+Real steps start from the approved documents. The Prototype's check confirms it stays separate and that
+its made-up data and screens stay out of the real build. The same [Ready to build](#ready-to-build) gate
+applies to the documents and choices the Prototype itself needs.
 
-When the PRD has dates under **Dates and budget**, a delivery step may carry `- **Target:** <a week or a date>` above its Status.
-An open `TBD` blocks them like any step (an Install waits for an open hosting); the Handover step waits for
-every open `TBD` in the Handover document. These steps are ticked only by the person, like every step: a
-sign-off is theirs to record, never the builder's.
+Use the PRD's **Dates and budget** to put agreed timeline dates on their steps as `- **Target:** <a week or a date>`
+above the Status. Start of work goes on the first work step, first version they try on Prototype, acceptance
+on **Acceptance test (UAT)**, and handover and go-live on their matching steps. Keep whether each date is
+fixed or can move. Use dates for the steps that apply and leave unset dates out of `Target`. The PRD keeps
+why a date matters and what happens if it slips. If the Prototype is the first work step, put both
+milestones on its one `Target` line. An open `TBD` can block a delivery step too (Install waits
+for an open hosting choice). Handover waits for every open `TBD` in its own document and any it inherits
+from earlier steps. Only the person ticks the steps and records the sign-offs.
 
 Propose the steps, then ask in one round: "Right order? Anything missing, too big or not needed?"
 
@@ -131,13 +141,14 @@ Exactly one of these, on the step's **Status** line:
 pass. If the person says it does not work, set the step back to `not started` with one line saying why.
 
 When a choice reopens, keep already checked steps as historical progress; they do not approve the revised
-choice. Block affected unchecked steps, including ones waiting for the person's check. Keep any earlier
-run and its date as historical text beneath the step's check, with only one current Status line. When
-several choices block a step, keep its existing open TBD label first and name the others in its check.
+choice. Block affected unchecked steps and their unchecked dependents, including ones waiting for the person's
+check. Keep any earlier run and its date as historical text beneath the step's check, with only one current
+Status line. When several choices block a step, keep its existing open TBD label first and name the
+others in its check.
 
-When the choice a step waited for is settled, first check what else the step needs. **If another `TBD` it
-needs is still open,** keep it blocked: set its Status to `⛔ waits for TBD: <the next open one, in document
-order>` and keep the move as one line under **Status**:
+When the choice a step waited for is settled, first check what else the step and its prerequisites need.
+**If another `TBD` it needs is still open,** keep it blocked: set its Status to
+`⛔ waits for TBD: <the next open one, in document order>` and keep the move as one line under **Status**:
 `  - Changed <date>: waited for <what> → waits for <the next one>, because <the document> settled it as <the choice>.`
 **Only when nothing it needs is still open,** set its Status back to `not started` and keep the wait as one
 line under **How we know it works**. Use `  - Changed <date>: waited for <what> → not started, because
@@ -149,11 +160,32 @@ Ordinary execution progress changes the status without changing the version or s
 a revised approved decision (including new blockers or revised checks), or adding, removing or reordering
 steps, follow SKILL.md: preserve the decision history, raise the version, and return the plan to Draft.
 
+## The builder check
+
+Before asking for Plan approval on any project, read all its documents as a builder who must start
+tomorrow without another conversation. List every point you would have to guess. Follow a real path
+through the product: its working rules (for booking, opening hours, slot length, holidays, how far ahead
+people can book and the cancel cut-off), who does each action, what happens on failure or bad input, units
+and limits, devices and system versions, sample data, accounts and access, and how each result is checked.
+
+Each point gets exactly one outcome:
+
+1. The person answers it. Write the answer in the document it belongs to, following its change and
+   approval rules.
+2. It goes on the next client form. For a client project, add the question to **Still open** with
+   **builder needs it**, the person who answers it and whether it blocks the work.
+3. It is recorded as a `TBD`. In its owning document, use the existing `Decided when` words to say
+   what will settle it and who decides. Block the steps that depend on it.
+
+Ask for the missing answers. Only the client can supply facts about its work, even when the person says
+"you pick". Show the list and its outcomes before asking for Plan approval. A question on a future client
+form that still blocks a step needs the client's answer or a recorded `TBD` before the Plan is stamped.
+
 ## The read-back
 
 Tell it as the story of the build: each building step on its own line, what is built first and what the
-person will see when it is done; the delivery steps may share one line. Nothing is built until the person
-approves the order.
+person will see when it is done. The delivery steps may share one line. Once the person approves the
+order, check [Ready to build](#ready-to-build) before starting any step.
 
 > 18 steps, in this order:
 > 1. First I build: a patient books a visit with one doctor → you will see it on the front desk list.
@@ -165,14 +197,24 @@ approves the order.
 > 6. Moving and cancelling → a patient moves or cancels their own visit, never someone else's (waits for
 >    the text-message service).
 > 7. The reminder → a text arrives at 18:00 the day before the visit (waits for the text-message service).
-> 8. The API guide → a new developer can follow every request in `docs/api.md`.
-> 9. Arabic → every page reads right to left, with nothing left in English.
+> 8. The API guide → a new developer can follow every request in `docs/api.md` (waits for the
+>    text-message service because the full API includes sign-in and reminders).
+> 9. Arabic → every page reads right to left, with nothing left in English (waits for the
+>    text-message service because the full set of pages includes patient sign-in).
 > 10. The safe release → a backup restores and the agreed recovery is tried on a safe copy (waits for
 >    the patient notice and the release recovery decision).
 > 11–18. Delivery: functional test, security test, UAT by the front desk lead on a test copy, guides and
->    training, install on the clinic's server, live test, go-live by early December, handover to the clinic
->    manager.
+>    training, install on the clinic's server, live test, go-live and handover to the clinic manager by
+>    November 30 (these wait for the blocked steps they depend on).
 > Right order? Anything missing, too big or not needed?
+
+## Ready to build
+
+For the requested step, check that the owner has said to build it, every document the step needs is
+Approved, including the Plan, and no open `TBD` blocks it. Check the owning documents for current `TBD`s,
+including choices that reopened. Follow the step's prerequisites so it cannot bypass a blocked step.
+Approval can leave choices open. If any condition is missing, say what is missing and build nothing.
+For a blocking `TBD`, name the choice and who decides it. Offer to settle it in its owning document.
 
 ## The plan page
 
@@ -230,8 +272,8 @@ Only on a yes to that file, write the block below in English, whatever the docum
 
 1. Start at docs/plan.md and find the next step that is not done.
 2. Read only what that step needs: docs/prd.md for what to build, docs/trd.md for what it is built with, DESIGN.md for the look, docs/data.md for what is saved, docs/security.md for the protection rules, docs/handover.md for what happens after it is built.
-3. Only documents stamped Approved count. A Draft is not a decision.
-4. Build only that step. If something is missing or two documents disagree, stop and ask the owner.
+3. Only documents stamped Approved count. A Draft cannot authorize a step. An approved document can still hold an open TBD. A step that needs it waits.
+4. Build only that step, and only after the owner says to build it, every document it needs is Approved, and no open TBD blocks it. Otherwise, name what is missing and build nothing. For a blocking TBD, say who decides it and offer to settle it. If two documents disagree, stop and ask the owner.
 5. Never change an approved document, and never mark a step as checked. A finished step waits for the owner's check.
 <!-- project-docs:end -->
 ```
@@ -257,7 +299,7 @@ Change nothing else in either file.
 ## The document
 
 Write exactly these headings, in this order. Each step has its own `###` heading and these three lines
-(a delivery step may add its **Target** line above the Status).
+(a step with an agreed date may add its **Target** line above the Status).
 
 ```markdown
 # Plan: <Project name>
@@ -278,6 +320,37 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 
 When the person asks for Arabic, write the same document in Arabic with these headings, these exact
 statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
+
+ضع المسار الأساسي قبل ما يعتمد عليه من ترجمة أو أدلة أو اختبارات. إذا توقفت خطوة بسبب قرار لم يُحسم،
+تنتظر الخطوة التي تعتمد عليها القرار نفسه، ولو كان الاعتماد غير مباشر. عند وجود أكثر من قرار مفتوح،
+اكتب الأول حسب ترتيب الوثائق (PRD، ثم TRD، ثم التصميم، ثم البيانات، ثم الأمان، ثم التسليم) وترتيب الأسطر
+داخل كل وثيقة. اذكر باقي القرارات تحت **كيف نعرف أنها تعمل**.
+
+قبل طلب اعتماد الخطة، اقرأ كل وثائق المشروع كما يقرؤها مطوّر عليه أن يبدأ غدًا دون محادثة أخرى. دوّن
+كل ما سيضطر إلى تخمينه، واعرض القائمة ونتيجة كل نقطة قبل طلب الاعتماد. لكل نقطة نتيجة واحدة:
+
+1. يجيب الشخص عنها، ويُكتب الجواب في الوثيقة المعنيّة وفق قواعد تعديلها واعتمادها.
+2. تُضاف إلى **ما زال مفتوحًا** في «نموذج اجتماع العميل» للاجتماع التالي، مع السبب «يحتاج المطوّر إلى الإجابة»،
+   ومن يجيب، وهل تعطل العمل.
+3. تُسجّل بصيغة «لم يُحسم بعد» في الوثيقة المعنيّة، مع ما يحسمها ومن يقرر ضمن عبارة «يُحسم عندما».
+   تنتظرها كل خطوة تحتاج إليها.
+
+العميل هو من يجيب عن الحقائق المتعلقة بعمله، حتى لو قال الشخص إن لك أن تختار. إذا عطل سؤال مؤجل
+إلى اللقاء التالي خطوةً، يلزم جواب العميل أو تسجيله بصيغة «لم يُحسم بعد» قبل اعتماد الخطة.
+
+لا يبدأ بناء خطوة إلا عندما يطلب المالك بناءها، وتكون كل الوثائق التي تحتاجها معتمدة، بما فيها الخطة،
+ولا يوقفها قرار مفتوح. قد تحتوي الوثيقة المعتمدة على قرار لم يُحسم. راجع أيضًا الخطوات التي تعتمد عليها.
+إذا غاب شرط، قل ما الذي ينقص ولا تبنِ شيئًا. سمِّ القرار المفتوح ومن يحسمه واعرض حسمه في وثيقته.
+
+يمكن أن يكون النموذج الأولي أول خطوة لمشروع ذي شاشات، حتى لو كان مشروعًا فرديًا، إذا تعذّر بدء العمل
+الفعلي بسبب قرار لا تحتاجه الشاشات. يستخدم بيانات مختلَقة على حاسوب المطوّر وحده. وإذا جاء بعد الخطوة
+الفعلية الأولى، فيستخدم نسخة اختبار منفصلة. تبدأ الخطوات الفعلية من الوثائق المعتمدة، ويؤكد فحص
+النموذج أن شاشاته وبياناته المختلَقة تبقى خارجه. شروط البدء نفسها تسري على ما يحتاجه النموذج.
+
+انقل التواريخ المتفق عليها من **المواعيد والميزانية** في PRD إلى **الموعد المستهدف** للخطوات المعنيّة:
+بدء العمل لأول خطوة، وأول نسخة يجربونها للنموذج الأولي، واختبار القبول (UAT)، والتسليم والإطلاق.
+اذكر إن كان كل موعد ثابتًا أو قابلًا للتغيير، واترك غير المتفق عليه خارج السطر.
+إذا كان النموذج الأولي أول خطوة، فاذكر موعد بدء العمل وموعد تجربته في سطر واحد.
 
 العمل الهندسي الذي تتطلبه قاعدة معتمدة في TRD أو البيانات أو الأمان يبقى في الخطوات نفسها: اذكر
 القاعدة تحت **تغطي** والنتيجة والدليل المطلوبين تحت **كيف نعرف أنها تعمل**، دون وثيقة فحص إضافية أو

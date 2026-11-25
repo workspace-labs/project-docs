@@ -103,6 +103,9 @@ Headings cell: `28 px (page), 20 px (card)`) and 16 px for text (17 px for Arabi
 44 px tall, a little darker when pressed, grey with quiet text when
 turned off; cards with a 1 px Lines edge and 16 px inside space; error messages in the error color, right
 under what went wrong, saying what to do next. The must-have rules are always there.
+Use the approved TRD's devices for the **Devices** line. For a touch tablet app, name the tablet and
+write the touch requirement there. Apply the keyboard rule wherever a keyboard is used.
+Write the ready values in CSS. For a native app, the builder converts them to the platform's values.
 
 ````markdown
 # DESIGN.md: <Project name>
@@ -143,10 +146,10 @@ from the internet.
 - **Error message:** <…>
 
 ## Must-have rules
-- Works on a phone and a computer.
+- **Devices:** <devices named in the TRD and how the app is used on them>
 - Text contrast at least 4.5 : 1 (checked when this look was picked).
 - Input edges and other controls stand out at least 3 : 1 (they use Quiet text, never Lines).
-- Everything works with the keyboard, with a visible focus ring.
+- Wherever a keyboard is used, all interactions support it and have a visible focus ring.
 - Motion stays off for people who turn it off.
 
 ## Ready values
@@ -178,6 +181,10 @@ from the internet.
 When the person asks for Arabic, set `language: 'ar'` in `looks.js` (the preview turns right to left, and
 every look must use Noto Naskh Arabic for its headings and text), and write the document with these
 headings. The ready values keep the same names as in the English template.
+
+اذكر في سطر **الأجهزة** الأجهزة التي تحددها وثيقة TRD المعتمدة. في تطبيق لوحي يعمل باللمس، سمِّ
+الجهاز اللوحي واذكر أن استخدامه يكون باللمس. تنطبق قاعدة لوحة المفاتيح حيث تُستخدم لوحة مفاتيح.
+اكتب القيم الجاهزة بصيغة CSS. في التطبيقات الأصلية، يحوّل المطوّر القيم إلى الصيغة التي تستخدمها المنصة.
 
 ````markdown
 # دليل التصميم (DESIGN.md): <اسم المشروع>
@@ -217,10 +224,10 @@ headings. The ready values keep the same names as in the English template.
 - **رسالة الخطأ:** <…>
 
 ## قواعد لا بد منها
-- يعمل على الهاتف والحاسوب.
+- **الأجهزة:** <الأجهزة التي تحددها وثيقة TRD وكيف يُستخدم التطبيق عليها>
 - تباين النص 4.5 : 1 على الأقل (فُحص عند اختيار هذا الشكل).
 - حواف حقول الإدخال وعناصر التحكم واضحة بتباين 3 : 1 على الأقل (بلون النص الهادئ، لا بلون الحدود).
-- كل شيء يعمل بلوحة المفاتيح، مع إطار تركيز ظاهر.
+- حيث تُستخدم لوحة مفاتيح، يمكن تنفيذ كل التفاعلات بها ويظهر إطار التركيز.
 - تبقى الحركة متوقفة لمن يوقفها.
 
 ## القيم الجاهزة

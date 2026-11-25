@@ -8,6 +8,27 @@ const MARKER = '<!-- project-docs:meeting-page -->';
 const REFERENCE = path.join(__dirname, '../references/meeting-form.md');
 const TITLES = { en: 'Client meeting form: ', ar: 'نموذج اجتماع العميل: ' };
 const LATER = { en: 'later', ar: 'لاحقًا' };
+const TIMELINE = { en: 'Milestone', ar: 'المحطة' };
+const SIDE = {
+  en: { metBy: 'Met by (our side)', signs: 'For our side' },
+  ar: { metBy: 'من جهتنا', signs: 'من جهتنا' },
+};
+
+// The formats in 0.14.0 and 0.15.0 used the same headings, with an earlier set of fixed prompts.
+const LEGACY = {
+  en: {
+    metBy: 'Met by (our team)', signs: 'For our team',
+    datesLabel: 'Dates:', datesQuestion: 'is there a deadline? Is it fixed, or can it move?',
+    samples: / \(ask for a copy of .*\)$/, oldSamples: ' (ask for a copy)',
+    access: / Which accounts and admin access .*$/, oldAccess: ' Who gives us access?',
+  },
+  ar: {
+    metBy: 'من فريقنا', signs: 'عن فريقنا',
+    datesLabel: 'المواعيد:', datesQuestion: 'هل هناك موعد نهائي؟ هل هو ثابت أم يمكن أن يتغير؟',
+    samples: / \(اطلب نسخة من .*\)$/, oldSamples: ' (اطلب نسخة)',
+    access: / ما الحسابات وصلاحيات الإدارة .*$/, oldAccess: ' ومن يمنحنا الوصول؟',
+  },
+};
 
 function refuse(line, message) {
   throw new Error(`line ${line}: ${message}`);
@@ -107,12 +128,33 @@ function readBlocks(section) {
   return blocks;
 }
 
-function templateFor(lang) {
+function templateFor(form) {
+  const { lang } = form;
   const reference = fs.readFileSync(REFERENCE, 'utf8').replace(/\r\n?/g, '\n');
   const template = [...reference.matchAll(/^```markdown\n([\s\S]*?)^```[ \t]*$/gm)]
     .find((match) => match[1].startsWith('# ' + TITLES[lang]));
   if (!template) throw new Error(`meeting form reference has no ${lang} template`);
-  return readSections(template[1]).sections;
+  const { metBy, signs, datesLabel, datesQuestion, samples, oldSamples, access, oldAccess } = LEGACY[lang];
+  const legacy = readBlocks(form.sections[0])[0]?.rows?.some(({ cells }) => cells[0] === metBy);
+  return readSections(template[1]).sections.map((section) => {
+    const blocks = readBlocks(section);
+    if (!legacy) return { ...section, blocks };
+
+    if (!section.heading) {
+      const [details] = blocks;
+      details.rows.pop();
+      details.rows[1].cells[0] = metBy;
+    }
+    const timelineIndex = blocks.findIndex(isTimelineTable);
+    if (timelineIndex !== -1) {
+      blocks.splice(timelineIndex, 2, { kind: 'bullet', label: datesLabel, text: `**${datesLabel}** ${datesQuestion}` });
+    }
+    for (const block of blocks) {
+      if (block.kind === 'table' && isSignatureTable(block)) block.rows.at(-1).cells[0] = signs;
+      if (block.kind === 'bullet') block.text = block.text.replace(samples, oldSamples).replace(access, oldAccess);
+    }
+    return { ...section, blocks };
+  });
 }
 
 function checkHeaders(actual, expected) {
@@ -135,6 +177,19 @@ function checkFixedRows(actual, expected) {
 
 function isSignatureTable(table) {
   return ['Signature', 'التوقيع'].includes(table.headers[2]);
+}
+
+function isTimelineTable(block) {
+  return block.kind === 'table' && Object.values(TIMELINE).includes(block.headers[0]);
+}
+
+function displayFixedRows(rows, lang) {
+  const current = SIDE[lang];
+  const earlier = LEGACY[lang];
+  return rows.map(({ cells: [role, ...values], ...row }) => {
+    const name = role === earlier.metBy ? current.metBy : role === earlier.signs ? current.signs : role;
+    return { ...row, cells: [name, ...values] };
+  });
 }
 
 function tableAnswers(table, fixed) {
@@ -186,7 +241,7 @@ function matchBlocks(section, expected, role, lang) {
           blank += blankTableCells(got, answers, fixed, later);
         }
       }
-      model.push({ ...want, fixed, actual: got.rows });
+      model.push({ ...want, fixed, actual: fixed ? displayFixedRows(got.rows, lang) : got.rows });
     } else if (want.kind === 'bullet') {
       if (got.label !== want.label) refuse(got.line, `expected the question: ${want.label}`);
       const hasInlineAnswer = got.text !== want.text && got.text !== `**${got.label}**`;
@@ -206,7 +261,7 @@ function matchBlocks(section, expected, role, lang) {
 
 function parse(markdown) {
   const form = readSections(markdown);
-  const template = templateFor(form.lang);
+  const template = templateFor(form);
   let answered = false;
   let blank = 0;
   let number = 1;
@@ -219,7 +274,7 @@ function parse(markdown) {
     const section = form.sections[index];
     if (section?.heading !== want.heading) refuse(section?.line ?? form.end, `expected ${want.heading}`);
     const role = /^### 9\./.test(section.heading) ? 'notes' : /^### 10\./.test(section.heading) ? 'decision' : '';
-    const { model, answered: filled, blank: blanksInSection } = matchBlocks(section, readBlocks(want), role, form.lang);
+    const { model, answered: filled, blank: blanksInSection } = matchBlocks(section, want.blocks, role, form.lang);
     if (index === 0) {
       details = model[0].actual;
     } else if (index === 1) {
@@ -259,6 +314,8 @@ function parse(markdown) {
 
 const UI = {
   en: {
+    intro: 'Four stages before anything is built, with as many meetings as each needs.',
+    lead: 'Write what the client says, in their words. If something has not been decided, write "not decided".',
     details: 'Meeting details', project: 'Project', meeting: 'Meeting', date: 'Date', place: 'Place',
     attendees: 'Who came (name and job)', news: 'Anything new the client said', open: 'Still open',
     questionLabel: 'Question', contextLabel: 'Context', answerLabel: 'Answer',
@@ -270,6 +327,8 @@ const UI = {
     saved: 'Answers downloaded.', cleared: 'Typing cleared.', answers: (n) => `Meeting ${n} answers`,
   },
   ar: {
+    intro: 'أربع مراحل قبل أن يُبنى أي شيء، وفي كل مرحلة ما يلزمها من اجتماعات.',
+    lead: 'اكتب ما يقوله العميل بكلماته. إذا لم يُحسم أمر، فاكتب «لم يُحسم».',
     details: 'تفاصيل الاجتماع', project: 'المشروع', meeting: 'الاجتماع', date: 'التاريخ', place: 'المكان',
     attendees: 'الحاضرون (اسم كل واحد ووظيفته)', news: 'أي جديد قاله العميل', open: 'ما زال مفتوحًا',
     questionLabel: 'السؤال', contextLabel: 'السياق', answerLabel: 'الإجابة',
@@ -285,96 +344,225 @@ const UI = {
 const CSS = `
 * { box-sizing: border-box; }
 :root {
-  color: #202625;
-  background: #f4f5f3;
-  font: 100%/1.55 system-ui, sans-serif;
+  --accent: #0f766e;
+  --ink: #141a24;
+  --text: #2b3240;
+  --quiet: #6b7280;
+  --line: #d5d9e0;
+  --zebra: #f5f6f8;
+  color: var(--text);
+  background: var(--zebra);
+  font: 100%/1.6 system-ui, "Segoe UI", sans-serif;
 }
 body { margin: 0; }
-main { max-inline-size: 52rem; padding: clamp(1rem, 4vw, 3rem); margin-inline: auto; }
-h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
-h1 { font-size: clamp(1.75rem, 5vw, 2.6rem); margin: 0; }
-h2 { font-size: 1.35rem; margin: 0 0 1rem; }
-h3 { font-size: 1.1rem; margin: 1.5rem 0 .65rem; }
+main { max-inline-size: 54rem; padding: clamp(1rem, 4vw, 3rem); margin-inline: auto; background: #fff; }
+header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .1rem 1rem; align-items: start; }
+h1, h2, h3 { color: var(--ink); font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
+h1 { grid-column: 1; grid-row: 2; font-size: clamp(1.9rem, 5vw, 2.6rem); letter-spacing: -.01em; margin: 0; }
+h2 { font-size: 1.75rem; margin: 0 0 .9rem; padding-block-end: .55rem; border-block-end: 2.5px solid var(--ink); }
+h3 { font-size: 1.35rem; margin: 1.5rem 0 .6rem; }
 p { margin-block: .5rem; }
-.meeting-number { color: #48534e; margin-block: .45rem 0; }
-section {
-  margin-block-start: 1.5rem; padding: clamp(1rem, 3vw, 1.65rem);
-  background: #fff; border: 1px solid #bcc6be; border-block-start: 3px solid #24604d;
+.doc-kind { grid-column: 1; grid-row: 1; color: var(--accent); font-size: .85rem; font-weight: 700; margin: 0; }
+.meeting-number { grid-column: 2; grid-row: 1; color: var(--quiet); font-size: .85rem; text-align: end; margin: 0; }
+.stage-strip {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+  list-style: none; margin: 1rem 0 .3rem; padding: 0;
 }
-.project-details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .25rem 1rem; }
-.project-details dt { font-weight: 650; }
+.stage-strip li {
+  padding-block-start: .45rem; border-block-start: 4px solid var(--line);
+  color: var(--quiet); text-align: center; font-size: .74rem; line-height: 1.3; overflow-wrap: anywhere;
+}
+.stage-strip li span { display: block; font-size: .95rem; font-weight: 800; }
+.stage-strip .current { color: var(--accent); border-color: var(--accent); font-weight: 700; }
+.stage-note { margin: 0 0 1rem; color: var(--quiet); font-size: .8rem; }
+.lead { margin: 1.1rem 0 1.3rem; padding-inline-start: .9rem; border-inline-start: 4px solid var(--accent); color: var(--quiet); }
+.eyebrow { display: block; margin-block-end: .15rem; font-size: .8rem; font-weight: 700; color: var(--accent); }
+.section-number { margin-inline-end: .25em; color: var(--accent); }
+section { margin-block-start: 1.6rem; }
+.meeting-details h2 { font-size: 1.4rem; }
+.project-details {
+  display: grid; grid-template-columns: minmax(9rem, 16rem) minmax(0, 1fr); gap: .35rem 1.2rem;
+  margin: 0 0 .6rem;
+}
+.project-details, .meeting-details h2 + .meeting-fields {
+  padding: .6rem .9rem; background: var(--zebra); border-inline-start: 4px solid var(--accent);
+}
+.project-details dt { color: var(--ink); font-size: .9rem; font-weight: 700; }
 .project-details dd { margin: 0; overflow-wrap: anywhere; }
 .meeting-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: .8rem; }
 .meeting-fields .field:last-child { grid-column: 1 / -1; }
 .field { display: grid; align-content: start; gap: .35rem; margin-block: .8rem; min-inline-size: 0; }
-label { font-weight: 600; overflow-wrap: anywhere; }
+label { color: var(--ink); font-size: .95rem; font-weight: 700; overflow-wrap: anywhere; }
+.meeting-fields label { color: var(--quiet); font-size: .9rem; font-weight: 500; }
+.meeting-details h2 + .meeting-fields label { color: var(--text); }
 input, textarea, button { font: inherit; color: inherit; }
 input, textarea {
   inline-size: 100%; padding: .6rem .75rem; background: #fff;
-  border: 1px solid #717e76; border-radius: .3rem;
+  border: 1px solid var(--quiet); border-radius: 4px;
 }
 input { min-block-size: 2.75rem; }
 textarea { min-block-size: 4rem; resize: vertical; }
-fieldset { min-inline-size: 0; border: 1px solid #bcc6be; margin: .8rem 0; padding: .2rem .85rem; }
-legend { font-weight: 600; padding-inline: .4rem; }
+fieldset { min-inline-size: 0; border: 1px solid var(--line); margin: .8rem 0; padding: .2rem .85rem; }
+legend { color: var(--ink); font-weight: 600; padding-inline: .4rem; }
 .table-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: .65rem; }
 .table-fields .field { margin-block: .5rem; }
 .actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-block: 1rem .65rem; }
 button {
   min-block-size: 2.75rem; padding: .6rem 1rem; background: #fff;
-  border: 1px solid #717e76; border-radius: .3rem; font-weight: 650; cursor: pointer;
+  border: 1px solid var(--ink); border-radius: 6px; font-weight: 700; cursor: pointer;
 }
-button:first-child { background: #205541; color: #fff; border-color: #205541; }
-button:first-child:hover { background: #174032; }
-button + button:hover { background: #e9ede9; }
-input:focus, textarea:focus, button:focus { outline: 3px solid #225ba2; outline-offset: 3px; }
-.hint { color: #48534e; }
-#storage-warning { border-inline-start: 3px solid #9b5b22; padding-inline-start: .7rem; }
-table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-block: .65rem; }
+button:first-child { background: var(--accent); color: #fff; border-color: var(--accent); }
+button:first-child:hover { background: var(--ink); border-color: var(--ink); }
+button + button:hover { background: var(--zebra); }
+input:focus, textarea:focus, button:focus { outline: 3px solid var(--accent); outline-offset: 2px; }
+.hint { color: var(--quiet); }
+#storage-warning { border-inline-start: 3px solid var(--accent); padding-inline-start: .7rem; }
+table {
+  inline-size: 100%; table-layout: fixed; border-collapse: collapse;
+  border-block-end: 2px solid var(--ink); margin-block: .65rem;
+}
 th, td {
-  border: 1px solid #717e76; padding: .45rem; text-align: start;
+  border: 1px solid var(--line); padding: .45rem; text-align: start;
   overflow-wrap: anywhere; vertical-align: top;
 }
-thead { background: #25352f; color: white; }
-thead th { border-inline-color: #25352f; }
-tbody tr:nth-child(even) { background: #f4f5f3; }
-tbody tr:last-child { border-block-end: 2px solid #717e76; }
+thead th { background: var(--ink); color: #fff; border-color: var(--ink); padding: .55rem .6rem; }
+tbody tr:nth-child(even) { background: var(--zebra); }
+tbody th { font-weight: 600; color: var(--ink); }
 .signature-table { break-inside: avoid; }
 .signature-table caption { text-align: start; font-weight: 600; }
+.timeline-table .field { margin: 0; }
+.visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
 .only-paper, .paper-answer { display: none; }
 @media screen and (max-width: 35rem) {
   .meeting-fields, .project-details { grid-template-columns: 1fr; gap: 0; }
   .project-details dd { margin-block-end: .5rem; }
 }
-@page { size: A4; margin: 14mm; }
 @media print {
-  :root { color: black; background: white; font-size: 10.5pt; }
-  main { max-inline-size: none; padding: 0; }
-  h1 { font-size: 22pt; }
-  section { padding: 0; border: 0; margin-block-start: .9rem; }
-  h2, h3, legend { break-after: avoid; page-break-after: avoid; }
-  fieldset, .paper-keep, .field, .signature-table { break-inside: avoid; page-break-inside: avoid; }
-  fieldset { padding: .1rem .55rem; }
+  :root { background: #fff; font-size: 10pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  main { max-inline-size: none; padding: 7.2mm; }
+  main:not([data-mode="whole"]) { padding-block-end: 0; }
+  h1 { font-size: 25pt; }
+  main:not([data-mode="whole"]) section { margin-block-start: 1rem; }
+  main:not([data-mode="whole"]) .meeting-fields .field { margin-block: .5rem; }
+  h2, h3, legend { break-after: avoid; }
+  fieldset, .paper-keep, .field, tr, .signature-table, .timeline-table { break-inside: avoid; }
   input, textarea, .screen-only { display: none !important; }
   .only-paper, .paper-answer { display: block; }
   .field { display: block; }
-  .paper-answer {
-    min-block-size: 2.65rem; border-block-end: 1px solid #727272;
-    white-space: pre-wrap; overflow-wrap: anywhere;
+  .field:not(.meeting-fields .field, .table-fields .field, td .field) {
+    display: grid; grid-template-columns: 36% minmax(0, 1fr); gap: 1.2rem;
+    margin: 0; padding: .55rem 0; border-block-end: 1px solid var(--line);
   }
-  .meeting-fields .paper-answer { min-block-size: 1.65rem; }
+  .paper-answer {
+    min-block-size: 2.7rem; border-block-end: 1px dotted var(--quiet);
+    white-space: pre-wrap; overflow-wrap: anywhere; position: relative;
+  }
+  .field:not(.meeting-fields .field, .table-fields .field, td .field) .paper-answer:empty::before {
+    content: ""; position: absolute; inset-inline: 0; inset-block-start: 1.2rem;
+    border-block-start: 1px dotted var(--quiet);
+  }
+  .meeting-fields .paper-answer, td .paper-answer { min-block-size: 1.5rem; }
+  .repeat-row {
+    display: flex; margin: 0; padding: 0;
+    border: 1px solid var(--line); border-block-end: 0;
+  }
+  .repeat-row-alt { background: var(--zebra); }
+  .repeat-row-end { border-block-end: 2px solid var(--ink); }
+  .repeat-row legend {
+    float: inline-start; inline-size: 34%; margin: 0; padding: .55rem .7rem;
+    font-size: .9rem; border-inline-end: 1px solid var(--line); overflow-wrap: anywhere;
+  }
+  .repeat-row .row-number {
+    inline-size: 2.6rem; padding-inline: .3rem; white-space: nowrap; text-align: center; font-weight: 700;
+  }
+  .table-fields { flex: 1; display: flex; gap: 0; }
+  .table-fields .field { flex: 1; margin: 0; padding: .4rem .6rem; border-inline-start: 1px solid var(--line); }
+  .table-fields .field:first-child { border-inline-start: 0; }
+  .table-fields label { color: var(--text); font-size: .72rem; font-weight: 600; }
+  .table-fields .paper-answer { min-block-size: 1.6rem; }
+  .table-fields .paper-answer, td .paper-answer { border: 0; }
   .signature-table td { height: 2.4rem; }
-  thead { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
 `;
 
 const ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 const html = (value) => String(value).replace(/[&<>"']/g, (char) => ENTITIES[char]);
 
-function field({ id, key = id, label, context = '', type }) {
+function pageFooter(form, title) {
+  const arabic = form.lang === 'ar';
+  const start = arabic ? 'right' : 'left';
+  const end = arabic ? 'left' : 'right';
+  const direction = arabic ? 'rtl' : 'ltr';
+  const page = arabic ? 'صفحة ' : 'Page ';
+  const of = arabic ? ' من ' : ' of ';
+  // Escape CSS string syntax and prevent project text from ending the style element.
+  const caption = `${title} · ${form.project}`.replace(/["\\<>\u0000-\u001f\u007f]/g,
+    (char) => `\\${char.codePointAt(0).toString(16)} `);
+  return `
+@page {
+  size: A4; margin: 16mm 15mm 17mm;
+  @bottom-${start} {
+    content: "${caption}"; direction: ${direction}; text-align: ${start};
+    width: 72%; white-space: normal; overflow-wrap: anywhere;
+    color: #6b7280; font: 8pt system-ui, "Segoe UI", sans-serif;
+  }
+  @bottom-${end} {
+    content: "${page}" counter(page) "${of}" counter(pages); direction: ${direction}; text-align: ${end};
+    width: 28%; color: #6b7280; font: 8pt system-ui, "Segoe UI", sans-serif;
+  }
+}
+`;
+}
+
+function stageTitle(heading) {
+  const [, label, number, name] = heading.match(/^(Stage|المرحلة) ([1-4]): (.+)$/);
+  return { prefix: `${label} ${number}`, number, name: name[0].toUpperCase() + name.slice(1) };
+}
+
+function currentStages(form) {
+  if (form.mode === 'whole') return new Set([0]);
+  if (form.mode !== 'open') return new Set();
+  const normalize = (value) => value.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim().replace(/:$/, '').toLowerCase();
+  const labels = form.stages.map(({ heading, sections }) => {
+    const { prefix, name } = stageTitle(heading);
+    const prompts = sections.flatMap((section) => [
+      section.heading,
+      ...section.blocks.flatMap((block) => {
+        if (block.kind === 'bullet') return [block.label, block.text];
+        if (block.kind !== 'table') return [];
+        if (block.fixed) return [...block.headers.slice(1), ...block.rows.map(({ cells }) => cells[0])];
+        return block.headers.filter((header) => header !== '#');
+      }),
+    ]);
+    return new Set([heading, prefix, name, ...prompts].filter(Boolean).map(normalize));
+  });
+  const current = new Set();
+  for (const question of form.open) {
+    const key = normalize(question);
+    const index = labels.findIndex((stage) => stage.has(key));
+    // A free-form question can be unassigned or share a short label with another stage.
+    if (index !== -1 && labels.findLastIndex((stage) => stage.has(key)) === index) current.add(index);
+  }
+  return current;
+}
+
+function stageStrip(form, ui) {
+  const current = currentStages(form);
+  const items = form.stages.map(({ heading }, index) => {
+    const { number, name } = stageTitle(heading);
+    const mark = current.has(index) ? ' class="current" aria-current="step"' : '';
+    return `<li${mark}><span>${number}</span>${html(name)}</li>`;
+  }).join('');
+  return `<ol class="stage-strip" role="list">${items}</ol>\n`
+    + `<p class="stage-note">${html(ui.intro)}</p>\n<p class="lead">${html(ui.lead)}</p>\n`;
+}
+
+function field({ id, key = id, label, context = '', type, compact = false }) {
   const attrs = `id="${id}" data-answer="${html(key)}" data-question="${html(label)}" data-context="${html(context)}" dir="auto"`;
   const input = type ? `<input ${attrs} type="${type}">` : `<textarea ${attrs} rows="2"></textarea>`;
-  return `<div class="field"><label for="${id}">${html(label)}</label>${input}<div class="paper-answer" aria-hidden="true"></div></div>\n`;
+  const caption = compact ? `<label class="visually-hidden" for="${id}">${html(`${context} · ${label}`)}</label>`
+    : `<label for="${id}">${html(label)}</label>`;
+  return `<div class="field">${caption}${input}<div class="paper-answer" aria-hidden="true"></div></div>\n`;
 }
 
 function signatureTable(block, showCaption = false) {
@@ -395,8 +583,24 @@ function tableFields(block, section, answerField) {
     const legend = block.fixed ? cells[0] : `#${numbered ? cells[0] : row + 1}`;
     const headers = idColumn ? block.headers.slice(1) : block.headers;
     const fields = headers.map((label) => answerField(label, `${section} · ${legend}`)).join('');
-    return `<fieldset><legend>${html(legend)}</legend><div class="table-fields">${fields}</div></fieldset>\n`;
+    const legendClass = block.fixed ? '' : ' class="row-number"';
+    const last = row === block.rows.length - 1 ? ' repeat-row-end' : '';
+    const alternate = row % 2 ? ' repeat-row-alt' : '';
+    return `<fieldset class="repeat-row${alternate}${last}"><legend${legendClass}>${html(legend)}</legend>`
+      + `<div class="table-fields">${fields}</div></fieldset>\n`;
   });
+}
+
+function timelineTable(block, section, answerField) {
+  const headers = block.headers.map((label) => `<th scope="col">${html(label)}</th>`).join('');
+  const rows = block.actual.map(({ cells: [milestone, ...values] }) => {
+    const cells = values.map((value, index) => {
+      const content = answerField ? answerField(block.headers[index + 1], `${section} · ${milestone}`, true) : html(value);
+      return `<td>${content}</td>`;
+    }).join('');
+    return `<tr><th scope="row">${html(milestone)}</th>${cells}</tr>`;
+  }).join('');
+  return `<table class="timeline-table"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function stageQuestions(stage, answerField) {
@@ -404,7 +608,8 @@ function stageQuestions(stage, answerField) {
     const markup = blocks.flatMap((block) => {
       switch (block.kind) {
         case 'signature': return signatureTable(block, block.scope);
-        case 'table': return tableFields(block, heading || stage.heading, answerField);
+        case 'table': return isTimelineTable(block) ? timelineTable(block, heading, answerField)
+          : tableFields(block, heading || stage.heading, answerField);
         case 'paragraph': return `<p>${html(block.text)}</p>`;
         case 'bullet': return answerField(block.text.replace(/\*\*/g, '') || heading, block.text ? heading : '');
       }
@@ -413,19 +618,25 @@ function stageQuestions(stage, answerField) {
     if (heading && !repeatsHeading) {
       const withHeading = blocks[0]?.kind === 'paragraph' && blocks[1]?.kind === 'signature' ? 2 : 1;
       const first = markup.splice(0, withHeading).join('');
-      markup.unshift(`<div class="paper-keep"><h3>${html(heading)}</h3>\n${first}</div>`);
+      const styled = html(heading).replace(/^(\d+)\. /, '<span class="section-number">$1</span> ');
+      markup.unshift(`<div class="paper-keep"><h3>${styled}</h3>\n${first}</div>`);
     }
     return markup;
   });
   const first = content.splice(0, stage.sections[0].blocks.length + 1).join('');
-  return `<section><div class="paper-keep"><h2>${html(stage.heading)}</h2>\n${first}</div>${content.join('')}</section>\n`;
+  const { prefix, name } = stageTitle(stage.heading);
+  const title = `<span class="eyebrow">${html(prefix)}</span>${html(name)}`;
+  return `<section><div class="paper-keep"><h2>${title}</h2>\n${first}</div>${content.join('')}</section>\n`;
 }
 
 function meetingDetails(form, ui) {
   const details = form.details.filter(({ cells }) => cells[1]);
   const written = details.map(({ cells }) => `<dt>${html(cells[0])}</dt><dd>${html(cells[1])}</dd>`).join('');
-  return `<section><h2>${ui.details}</h2>\n`
+  const timeline = form.stages[0].sections.flatMap(({ blocks }) => blocks).find(isTimelineTable);
+  const hasTimeline = timeline?.actual.some(({ cells }) => cells.slice(1).some(Boolean));
+  return `<section class="meeting-details"><h2>${ui.details}</h2>\n`
     + (written ? `<dl class="project-details">${written}</dl>\n` : '')
+    + (form.mode !== 'whole' && hasTimeline ? timelineTable(timeline) : '')
     + '<div class="meeting-fields">\n'
     + field({ id: 'meeting-date', label: ui.date, type: 'date' })
     + field({ id: 'meeting-place', label: ui.place, type: 'text' })
@@ -436,11 +647,11 @@ function meetingDetails(form, ui) {
 function formContent(form, ui) {
   let count = 0;
   const occurrences = new Map();
-  const answerField = (label, context = '') => {
+  const answerField = (label, context = '', compact = false) => {
     const identity = JSON.stringify([context, label]);
     const occurrence = (occurrences.get(identity) ?? 0) + 1;
     occurrences.set(identity, occurrence);
-    return field({ id: `answer-${++count}`, key: `${identity}:${occurrence}`, label, context });
+    return field({ id: `answer-${++count}`, key: `${identity}:${occurrence}`, label, context, compact });
   };
   if (form.mode === 'whole') return form.stages.map((stage) => stageQuestions(stage, answerField)).join('');
   if (form.mode === 'open') {
@@ -453,9 +664,11 @@ function formContent(form, ui) {
 function render(form) {
   const ui = UI[form.lang];
   const dir = form.lang === 'ar' ? 'rtl' : 'ltr';
+  const title = TITLES[form.lang].slice(0, -2);
+  const css = CSS + pageFooter(form, title);
   const script = `(${runForm.toString()})();`;
   const csp = `default-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'; `
-    + `script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(CSS)}'`;
+    + `script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(css)}'`;
   const data = {
     project: form.project, client: form.details[0]?.cells[1] ?? '',
     'project-label': ui.project, 'answers-title': ui.answers(form.number),
@@ -471,9 +684,9 @@ function render(form) {
   return `<!doctype html>\n${MARKER}\n<html lang="${form.lang}" dir="${dir}"><head>\n`
     + '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
     + `<meta http-equiv="Content-Security-Policy" content="${csp}">\n`
-    + `<title>${html(form.project)} · ${ui.meeting} ${form.number}</title>\n<style>${CSS}</style></head><body>\n`
-    + `<main data-mode="${form.mode}"><header><h1>${html(form.project)}</h1>`
-    + `<p class="meeting-number">${ui.meeting} ${form.number}</p></header>\n`
+    + `<title>${html(form.project)} · ${ui.meeting} ${form.number}</title>\n<style>${css}</style></head><body>\n`
+    + `<main data-mode="${form.mode}"><header><p class="doc-kind">${html(title)}</p><h1>${html(form.project)}</h1>`
+    + `<p class="meeting-number">${ui.meeting} ${form.number}</p></header>\n${stageStrip(form, ui)}`
     + `<form id="meeting-sheet" ${attributes} autocomplete="off">\n`
     + meetingDetails(form, ui) + formContent(form, ui)
     + `<section>${field({ id: 'meeting-new', label: ui.news })}</section>\n`

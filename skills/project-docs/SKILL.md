@@ -21,9 +21,6 @@ read back the answers and record approval. After the project is handed over, kee
 | 6 | **Handover**: after it is built | `docs/handover.md` | when handed to someone, or for a solo owner's requested maintenance record | [references/handover.md](references/handover.md) |
 | 7 | **Plan**: small steps, then delivery | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
 
-For a client project, make the **client meeting form** and its HTML page first. See [references/meeting-form.md](references/meeting-form.md)
-for the four stages, the follow-up after each meeting, and the separate scope approval or stop meeting.
-
 Load **only** the reference file of the document you are writing: its questions and its exact headings.
 
 ## Start: where are we?
@@ -32,8 +29,10 @@ Load **only** the reference file of the document you are writing: its questions 
    and by how many calendar days. Due soon means today through the next seven days. Say nothing when neither visit is near.
 2. For maintenance, a request after handover, or confirmation that handover took place, read [references/maintenance.md](references/maintenance.md).
    Otherwise, read `docs/`, `DESIGN.md`, `README.md` and existing code. For a new project with no documents, ask
-   "Is it for a client, or for yourself?" Client → make `docs/meeting-form.md` and `docs/meeting-form.html` first.
-   For yourself → go straight to the PRD. Follow the meeting reference for discovery and the PRD draft. Stage 4 **Stop** ends the work.
+   only "Is it for a client, or for yourself?" (Arabic: «هل المشروع لعميل أم لك شخصيًا؟»). Use any answers already given.
+   **For a client:** if the name or idea has yet to be given, ask in one message for the project name and idea. Either can be "not yet".
+   Make the form and HTML page with [references/meeting-form.md](references/meeting-form.md). Stage 4 **Stop** ends the work.
+   **For yourself:** go straight to the PRD and ask the person directly.
    Read each numbered document's **stamp** (see below). Continue from the **first document that is not approved**
    or the one the person asks for. The meeting form and the maintenance record have no stamp.
 3. A document that exists but has no stamp (the person wrote it before): read it, keep everything in it,
@@ -68,8 +67,9 @@ Load **only** the reference file of the document you are writing: its questions 
 3. **Read it back** in plain words, short, in the person's own terms. Write nothing until they say "yes,
    that's it". If they correct it, ask again and read it back again.
 4. **Write the document** with the exact headings from its reference file, then show it.
-5. **Approval.** Ask "Approved, or changes?" For a PRD started from a client meeting form, follow Stage 4
-   instead. When **Who decides** names the scope approver, only that person can approve the PRD.
+5. **Approval.** The client approver named in **Who decides** approves the PRD and Handover. Follow Stage 4 for a meeting-form PRD,
+   including explicit approval of proposed success checks. Otherwise ask the applicable approver "Approved, or changes?" Client facts require the client's answer or stay `TBD`.
+   Run the builder check after every client meeting and again before Plan approval for every project (see the meeting and Plan references).
    - **Approved** → stamp it `Approved` with the date it was given and who gave it (see the stamp).
    - **Changes** → a clear change: make exactly that, and also the lines that only exist because of the old
      value (a check that quotes the old number), saying so when you show it. A vague change, or one that
@@ -133,8 +133,8 @@ records decides; its latest change wins. Dependent documents wait again; follow 
 If the project has screens (an app, a website, a desktop program), look in your list of available skills
 for one named `frameflow`:
 
-- **frameflow is installed** → offer once: "Do you want the app flow next, the screens a user sees and taps,
-  drawn for your client to approve?" Yes → run frameflow, then come back to the Design. No → go on.
+- **frameflow is installed** → offer once, with a recommended choice and why: draw the app flow for approval first, or
+  go straight to Design. Draw first → run frameflow, then come back to Design. Skip → continue to Design.
 - **frameflow is not installed** → say once: "The frameflow skill can draw your screens as a storyboard:
   https://github.com/workspace-labs/frameflow". Then go on. Never install it, and never ask again.
 
@@ -156,10 +156,10 @@ No screens → skip the app flow **and** the Design brief, and go on to Data.
 
 ## The three-step chain
 
-For a whole project, never a small fix: **1. project-docs** (nothing is built before the client approves),
-**2. software-engineering-build-standard** (builds only from the approved documents and the plan),
-**3. checkflow** (nothing is deployed or handed over before its check is clean). When the documents are
-approved, name step 2. If a skill in the chain is not installed, say so and ask how to continue.
+For a whole project: **1. project-docs** writes the documents. **2. software-engineering-build-standard** handles engineering.
+Start a Plan step only when every document the step needs is Approved, no open `TBD` blocks the step, and the owner has said to build.
+Otherwise name what is missing and build nothing. **3. checkflow** checks the build before deployment and handover.
+After Plan approval, name step 2. If a skill in the chain is missing, say so and ask how to continue.
 
 ## Files
 

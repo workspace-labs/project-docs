@@ -3,7 +3,8 @@
 | | |
 |---|---|
 | Client (organisation, department) | Cedar Family Clinic, front desk |
-| Met by (our team) | the builder |
+| Met by (our side) | the builder |
+| What we understood before this meeting (the client confirms or corrects) | Patients book and change their visits on their phone. The front desk sees all appointments for the day. |
 
 Four stages before anything is built, with as many meetings as each needs. Write what the client says,
 in their words. If something has not been decided, write "not decided".
@@ -15,7 +16,7 @@ in their words. If something has not been decided, write "not decided".
 | 1 | 2026-10-01, at the clinic | 1 | the clinic manager; the builder | |
 | 2 | 2026-10-02, at the front desk | 2 | the clinic manager; the front desk lead; the two front desk staff; the builder | |
 | 3 | 2026-10-06, at the clinic | 3 | the clinic manager; the front desk lead; the clinic's IT lead; the builder | |
-| 4 | 2026-10-08, at the clinic | 4 | the clinic manager; the builder | Approved |
+| 4 | 2026-10-08, at the clinic | 4 | the clinic manager; the builder | Approved the scope and the proposed checks |
 
 ## Still open
 
@@ -27,7 +28,15 @@ in their words. If something has not been decided, write "not decided".
 ### 1. The project
 - **What is it, in two or three sentences?** Patients book, move and cancel their own visits from their phone. The front desk sees the day in one list.
 - **What problem does it solve? What goes wrong without it?** Every booking is a phone call. Mornings go on the phone, patients wait on hold, and missed visits are found out too late.
-- **Dates:** ready before the winter season, which starts in December. Fixed.
+
+| Milestone | Date | Fixed or can move? |
+|---|---|---|
+| Start of work | 2026-10-09 | can move |
+| First version they try (prototype) | 2026-10-10 | can move |
+| Acceptance test (UAT) | 2026-11-16 | can move |
+| Handover / go-live | 2026-11-30 | fixed |
+
+- **Why this date? What happens if it slips?** The busy winter season starts in December. If handover slips, the front desk keeps taking all bookings by phone during the busy season.
 - **Budget:** the clinic pays the builder's hours; the server is the clinic's own. It covers the prototype and the tests.
 
 ### 2. Who is involved
@@ -62,7 +71,7 @@ in their words. If something has not been decided, write "not decided".
 
 - **What goes wrong today, or takes too long?** Mornings on the phone; patients on hold; empty times nobody can fill.
 - **Unusual cases:** a doctor off sick: the desk phones every patient that day.
-- **Papers, forms or files used today:** the paper diary (copy of one week taken).
+- **Papers, forms or files used today:** the front desk lead gave us a copy of the blank diary page and one week of diary entries with names and phone numbers removed.
 
 ### Signatures: the notes of stages 1 and 2
 These notes match what was said. The scope is approved separately in Stage 4.
@@ -70,7 +79,7 @@ These notes match what was said. The scope is approved separately in Stage 4.
 | | Name | Signature | Date |
 |---|---|---|---|
 | For the client | the clinic manager | signed | 2026-10-02 |
-| For our team | the builder | signed | 2026-10-02 |
+| For our side | the builder | signed | 2026-10-02 |
 
 ## Stage 3: the needs and the new way
 
@@ -101,7 +110,7 @@ These notes match what was said. The scope is approved separately in Stage 4.
 ### 7. Later stages: ask now
 - **Data:** patient names and phone numbers. Patient details must stay in the country; visits are kept two years.
 - **Old records:** none move in; the paper diary ends when it goes live.
-- **Where it must run:** the clinic's own server. Internet allowed, for patients. The IT lead gives access.
+- **Where it must run:** the clinic's own server. Internet allowed, for patients. The clinic owns the server and the domain. The IT lead gives the builder a server account and domain admin access. When it is chosen, the clinic will own the messaging account and the IT lead will give the builder access. No payment account is needed.
 - **Available:** patients at any hour; the front desk 8:00 to 18:00. When it is down, the desk takes calls as before.
 - **Speed:** every page in under 2 seconds on a phone, even on Monday mornings.
 - **Devices:** patients on their phones; the front desk on two computers.
@@ -126,6 +135,8 @@ These notes match what was said. The scope is approved separately in Stage 4.
 
 ### 9. Open questions and notes
 - Which text-message service: the IT lead will look for one that keeps data in the country.
+- After Stage 3, the builder needed to know how long each appointment lasts. The clinic manager confirmed in Stage 4 that patients book 20-minute appointments.
+- The clinic manager explicitly approved the proposed PRD Check lines and How we know it worked checks in the Stage 4 read-back.
 
 ## Stage 4: approve the scope, or stop
 
@@ -146,4 +157,4 @@ built.
 | | Name | Signature | Date |
 |---|---|---|---|
 | Approves the scope | the clinic manager | signed | 2026-10-08 |
-| For our team | the builder | signed | 2026-10-08 |
+| For our side | the builder | signed | 2026-10-08 |

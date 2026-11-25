@@ -212,18 +212,19 @@ function decidesProblems(prd, L) {
   return { alone: false, problems: ok ? [] : [`"${L.decides}" must be the five fixed lines or one "alone" line, found ${JSON.stringify(labels)}`] };
 }
 
-// The fixed delivery steps: none when the owner builds it alone; otherwise all of them in order, the building
-// steps first, the Prototype at step 1 or 2 only when there are screens, and Handover last.
+// A solo owner may start with a disposable screen prototype. Client delivery requires the fixed sequence.
 function deliveryProblems(plan, { alone, screens }, L) {
   const names = section(plan, L.s.steps).split('\n### ').slice(1)
     .map((s) => (s.split('\n')[0].match(L.stepName) || [])[1] || '');
   const found = names.map((name) => L.delivery.find((d) => name === d || name.startsWith(`${d}: `)));
   const problems = [];
+  const [prototype, ...closing] = L.delivery;
   if (alone) {
-    if (found.some(Boolean)) problems.push('a project its owner builds alone has no delivery steps');
+    if (found.some((name, i) => name && !(screens && i === 0 && name === prototype))) {
+      problems.push('a solo project may use only a first-step screen prototype');
+    }
     return problems;
   }
-  const [prototype, ...closing] = L.delivery;
   // Right after step 1, or step 1 itself when step 1 would wait for the database.
   if (screens) { if (found[0] !== prototype && found[1] !== prototype) problems.push(`step 1 or 2 must be "${prototype}"`); }
   else if (found.includes(prototype)) problems.push(`no screens, so no "${prototype}" step`);
@@ -483,8 +484,8 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
     for (const m of must) assert.ok(covered.includes(m), `no step covers ${m}`);
   });
 
-  // Where a TBD really lives: the PRD, TRD, DESIGN.md, Data and the Handover. Security and the Plan only quote them.
-  const tbdSources = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/handover.md'].filter(has).map(doc);
+  // The Plan quotes open choices from the documents that own them.
+  const tbdSources = () => ['docs/prd.md', 'docs/trd.md', 'DESIGN.md', 'docs/data.md', 'docs/security.md', 'docs/handover.md'].filter(has).map(doc);
 
   test(`(${folder}) "Who decides" is the five fixed lines, or one "alone" line`, () => {
     assert.deepStrictEqual(decidesProblems(doc('docs/prd.md'), L).problems, []);
@@ -498,7 +499,7 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
     }
   });
 
-  test(`(${folder}) a handed-over project has a Handover document and every delivery step in order; one built alone has neither`, () => {
+  test(`(${folder}) a handed-over project has the Handover and fixed delivery sequence; a solo project may start with a screen prototype`, () => {
     const { alone } = decidesProblems(doc('docs/prd.md'), L);
     assert.strictEqual(has('docs/handover.md'), !alone, alone ? 'built alone: no handover.md' : 'handed over: needs handover.md');
     assert.deepStrictEqual(deliveryProblems(doc('docs/plan.md'), { alone, screens: has('DESIGN.md') }, L), []);
@@ -775,8 +776,8 @@ test('the approved Plan offers the exact instructions and all four placement cas
     '',
     '1. Start at docs/plan.md and find the next step that is not done.',
     '2. Read only what that step needs: docs/prd.md for what to build, docs/trd.md for what it is built with, DESIGN.md for the look, docs/data.md for what is saved, docs/security.md for the protection rules, docs/handover.md for what happens after it is built.',
-    '3. Only documents stamped Approved count. A Draft is not a decision.',
-    '4. Build only that step. If something is missing or two documents disagree, stop and ask the owner.',
+    '3. Only documents stamped Approved count. A Draft cannot authorize a step. An approved document can still hold an open TBD. A step that needs it waits.',
+    '4. Build only that step, and only after the owner says to build it, every document it needs is Approved, and no open TBD blocks it. Otherwise, name what is missing and build nothing. For a blocking TBD, say who decides it and offer to settle it. If two documents disagree, stop and ask the owner.',
     "5. Never change an approved document, and never mark a step as checked. A finished step waits for the owner's check.",
     '<!-- project-docs:end -->',
   ].join('\n');
@@ -812,6 +813,79 @@ test('the meeting reference gives a lossless upgrade from 0.13.0 and honors the 
 test('SKILL.md stays within the 173-line limit', () => {
   const skill = fs.readFileSync(path.join(SKILL, 'SKILL.md'), 'utf8');
   assert.ok(skill.replace(/\n$/, '').split('\n').length <= 173);
+});
+
+const skillText = (file) => readMarkdown(path.join(SKILL, file));
+const oneLine = (value) => value.replace(/\s+/g, ' ').trim();
+
+test('0.16.0: start asks one routing question, then asks clients for both intake answers together', () => {
+  const skill = skillText('SKILL.md');
+  const start = oneLine(section(skill, 'Start: where are we?'));
+  assert.match(start, /ask only "Is it for a client, or for yourself\?"/);
+  assert.match(start, /هل المشروع لعميل أم لك شخصيًا؟/);
+  const clientPath = start.split('**For a client:**')[1]?.split('**For yourself:**')[0];
+  assert.ok(clientPath);
+  assert.match(clientPath, /one message.*project name and (?:the )?idea.*"not yet"/i);
+  assert.match(clientPath, /references\/meeting-form\.md/);
+  const personalPath = start.split('**For yourself:**')[1]?.split('Read each numbered')[0];
+  assert.ok(personalPath);
+  assert.match(personalPath, /straight to the PRD/);
+  assert.doesNotMatch(personalPath, /follow the meeting reference|meeting-form\.md|Stage 4/i);
+});
+
+test('0.16.0: check builder guesses after each meeting and show one of three outcomes before Plan approval', () => {
+  const skill = skillText('SKILL.md');
+  const meeting = oneLine(section(skillText('references/meeting-form.md'), 'After each meeting'));
+  const plan = section(skillText('references/plan.md'), 'The builder check');
+  assert.match(skill, /builder check/i);
+  assert.match(meeting, /builder check.*\*\*Still open\*\*.*builder needs it/i);
+  assert.match(meeting, /block/i);
+  const outcomes = [...plan.matchAll(/^\d+\. (.+)$/gm)].map((m) => m[1]);
+  assert.strictEqual(outcomes.length, 3);
+  assert.match(outcomes[0], /person answers it/i);
+  assert.match(outcomes[1], /next client form/i);
+  assert.match(outcomes[2], /TBD/);
+  assert.match(oneLine(plan), /show the list and its outcomes before asking for Plan approval/i);
+});
+
+test('0.16.0: builder instructions require approval, clear decisions and express authorization', () => {
+  const instructions = skillText('references/plan.md').split('\n## The agent instructions\n')[1];
+  const block = instructions.split('<!-- project-docs:start -->')[1]?.split('<!-- project-docs:end -->')[0];
+  assert.ok(block);
+  assert.match(oneLine(block), /approved document can still hold an open TBD.*step that needs it waits/i);
+  assert.match(oneLine(block), /owner says to build it/i);
+  assert.match(oneLine(block), /every document it needs is Approved/i);
+  assert.match(oneLine(block), /no open TBD blocks it/i);
+  assert.match(oneLine(skillText('SKILL.md')), /every document the step needs is Approved.*no open .*TBD.*blocks the step.*owner has said to build/i);
+});
+
+test('0.16.0: the mock prototype is disposable and the real build starts from approved documents', () => {
+  const delivery = oneLine(section(skillText('references/plan.md'), 'Delivery steps'));
+  assert.match(delivery, /made-up data and screens never grow into the product/i);
+  assert.match(delivery, /real (?:steps|build).*approved documents/i);
+  assert.match(delivery, /(?:solo|alone).*prototype/i);
+});
+
+test('0.16.0: the client approves the PRD, Handover and proposed success checks', () => {
+  const loop = oneLine(section(skillText('SKILL.md'), 'The loop: every document, the same way'));
+  assert.match(loop, /Approval.*client.*\*\*Who decides\*\*.*PRD.*Handover/i);
+  const prd = oneLine(section(skillText('references/prd.md'), 'The read-back'));
+  assert.match(prd, /scope approver.*Stage 4.*agent-drafted.*Check:.*How we know it worked.*proposed/i);
+  assert.match(prd, /that approver.*(?:confirm|approve).*check explicitly/i);
+  const handover = oneLine(skillText('references/handover.md'));
+  assert.match(handover, /client.{0,140}approv.{0,140}\*\*Who decides\*\*|\*\*Who decides\*\*.{0,140}approv.{0,140}client/i);
+});
+
+test('0.16.0: the TRD reuses the start answer and asks owners about workplace rules only if personal', () => {
+  const trd = oneLine(skillText('references/trd.md'));
+  assert.match(trd, /reuse.{0,100}start|start.{0,100}reuse/i);
+  assert.match(trd, /personal.{0,130}(?:workplace|workplace's) rules/i);
+  assert.doesNotMatch(trd, /Is this for work, or personal\?/i);
+});
+
+test('0.16.0: Security has its place in the document order for the first blocking decision', () => {
+  const steps = oneLine(section(skillText('references/plan.md'), 'How to make the steps'));
+  assert.match(steps, /\(PRD, TRD, Design, Data, Security, Handover\)/);
 });
 
 test('the stamp rules reject a broken stamp', () => {

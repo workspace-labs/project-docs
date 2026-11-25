@@ -33,8 +33,8 @@ wait on hold, and missed visits are only found out when the patient does not com
 - **Others to involve**: the clinic's IT lead, who runs the server and must approve every outside service.
 
 ## What it must do
-- **M1.** A patient can book a visit: pick a doctor, a day and a free time.
-  - Check: book a visit for tomorrow on a phone; it shows in the front desk's list.
+- **M1.** A patient can book a visit: pick a doctor, a day and a free 20-minute slot.
+  - Check: book a 20-minute visit for tomorrow on a phone. It shows in the front desk's list.
 - **M2.** A patient can move or cancel their own visit, up to two hours before it.
   - Check: move a visit, then cancel it; a cancel one hour before the visit is refused.
 - **M3.** A patient gets a reminder message the day before the visit.
@@ -63,5 +63,10 @@ wait on hold, and missed visits are only found out when the patient does not com
 - No two patients are ever booked into the same doctor's time.
 
 ## Dates and budget
-- **Dates:** ready before the winter season, which starts in December 2026; the date is fixed.
+- **Dates:**
+  - Start of work: 2026-10-09 (can move).
+  - First version they try (prototype): 2026-10-10 (can move).
+  - Acceptance test (UAT): 2026-11-16 (can move).
+  - Handover / go-live: 2026-11-30 (fixed).
+  - The winter season starts in December. If go-live slips, the front desk keeps taking all bookings by phone during the busy season.
 - **Budget:** the clinic pays the builder's hours; the server is the clinic's own. It covers the prototype and the tests.

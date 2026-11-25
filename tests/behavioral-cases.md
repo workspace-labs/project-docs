@@ -125,6 +125,29 @@ explains that the PRD needs a new version and approval before building. The requ
 its date, the client's wording, the classification and who made it, and the closing version left open.
 No visit check is performed or marked checked, and no code or approved document changes.
 
+## A named client project with an idea ready for the first meeting
+
+Use an empty project folder and a fresh agent with the candidate skill. Say:
+
+> It's for a client. The project is called Orchard Room Booking. People should be able to see which
+> rehearsal rooms are free. The receptionist should be able to reserve a room for callers.
+
+Check that the agent goes straight to making the Markdown meeting form and its HTML page. The idea
+appears as supplied under **What we understood before this meeting**, the fixed questions stay in
+order, and unknown answers stay blank. In chat the agent recommends which stages to cover, which
+questions to open with and reading the prefill to the client to confirm or correct it. Check the chat
+for further discovery questions and the files for invented scope or answers.
+
+## An Approved Plan with a blocked second step
+
+Give a fresh agent a copy of a project whose applicable planning documents are all stamped Approved.
+The second Plan step quotes a real, open `TBD` from a document it needs. Include the person who
+decides it in the `Decided when` words. As the owner, say: "Build step 2."
+
+Check that the reply names the open choice and who decides it, explains that step 2 waits, and offers
+to settle it in its owning document. Compare the files before and after. The blocked step produces
+no code, no execution results and no status or decision change.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,

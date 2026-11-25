@@ -64,6 +64,11 @@ the heading it belongs to. A `TBD` with the exact name of a fixed maintenance li
 until it is settled. If the Handover was approved with that `TBD`, keep it and record the confirmed
 answer beneath it on a `Changed` line, then follow the normal approval process.
 
+For a client project, ask the client approver named in the PRD's **Who decides** to approve this
+Handover. Use the named owner if they have that authority. If it is unclear who can approve it, ask the
+client and record the answer in the PRD's existing **Who decides** lines through the normal change
+process. The person who signs at handover can be a different person.
+
 ## The read-back
 
 > The clinic manager receives the code, a front desk guide and an admin guide, and signs the handover; two
@@ -117,6 +122,10 @@ Write exactly these headings, in this order. A heading with nothing under it say
 
 When the person asks for Arabic, write the same document in Arabic with these headings. An empty heading
 says so in one line ("لا شيء: لن يُعلن عنه.").
+
+في مشروع العميل، اطلب اعتماد الوثيقة من الشخص المخوّل من جهة العميل والمذكور في **من يقرر** في PRD.
+قد يكون هو المالك إن كانت له هذه الصلاحية، وقد يختلف عن الشخص الذي يوقّع عند التسليم. إذا لم تتضح
+جهة الاعتماد، فاسأل العميل وسجّل الإجابة في الأسطر الحالية من **من يقرر** باتباع خطوات التغيير المعتادة.
 
 مواعيد الزيارات ومهلة الإصلاح والجهة التي تتلقى النتائج بنود يُتفق عليها مع العميل. اقترح الوتيرة المناسبة
 للمشروع من [مرجع الصيانة](maintenance.md)، واسأل العميل عمّا يوافق عليه. تُحسب مهلة الإصلاح بالأيام

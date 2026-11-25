@@ -29,15 +29,16 @@ Gather first · The questions · TBD: an honest gap · The read-back · The docu
 
 ## The questions
 
-**First question, always: "Is this for work, or personal?"**
+Reuse the start answer before asking any technology question.
 
-- **Work** → before any technology question, ask about the rules the workplace sets. These come first
-  and nothing may break them:
+- **Client** → this is work for that client. Reuse any work rules already answered and ask about missing
+  ones before any technology question. These rules come first:
   1. Tools or services you **must** use (a company login, a cloud, a language, a database).
   2. Tools or services you **can't** use.
   3. Where it has to run (company servers, a cloud, a country, offline, a kind of computer).
   4. Security rules (approvals, where data may be kept, who may log in).
-- **Personal** → write "None: personal project" under Work rules and go on.
+- **Personal** → for this path, ask only whether the project must follow workplace rules. If it must,
+  gather any missing rules as above. Otherwise write "None: personal project" under Work rules and go on.
 
 **Then each part, at most 3 parts a round.** Ask each part as **one** question that already holds the
 options, so the person answers once: "Screen: do you already know what you want? If not, here are 3
@@ -72,15 +73,20 @@ never guess from what providers usually do. Anything not confirmed yet → one l
 answer is confirmed. Every step that sends it real information waits for that name; a step that uses only
 made-up data does not. A service that receives nothing of theirs is not asked.
 
-**Ask the rules first** (online or offline, languages, and which devices people will hold, which goes into
-the Speed line): they change which options fit the other parts. Write the document in its own order.
+**Ask the rules first** (online or offline, languages, and which devices people will use): they change
+which options fit the other parts. Name the supported devices under **Where it lives**, and name the
+test device in the Speed line where it affects the result. Write the document in its own order.
 
 **Where it lives:** if the project will be deployed or distributed beyond the builder's computer,
-reuse any recovery decision already given. Ask the operator which recovery paths their release channel
-supports. Ask the owner once to choose who decides to go back, what signal calls for it, and what to do
-if the previous release cannot read data saved by the new one. For example, keep the data and ship a
-fix release. Record the answer here under **Release recovery**. Skip this for a tool that stays on the
-builder's computer.
+reuse any recovery decision already given.
+
+- **Only the owner uses it.** Record that they decide and ask just for the signal and any applicable fallback.
+- **Other people use it.** Ask the operator which recovery paths their release channel supports. Ask the
+  owner once to choose who decides to go back, what signal calls for it, and what to do if the previous
+  release cannot read data saved by the new one.
+
+For example, the fallback can be to keep the data and ship a fix release. Record the answer here under
+**Release recovery**. Skip this for a tool that stays on the builder's computer.
 
 Prices, free plans and limits of hosting and services change often and you cannot look them up: say so,
 and tell the person to check them on the provider's site before they sign up.
@@ -142,8 +148,8 @@ Two parts are smart defaults, not questions, unless the work rules or the person
   When waiting time matters for a flow the person named, reuse what they already said and confirm any
   gaps together: the flow, when the clock starts, what counts as finished, on which device, and at what
   load. Put those conditions and the agreed target on the Speed line.
-- **Accessibility:** "readable contrast, works with the keyboard, respects reduced motion (see DESIGN.md)",
-  unless the meeting form says more. No screens → "None: no screens".
+- **Accessibility:** readable contrast, keyboard access wherever a keyboard is used, and reduced motion
+  (see DESIGN.md), unless the meeting form says more. No screens → "None: no screens".
 
 **Available** is never a default: the hours it must work and what happens when it is down are the client's
 answer. Ask, or write `TBD`. Personal project → "When the person runs it".
@@ -192,6 +198,8 @@ the TRD is written:
 Write exactly these headings, in this order. Each choice is one line: `- <choice>, because <reason>.`
 Approved choices are **locked**: change them only on the person's yes, with a dated `Changed` line under
 the old one (see SKILL.md).
+A technical approval does not supply facts about the client. Keep each such line grounded in a client
+answer or record it as `TBD`.
 
 ```markdown
 # TRD: <Project name>
@@ -251,6 +259,10 @@ the old one (see SKILL.md).
 When the person asks for Arabic, write the same document in Arabic with these headings and fixed words.
 Names of tools and code stay as they are (Next.js, PostgreSQL).
 
+أعد استخدام إجابة بداية المشروع قبل السؤال عن التقنية. مشروع العميل عملٌ لذلك العميل؛ أعد استخدام قواعد
+عمله المعروفة واسأل عما ينقص منها. في المشروع الشخصي اسأل فقط إن كان عليه الالتزام بقواعد جهة عمل.
+إن كانت هناك قواعد فاسأل عمّا ينقص منها؛ وإلا فاكتب «لا شيء: مشروع شخصي» تحت **قواعد العمل**.
+
 استخدم ما ذكره الشخص أصلًا عن المنصات والأجهزة وقنوات التوزيع وقدرات المشروع ومتطلبات الضمان الصريحة.
 ضع المنصات والتوزيع تحت **أين يعمل** والقيود ذات الصلة تحت **قواعد العمل** أو **القواعد التي يلتزم بها**،
 دون عناوين جديدة. لا تفترض متجرًا أو واجبًا قانونيًا أو ادعاء مطابقة. اسأل فقط إذا غيّر المجهول القرار
@@ -258,11 +270,17 @@ Names of tools and code stay as they are (Next.js, PostgreSQL).
 دليل التنفيذ مسؤولية المطوّر أو المراجع لاحقًا.
 
 **أين يعمل:** إذا كان المشروع سيُنشر أو يوزّع خارج حاسوب المطوّر، فأعد استخدام أي قرار سبق أن اتخذه
-المالك بشأن التعافي. اسأل المشغّل عن طرق التعافي التي تدعمها قناة الإصدار، واسأل المالك مرة واحدة:
-من يقرر الرجوع، وما الإشارة التي تستدعيه، وماذا يفعل إذا تعذّرت على الإصدار السابق قراءة البيانات
-التي حفظها الإصدار الجديد؟ قد يكون الحل إبقاء البيانات وإصدار تحديث إصلاحي. سجّل الجواب هنا تحت
-**التعافي عند الإصدار**. تجاوز هذا السطر إذا بقيت الأداة على حاسوب المطوّر. وإذا بقي قرار التعافي
-مفتوحًا، فاكتب «لم يُحسم بعد» وعطّل خطوة الإصدار المعنية فقط.
+المالك بشأن التعافي.
+
+- **المالك هو المستخدم الوحيد.** هو من يقرر الرجوع. اسأله عن مسارات التعافي المتاحة، والإشارة التي
+  تستدعي الرجوع، والبديل عند الحاجة.
+- **هناك مستخدمون آخرون.** اسأل المشغّل عن طرق التعافي التي تدعمها قناة الإصدار، واسأل المالك مرة واحدة:
+  من يقرر الرجوع، وما الإشارة التي تستدعيه، وماذا يفعل إذا تعذّرت على الإصدار السابق قراءة البيانات
+  التي حفظها الإصدار الجديد؟
+
+قد يكون الحل إبقاء البيانات وإصدار تحديث إصلاحي. سجّل الجواب هنا تحت **التعافي عند الإصدار**.
+تجاوز هذا السطر إذا بقيت الأداة على حاسوب المطوّر. وإذا بقي قرار التعافي مفتوحًا، فاكتب «لم يُحسم بعد»
+وعطّل خطوة الإصدار المعنية فقط.
 
 **السرعة:** إذا كان الهدف مناسبًا ولم يرد هدف آخر في PRD أو استمارة الاجتماع، فاقترح «تفتح كل صفحة
 أو شاشة في أقل من ثانيتين على هاتف أو حاسوب عادي» وأكّده مع الشخص عند إعادة عرض الإجابات عليه.

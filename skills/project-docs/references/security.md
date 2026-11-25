@@ -19,8 +19,10 @@ Gather first · The questions · How it's protected · The read-back · The docu
   document does not mean nothing is saved: ask about missing data facts, or carry them as `TBD`. Write
   "saves nothing" only when the project's confirmed answers establish that.
 - Any `TBD` in those places: carry it over as `TBD`, naming the document that holds it (`- TBD: the hosting,
-  see the TRD's Where it lives.`), never fill it in yourself. Security quotes a `TBD`; it never opens one of
-  its own.
+  see the TRD's Where it lives.`). If a fact only Security asks about is still unknown, open a `TBD`
+  here, such as `- TBD: who is told first after a leak. Decided when the clinic manager names the contact.`
+  This also applies to an unresolved fact about who can get in. Ask whoever owns the answer and leave
+  it open if they do not know yet.
 
 ## The questions (only what is missing: one round, three questions)
 
@@ -35,7 +37,9 @@ Gather first · The questions · How it's protected · The read-back · The docu
    they live? Suggest the default: never in the code and never in git; in environment variables or the
    host's secret store, with `.env` files listed in `.gitignore`. Who can see them, and how is one replaced?
 3. **If something goes wrong** (a leak, a break-in, a lost laptop): who is told first, what is done first
-   (turn it off, change the keys), and who tells the people whose data was involved?
+   (turn it off, change the keys), and who tells the people whose data was involved? If the owner is the
+   only user, ask what they do first. Ask who else needs to be told only if other people or their data
+   could be affected. A line that does not apply says so.
 
 ## How it's protected (never asked: the skill writes it)
 
@@ -121,6 +125,11 @@ nothing.").
 When the person asks for Arabic, write the same document in Arabic with these headings. Column names stay
 as they are in the Data document (`patients.phone`), with the Arabic marks `🔒 شخصي` and `🔐 سري`. A line that does not apply starts with `لا ينطبق:`. An empty
 heading says so in one line ("لا شيء: لا يحفظ شيئًا.").
+
+انقل كل بند «لم يُحسم بعد» من الوثائق الأخرى مع ذكر مصدره. إذا بقيت حقيقة لا تسأل عنها إلا وثيقة
+الأمان مفتوحة، مثل من يستطيع الدخول أو من يُبلّغ أولًا، فسجّلها هنا بصيغة «لم يُحسم بعد» المعتادة.
+إذا كان المالك المستخدم الوحيد، فاسأله عمّا يفعله أولًا عند حدوث مشكلة، ولا تسأل عمّن ينبغي إبلاغه
+إلا إذا أمكن أن يتأثر أشخاص آخرون أو بياناتهم. اذكر أن السطر لا ينطبق عندما لا يكون له محل.
 
 إذا وُجد دخول أو حفظ لبيانات شخصية أو سرية أو استخدام لخدمة خارجية، أضف تحت **كيف يُحمى** أسطرًا
 قصيرة عمّا يستحق الحماية، ومن لا يُوثق به، وطريقة أو طريقتين لحدوث الضرر ← الحماية أو فحص الخطة.

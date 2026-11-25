@@ -80,14 +80,183 @@ function entityDecode(value) {
   });
 }
 
+const TIMELINES = {
+  en: {
+    prefill: 'What we understood before this meeting (the client confirms or corrects)',
+    idea: 'Patients book from a phone. The front desk sees `Today | Tomorrow` and C:\\Visits.',
+    headers: ['Milestone', 'Date', 'Fixed or can move?'],
+    milestones: ['Start of work', 'First version they try (prototype)', 'Acceptance test (UAT)', 'Handover / go-live'],
+    why: 'Why this date? What happens if it slips?',
+    samples: 'a few sample records with personal details removed',
+    access: 'Which accounts and admin access will the builder need',
+    owner: 'Who owns each one, and who gives us access?',
+    side: ['Met by (our side)', 'For our side'],
+    oldSide: ['Met by (our team)', 'For our team'],
+    oldDates: '**Dates:** is there a deadline? Is it fixed, or can it move?',
+  },
+  ar: {
+    prefill: 'ما فهمناه قبل الاجتماع (يؤكّده العميل أو يصحّحه)',
+    idea: 'يحجز المرضى من هواتفهم. ويرى موظفو الاستقبال مواعيد اليوم في قائمة واحدة.',
+    headers: ['المحطة', 'الموعد', 'ثابت أم يمكن تغييره؟'],
+    milestones: ['بدء العمل', 'أول نسخة يجرّبونها (النموذج الأولي)', 'اختبار القبول (UAT)', 'التسليم / بدء التشغيل'],
+    why: 'لماذا اختير هذا الموعد؟ وماذا يحدث إن تأخر؟',
+    samples: 'سجلات للاستخدام كأمثلة بعد حذف بياناتها الشخصية',
+    access: 'ما الحسابات وصلاحيات الإدارة التي سيحتاج إليها منفّذ المشروع',
+    owner: 'من يملك كل حساب، ومن يمنحنا الوصول إليه؟',
+    side: ['من جهتنا', 'من جهتنا'],
+    oldSide: ['من فريقنا', 'عن فريقنا'],
+    oldDates: '**المواعيد:** هل هناك موعد نهائي؟ هل هو ثابت أم يمكن أن يتغير؟',
+  },
+};
+
 for (const language of TEMPLATE) {
+  const copy = TIMELINES[language.lang];
+  const tableIdea = copy.idea.replace(/[\\|]/g, '\\$&');
+
+  test(`0.16.0: ${language.lang} first meeting shows the prefilled idea, fixed questions and a four-row timeline`, (t) => {
+    const blank = formFor(language);
+    const source = blank.replace(`| ${copy.prefill} | |`, `| ${copy.prefill} | ${tableIdea} |`);
+    assert.notEqual(source, blank, 'the intake template has a separate client-confirmed prefill row');
+    const html = entityDecode(generate(t, source));
+    assert.match(html, /<main[^>]+data-mode="whole"/);
+    assert.ok(html.includes(`<dt>${copy.prefill}</dt><dd>${copy.idea}</dd>`));
+    assert.ok(html.includes(`data-question="${language.firstQuestion}"`), 'the client can confirm or correct the idea');
+    const table = html.match(/<table class="timeline-table">[\s\S]*?<\/table>/)?.[0];
+    assert.ok(table, 'the milestone questions print as a table');
+    assert.deepEqual([...table.matchAll(/<th scope="col">(.*?)<\/th>/g)].map((m) => m[1]), copy.headers);
+    assert.deepEqual([...table.matchAll(/<th scope="row">(.*?)<\/th>/g)].map((m) => m[1]), copy.milestones);
+    assert.equal([...table.matchAll(/<textarea\b/g)].length, 8, 'four dates and four flexibility fields');
+    for (const question of [copy.why, copy.samples, copy.access, copy.owner]) assert.ok(html.includes(question), question);
+    for (const name of copy.side) assert.ok(source.includes(`| ${name} |`), name);
+  });
+
+  test(`0.16.0: ${language.lang} a filled 0.14.0 or 0.15.0 form still generates without overwriting its answers`, (t) => {
+    const lines = formFor(language).split('\n');
+    const [details, signature] = copy.side;
+    const [oldDetails, oldSignature] = copy.oldSide;
+    const legacy = lines.map((line, index) => {
+      if (line.includes(copy.prefill) || copy.milestones.some((row) => line.startsWith(`| ${row} |`))) return '';
+      if (line.startsWith(`| ${copy.headers[0]} |`)) return `- ${copy.oldDates}\n\n> ${copy.idea}`;
+      if (line.includes(copy.why)) return '';
+      if (line === '|---|---|---|' && lines[index - 1].startsWith(`| ${copy.headers[0]} |`)) return '';
+      if (line.startsWith('- **') && line.includes(copy.samples)) return line.slice(0, line.indexOf(' ('))
+        + (language.lang === 'en' ? ' (ask for a copy)' : ' (اطلب نسخة)');
+      if (line.startsWith('  ') && line.includes(copy.access)) return '  Who gives us access?';
+      if (line.includes(copy.access)) return line.slice(0, line.indexOf(copy.access)).trimEnd() + ' ومن يمنحنا الوصول؟';
+      if (line === `| ${signature} | | | |`) return `| ${oldSignature} | Cedar Designer | Signed | 2026-11-22 |`;
+      return line.replace(`| ${details} | |`, `| ${oldDetails} | Cedar Designer |`);
+    }).join('\n');
+    const followup = withTableRows(legacy, language.open,
+      `| 1 | ${tableIdea} | ${language.missing} | ${language.blocks} | Cedar | 1 |`);
+    const source = path.join(workspace(t), 'meeting-form.md');
+    fs.writeFileSync(source, followup);
+
+    const result = run(source);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(fs.readFileSync(source, 'utf8'), followup, 'preserve the original file byte for byte');
+    const html = entityDecode(fs.readFileSync(path.join(path.dirname(source), 'meeting-form.html'), 'utf8'));
+    assert.ok(html.includes(`<dt>${details}</dt><dd>Cedar Designer</dd>`));
+    assert.ok(html.includes(`<th scope="row">${signature}</th><td>Cedar Designer</td><td>Signed</td><td>2026-11-22</td>`));
+    assert.ok(html.includes(copy.idea), 'the existing follow-up question is preserved');
+    assert.doesNotMatch(html, /class="timeline-table"/, 'the old deadline is not turned into guessed dates');
+  });
+}
+
+test('0.16.0: the published skill and examples use our side wording', () => {
+  const scan = (folder) => {
+    for (const file of fs.readdirSync(folder, { withFileTypes: true })) {
+      const filename = path.join(folder, file.name);
+      if (file.isDirectory()) scan(filename);
+      else if (file.isFile()) {
+        let content = fs.readFileSync(filename, 'utf8');
+        if (filename === SCRIPT) {
+          // The LEGACY table holds the exact labels used by saved 0.14.0 and 0.15.0 forms.
+          content = content.replace(/^const LEGACY = \{\r?$[\s\S]*?^\};\r?$/m, '');
+        }
+        assert.doesNotMatch(content, /our team|فريقنا/i, filename);
+      }
+    }
+  };
+  scan(SKILL);
+});
+
+test('Round 3: the meeting form stylesheet uses the approved Teal accent', (t) => {
+  const html = generate(t, formFor(TEMPLATE[0]));
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.match(css, /#0f766e\b/i);
+  assert.doesNotMatch(css, /#(?:24604d|205541|25352f)\b/i);
+});
+
+test('Round 3: the meeting form uses the system font stack without embedded fonts or URLs', (t) => {
+  const html = generate(t, formFor(TEMPLATE[0]));
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.match(css, /system-ui,\s*["']Segoe UI["'],\s*sans-serif\b/i);
+  assert.doesNotMatch(css, /@font-face|\burl\s*\(/i);
+});
+
+test('Round 3: A4 page margin boxes print the form name and both page counters', (t) => {
+  for (const language of TEMPLATE) {
+    const html = generate(t, formFor(language));
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    const arabic = language.lang === 'ar';
+    const start = arabic ? 'right' : 'left';
+    const end = arabic ? 'left' : 'right';
+    assert.match(css, /@page\b[^{]*\{[^}]*size\s*:\s*A4\b/i);
+    const match = (side) => css.match(new RegExp(`@bottom-${side}\\s*\\{([^}]*)\\}`, 'g'))?.join('\n');
+    assert.ok(match(start)?.includes(`${language.title} · ${language.project}`), 'form name and project at the start');
+    assert.match(match(end) || '', arabic ? /صفحة .*counter\(page\).* من .*counter\(pages\)/
+      : /Page .*counter\(page\).* of .*counter\(pages\)/);
+  }
+});
+
+function visibleText(markup) {
+  return entityDecode(markup.replace(/<\/[^>]+>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+}
+
+function stageStrip(html) {
+  const strip = html.match(/<ol\b[^>]*\bclass="stage-strip"[^>]*>([\s\S]*?)<\/ol>/)?.[1];
+  assert.ok(strip, 'the page shows the four-stage strip');
+  return [...strip.matchAll(/<li\b([^>]*)>([\s\S]*?)<\/li>/g)].map(([, attributes, content]) => ({
+    text: visibleText(content),
+    current: /\bclass="current"/.test(attributes),
+    ariaCurrent: /\baria-current="step"/.test(attributes),
+  }));
+}
+
+for (const language of TEMPLATE) {
+  test(`Round 3: ${language.lang} the stage strip names four stages and marks stage 1 on a blank form`, (t) => {
+    const stages = stageStrip(generate(t, formFor(language)));
+    assert.deepEqual(stages.map(({ text }) => text), language.lang === 'ar'
+      ? ['1 الهدف', '2 الأشخاص والعمل اليوم', '3 الاحتياجات والطريقة الجديدة', '4 اعتماد النطاق أو التوقف']
+      : ['1 The goal', "2 The people and today's work", '3 The needs and the new way', '4 Approve the scope, or stop']);
+    assert.deepEqual(stages.map(({ current }) => current), [true, false, false, false]);
+    assert.deepEqual(stages.map(({ ariaCurrent }) => ariaCurrent), [true, false, false, false]);
+  });
+
+  test(`Round 3: ${language.lang} a follow-up marks the stages of its open questions`, (t) => {
+    const decision = language.lang === 'ar' ? '10. القرار' : '10. The decision';
+    const userKind = language.lang === 'ar' ? 'نوع المستخدم' : 'Kind of user';
+    const html = generate(t, withTableRows(formFor(language), language.open,
+      `| 1 | ${language.firstQuestion} | ${language.missing} | ${language.blocks} | Cedar | 1 |`,
+      `| 2 | ${decision} | ${language.missing} | ${language.blocks} | Cedar | 1 |`,
+      `| 3 | ${userKind} | ${language.missing} | ${language.blocks} | Cedar | 1 |`));
+    assert.match(html, /<main[^>]+data-mode="open"/);
+    const stages = stageStrip(html);
+    assert.deepEqual(stages.map(({ current }) => current), [true, true, false, true]);
+  });
+
   test(`${language.lang}: a blank form shows every stage, labeled fields and paper signatures`, (t) => {
     const form = formFor(language);
     const html = generate(t, form);
     assert.match(html, new RegExp(`<html[^>]+lang="${language.lang}"[^>]+dir="${language.dir}"`));
     assert.match(html, /<main[^>]+data-mode="whole"/);
+    // Read the heading words across their printed number and title, and include the Section 9 field label.
+    const headingText = (heading) => heading.replace(/^((?:Stage|المرحلة) \d+): /u, '$1 ')
+      .replace(/^(\d+)\. /, '$1 ').toLowerCase();
+    const headings = [...html.matchAll(/<(h[23]|label)\b[^>]*>([\s\S]*?)<\/\1>/g)]
+      .map(([, , markup]) => headingText(visibleText(markup)));
     for (const heading of form.match(/^###? (?:Stage \d|المرحلة \d|\d+\.).*$/gm)) {
-      assert.ok(entityDecode(html).includes(heading.replace(/^#+ /, '')), heading);
+      assert.ok(headings.includes(headingText(heading.replace(/^#+ /, ''))), heading);
     }
     assert.ok(entityDecode(html).includes(language.firstQuestion));
     assert.ok(entityDecode(html).includes(language.signatures));
@@ -123,8 +292,8 @@ for (const language of TEMPLATE) {
     const html = generate(t, withTableRows(answered, held, '| 1 | 2026-11-22, Cedar | 1 | Cedar manager | |'));
     assert.match(html, /<main[^>]+data-mode="incomplete"/);
     assert.match(entityDecode(html), language.lang === 'ar'
-      ? /50 من الأسئلة بلا إجابة\. حدّث «ما زال مفتوحًا»/
-      : /50 questions are blank\. Update Still open/);
+      ? /58 من الأسئلة بلا إجابة\. حدّث «ما زال مفتوحًا»/
+      : /58 questions are blank\. Update Still open/);
     assert.doesNotMatch(entityDecode(html), language.clear);
     assert.ok(!html.includes('id="answer-1"'));
     for (const id of ['meeting-date', 'meeting-place', 'meeting-attendees', 'meeting-new']) {
@@ -163,7 +332,7 @@ for (const language of TEMPLATE) {
     const [before, section] = form.split(heading);
     assert.ok(section, 'the form includes section 6');
 
-    for (const [when, blank] of [[timing[0], 48], [timing[1], 49]]) {
+    for (const [when, blank] of [[timing[0], 56], [timing[1], 57]]) {
       const withRequirement = before + heading + section.replace('| 1 | | | |', `| 1 | ${requirement} | ${when} | |`);
       assert.notEqual(withRequirement, form, 'the fixture fills in a section 6 row');
       const html = generate(t, withRequirement);
@@ -180,6 +349,7 @@ test('the approved Cedar form reaches the all-clear with an empty check for a la
   const html = generate(t, cedar);
   assert.match(html, /<main[^>]+data-mode="clear"/);
   assert.match(html, /Nothing is open\./);
+  assert.ok(html.includes('<th scope="row">Handover / go-live</th><td>2026-11-30</td><td>fixed</td>'));
 });
 
 test('explicitly answered fields allow the all-clear', (t) => {
@@ -200,17 +370,17 @@ test('Cedar follow-ups keep recorded note signatures and leave unsigned rows rea
   const followup = withTableRows(cedar, 'Still open',
     '| 1 | When will the client send the records? | missing | yes | Cedar | 4 |');
   const client = '| For the client | the clinic manager | signed | 2026-10-02 |';
-  const builder = '| For our team | the builder | signed | 2026-10-02 |';
+  const builder = '| For our side | the builder | signed | 2026-10-02 |';
   assert.ok(cedar.includes(client) && cedar.includes(builder), 'the Cedar example records both note signatures');
 
   const clientSigned = '<th scope="row">For the client</th><td>the clinic manager</td><td>signed</td><td>2026-10-02</td>';
-  const builderSigned = '<th scope="row">For our team</th><td>the builder</td><td>signed</td><td>2026-10-02</td>';
-  const builderUnsigned = '<th scope="row">For our team</th><td>the builder</td><td></td><td></td>';
+  const builderSigned = '<th scope="row">For our side</th><td>the builder</td><td>signed</td><td>2026-10-02</td>';
+  const builderUnsigned = '<th scope="row">For our side</th><td>the builder</td><td></td><td></td>';
 
   const fullySigned = generate(t, followup);
   assert.ok(fullySigned.includes(clientSigned) && fullySigned.includes(builderSigned));
 
-  const partial = followup.replace(builder, '| For our team | the builder | | |');
+  const partial = followup.replace(builder, '| For our side | the builder | | |');
   const partlySigned = generate(t, partial);
   assert.ok(partlySigned.includes(clientSigned) && partlySigned.includes(builderUnsigned));
 

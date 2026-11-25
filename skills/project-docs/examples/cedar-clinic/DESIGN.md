@@ -37,10 +37,10 @@ from the internet.
 - **Error message:** error color, bold, right under the thing that went wrong, saying what to do next.
 
 ## Must-have rules
-- Works on a phone and a computer.
+- **Devices:** phones and computers, in a browser.
 - Text contrast at least 4.5 : 1 (checked when this look was picked).
 - Input edges and other controls stand out at least 3 : 1 (they use Quiet text, never Lines).
-- Everything works with the keyboard, with a visible focus ring.
+- Wherever a keyboard is used, all interactions support it and have a visible focus ring.
 - Motion stays off for people who turn it off.
 
 ## Ready values

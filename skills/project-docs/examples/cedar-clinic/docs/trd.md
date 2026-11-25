@@ -20,6 +20,7 @@
 
 ## Where it lives
 - The clinic's own in-country server, in a Docker container, because the work rules keep patient data in the country.
+- Patients and staff use it in a browser on phones and computers, as named in the PRD.
 - TBD: the release recovery decision. Decided when the IT lead confirms the available Docker recovery paths and the clinic manager confirms who decides to go back, the signal, and what to do if the previous image cannot read the saved visits.
 
 ## Outside services
@@ -47,7 +48,7 @@
 - **Speed:** every page opens in under 2 seconds on a phone on 4G.
 - **Recovery:** before real patient records are stored, the IT lead demonstrates restoring a backup into an isolated copy and reading the same visits back; a test never overwrites live records.
 - **Available:** patients book at any hour; the front desk needs it 8:00 to 18:00. When it is down, the desk takes bookings by phone as before.
-- **Accessibility:** text that stays readable when an older patient makes it larger; readable contrast, works with the keyboard, respects reduced motion (see DESIGN.md).
+- **Accessibility:** text that stays readable when an older patient makes it larger, readable contrast, keyboard access wherever a keyboard is used, and reduced motion (see DESIGN.md).
 
 ## How the code is written
 - **Language:** TypeScript.

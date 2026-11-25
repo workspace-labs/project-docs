@@ -4,10 +4,12 @@
 
 - Writes the planning documents a project needs **before anyone builds it**, in this order, and keeps
   its maintenance record after handover:
-  0. *(For a client project, make the **client meeting form** first, as `docs/meeting-form.md` and a printable,
-     editable `docs/meeting-form.html`. Four stages take as many meetings as needed. After each meeting,
-     only open questions go to the next one. The person decides when its answers are ready for a draft PRD.
-     Stage 4 is a separate scope decision after that draft. Personal projects start at the PRD.)*
+  0. *(For a client project, ask for the name and idea together, and carry the supplied words into the
+     **client meeting form** in `docs/meeting-form.md` and the printable, editable `docs/meeting-form.html`.
+     Recommend how to begin the first meeting. Four stages take as many meetings as needed. After each
+     meeting, carry unresolved answers and questions a builder would still have to guess into **Still open**.
+     The person decides when its answers are ready for a draft PRD. Stage 4 is a separate scope decision
+     after that draft. Personal projects start directly with the PRD questions.)*
   1. **PRD** (`docs/prd.md`): what it is, why, who it's for, who decides (owner, scope, prototype, acceptance,
      others), how the work runs today and with it, what it must do (each with a check), what it will NOT do, what
      comes later, assumptions and risks, how we know it worked, dates and budget.
@@ -31,7 +33,8 @@
      the visit results, and retiring it.
   8. **Plan** (`docs/plan.md`): small steps you can see work, each with a check, then, when someone else
      decides, the fixed delivery steps: prototype, functional test, security test, acceptance test (UAT) on a
-     test copy, guides and training, install, live test, go-live, handover.
+     test copy, guides and training, install, live test, go-live, handover. A solo owner can start with a
+     disposable screen prototype when the first real step waits on a choice the prototype can do without.
 - **Maintenance record** (`docs/maintenance.md`) starts at handover or at a first maintenance request
   once the Handover is approved. For a personal project, create it only on request. It keeps upcoming visit
   dates, reported results and requests, without a stamp or an approval round. The approved Handover
@@ -44,8 +47,12 @@
   current Plan; this adds no required document or approval round for unchanged decisions.
 - **Asks first.** For planning documents, ask click questions in small rounds of 2–3 and read the answers
   back. Write the draft after "yes, that's it".
-- **Approval.** A planning document is a draft until the person or their client approves it. Its
-  **Approved** stamp gives the date and approver. Each change makes v2, v3.
+- **Approval.** The client approver named in **Who decides** approves the PRD, proposed success checks
+  and Handover. The person can approve technical documents, with client facts supplied by the client
+  or recorded as `TBD`. Each **Approved** stamp gives the date and approver, and changes raise the version.
+- **Builder check.** Before Plan approval, show which missing answers were settled, which go on the
+  next client form, and which are recorded as a `TBD`. A builder starts a step only with the owner's word
+  to build, Approved documents for the step, and no blocking `TBD`.
 - **Locks.** Choices in the TRD and DESIGN.md are locked once approved. Only the person changes them,
   and the old choice stays visible with a dated "Changed" line.
 - **Resumes.** It checks any maintenance dates first, then reads what the project already has and
