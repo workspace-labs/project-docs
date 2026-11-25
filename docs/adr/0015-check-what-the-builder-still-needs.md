@@ -1,6 +1,6 @@
 # 0015. Check what the builder still needs
 
-- Status: Proposed
+- Status: Accepted (by the owner, 2026-11-25)
 - Date: 2026-11-25
 
 ## Context

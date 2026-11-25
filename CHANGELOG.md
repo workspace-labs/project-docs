@@ -2,6 +2,10 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.16.2] - 2026-11-25
+
+- ADR 0015, "Check what the builder still needs", is Accepted. Nothing else changed.
+
 ## [0.16.1] - 2026-11-25
 
 - New README picture: the steps now include "Ready to build", beside a printed client meeting form in

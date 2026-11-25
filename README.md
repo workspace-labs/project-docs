@@ -17,7 +17,7 @@ the look, and scripts for the meeting and Plan pages. **Nothing to install** to 
 documents or to open the pages. Generating the meeting and Plan pages uses Node.js 18 or newer.
 The Markdown files remain usable on their own.
 
-**Version 0.16.1** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.16.2** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 

@@ -1,7 +1,11 @@
 # How project-docs was tested
 
-**Last verified 2026-11-25 · version 0.16.1.** All 283 automated tests passed on macOS arm64 with
+**Last verified 2026-11-25 · version 0.16.2.** All 283 automated tests passed on macOS arm64 with
 Node.js 22.14.0, with zero skips.
+
+## 0.16.2 — ADR 0015 accepted
+
+- Only the ADR, its index, `README.md`, `CHANGELOG.md` and this file changed. `node --test` passed 283/283.
 
 ## 0.16.1 — New README picture
 
