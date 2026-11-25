@@ -1,7 +1,31 @@
 # How project-docs was tested
 
-**Last verified 2026-11-25 · version 0.16.2.** All 283 automated tests passed on macOS arm64 with
-Node.js 22.14.0, with zero skips.
+**Last verified 2026-11-25 · version 0.17.0.** All 307 automated tests passed on macOS arm64 with
+Node.js 20.20.2, with zero skips. The builder reported the same result on Node.js 22.14.0.
+
+## 0.17.0 — Develop a built project
+
+- **Automated checks.** `node --test` at `266bf9666d53b295fcbde76a76429480aae0ce6c` passed 283/283.
+  Round 1 added 6 tests; all 6 failed on a copy of that baseline and passed on the branch (289/289).
+  Round 2, the health check, added 18 more (307/307, zero failures or skips). The reviewer broke the
+  new guide text five ways on a scratch copy (the audit's "Never install it" removed in English and in
+  Arabic, "The check only reports" replaced, dates-after-sorting replaced, two homes for a finding
+  removed); the new tests caught each one.
+- **What stayed the same.** `SKILL.md` is 173 lines. No heading was added to any document template.
+  The scripts, the meeting form, the assets and the examples are unchanged from 0.16.2.
+- **Plan page.** `node skills/project-docs/scripts/plan-page.js` made the page from a small development
+  plan whose first step changes nothing (3 steps, 0 checked), in a scratch folder. The builder also made
+  the English and Arabic pages from copies of the Cedar Clinic plan with a development first step.
+- **Agent exercise.** The builder ran the Word Tally case in `tests/behavioral-cases.md` with a fresh
+  agent on a copy, without `workflow-project` and without a health audit skill: the agent confirmed
+  today first, said no health audit was run, gave one confirmed finding with its file and line, asked
+  the simulated owner to sort it, and left the tool's code unchanged. The reviewer did not repeat it.
+- **Release.** `node --test` passed 307/307 and `node tools/font-ranges.js --check` matched every TTF.
+  `dist/project-docs.zip` holds 81 files under one `project-docs/` root, with no tests, PDFs or
+  `.DS_Store` files.
+- **Not rerun.** The Design preview and the meeting page were not opened again; nothing under
+  `assets/preview/` or `scripts/` changed. The Pandoc comparison was not rerun for the same reason.
+  The skill's own drawn workflow and the README picture do not show the development road yet.
 
 ## 0.16.2 — ADR 0015 accepted
 

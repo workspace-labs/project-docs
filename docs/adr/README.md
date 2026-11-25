@@ -20,6 +20,7 @@ change it: a new record replaces it, and the old one names its successor.
 | [0013](0013-client-discovery-runs-in-four-stages.md) | Client discovery runs in four stages | Accepted | 2026-11-22 |
 | [0014](0014-keep-a-maintenance-record-after-handover.md) | Keep a maintenance record after handover | Accepted | 2026-11-23 |
 | [0015](0015-check-what-the-builder-still-needs.md) | Check what the builder still needs | Accepted | 2026-11-25 |
+| [0016](0016-confirm-today-before-planning-a-change.md) | Confirm today before planning a change | Accepted | 2026-11-25 |
 
 0004–0007 record decisions already in the shipped skill. They were written down and accepted by the owner
 on 2026-11-04.

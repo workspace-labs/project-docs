@@ -2,6 +2,17 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.17.0] - 2026-11-25
+
+- Develop a built project from a confirmed account of how it works today. Mark PRD lines that work
+  today or will change, and let the person decide what to do with each confirmed gap.
+- Start the development Plan with a safe copy and a record of the checks for what must keep working.
+  Repeat those checks at the end.
+- Check code health before planning the change, then let the owner sort findings before agreeing dates and budget.
+- ADR 0016, "Confirm today before planning a change", is Accepted.
+
+See [the 0.17.0 checks](TESTING.md#0170--develop-a-built-project).
+
 ## [0.16.2] - 2026-11-25
 
 - ADR 0015, "Check what the builder still needs", is Accepted. Nothing else changed.

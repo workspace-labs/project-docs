@@ -15,6 +15,8 @@ Turn what you find into proposed answers, so the person confirms instead of star
 client project using the [meeting form](meeting-form.md), a Stage 4 **Stop** ends the work. Draft the PRD
 once the person confirms the answers are clear enough. Scope approval takes place in its own Stage 4 meeting.
 
+For a [development](develop.md), confirm how the built project works today before planning the change.
+
 ## The questions
 
 Ask at most 3 questions a round. Once the person has said something to build from, offer 2 or 3 short
@@ -61,6 +63,8 @@ invent a fact, a number or a user group.
     each date given, keep whether it is fixed or can move. Keep why the dates matter and what slips
     would affect. Is there a budget, and does it cover the prototype and the tests? "No date" and
     "no budget" are answers. The Plan takes its `Target` dates from this section.
+    For a development, ask about dates and budget only after the person has sorted the gaps and health
+    findings.
 
 For a project built only for oneself, skip asking other workers. "What goes wrong without it?" and
 "How does the work run today?" may be answered "None". The current and planned workflows can be one
@@ -96,6 +100,7 @@ renumbered).
 
 Under each `M` line goes one `Check:` line, two spaces in: the acceptance test (UAT) tries these checks.
 After approval, a change to the scope is a `Changed` line, approved by the person who approves the scope.
+For a [development](develop.md), put its mark at the end of the `M` line and keep the `Check:` directly below.
 
 **Who decides** has these five lines, in this order. Someone who builds it only for themselves writes one
 line instead, `- **Owner**: <who>, alone.`. Their [Plan](plan.md) skips the fixed client delivery
@@ -160,6 +165,9 @@ for themselves writes under **من يقرر** one line, `- **المالك**: <م
 تتجاوز [خطة](plan.md) المشروع الشخصي الفردي خطوات التسليم الثابتة للعميل، ويمكن أن تبدأ بنموذج أولي
 للشاشات يُستبعد بعد تجربته إذا كان ذلك مفيدًا.
 
+عند [تطوير مشروع قائم](develop.md#in-arabic)، ابدأ بتأكيد طريقة عمله اليوم. ضع علامة البند في نهاية سطر
+`M` وأبقِ سطر «الفحص» تحته مباشرة.
+
 في مشروع للعميل، يعتمد النطاقَ من سُمّي في خانة **يعتمد النطاق**. عند إعادة عرض المسودة في المرحلة الرابعة،
 اعرض كل سطر «الفحص» كتبته أنت وكل فحص اقترحته تحت **كيف نعرف أنه نجح** على أنه مقترح. اطلب من جهة اعتماد
 النطاق تأكيد كل فحص أو تصحيحه صراحةً. يبقى الفحص مفتوحًا عند عدم الرد. إذا اعتُمد باقي النطاق، سجّل ذلك
@@ -169,6 +177,8 @@ for themselves writes under **من يقرر** one line, `- **المالك**: <م
 «ما الذي يتعثر من دونه؟» و«كيف يسير العمل اليوم؟» وكذلك في **المواعيد والميزانية**. في مشروع العميل، انقل
 مواعيد نموذج الاجتماع إلى هذا القسم مع بيان ما إذا كانت ثابتة أو قابلة للتغيير، ولماذا تهم، وما أثر تأخيرها.
 تأخذ الخطة مواعيدها المستهدفة من هنا.
+عند تطوير مشروع قائم، اسأل عن المواعيد والميزانية بعد أن يقرر الشخص ما سيفعله بكل ثغرة وكل ملاحظة
+من فحص سلامة المشروع.
 
 ```markdown
 # متطلبات المنتج (PRD): <اسم المشروع>

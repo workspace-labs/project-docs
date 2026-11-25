@@ -70,6 +70,7 @@ to them or gives their own dates. The full visit includes a real restore where a
   fix and the PRD stays as approved.
 - **Change:** a request is outside the approved PRD. Tell the person a new, approved version of the
   PRD is needed before building. Follow the normal change process to draft, version and approve it.
+  Use [develop.md](develop.md) to mark the new PRD version.
 - **Health job:** regular care that belongs to a visit.
 
 Quote the approved PRD line or `Check:` you relied on in your reply. For a request outside scope,

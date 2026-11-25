@@ -17,7 +17,7 @@ the look, and scripts for the meeting and Plan pages. **Nothing to install** to 
 documents or to open the pages. Generating the meeting and Plan pages uses Node.js 18 or newer.
 The Markdown files remain usable on their own.
 
-**Version 0.16.2** · 283 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
+**Version 0.17.0** · 307 tests · scope, limits and earlier preview/platform results are recorded in [how it was tested](TESTING.md).
 
 ---
 
@@ -58,6 +58,9 @@ None lines. These add no planning document or approval stage.
 
 1. **It reads what you already have** and continues from the first document that isn't approved. In a
    project that already has code, it writes what it finds as "found in code" and asks only about the gaps.
+   For a development, it confirms how the project works today, checks the health of its code, and
+   records your decisions on gaps and findings before planning the change. The plan checks what
+   must keep working before and after the change.
 2. **It asks 2 or 3 questions a round**, with click choices and its recommended pick, never a wall of
    questions. Later documents reuse earlier answers: it never asks twice.
 3. **It reads it back** and writes nothing until you say "yes, that's it".

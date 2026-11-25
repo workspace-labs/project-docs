@@ -58,6 +58,9 @@
 - **Resumes.** It checks any maintenance dates first, then reads what the project already has and
   continues planning from the first document that is not approved.
 - **Old projects.** It reads the code, writes what it finds as "found in code", and asks only about the gaps.
+  For a development, it confirms how the project works today, checks the health of its code, and
+  records the person's decisions on gaps and findings before planning the change. The plan checks
+  what must keep working before and after the change.
 - English by default; **Arabic** (right to left) when asked.
 - Works with Claude Code, Claude in the browser, ChatGPT/Codex, GitHub Copilot and Cursor.
 

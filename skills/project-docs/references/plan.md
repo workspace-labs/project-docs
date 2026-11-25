@@ -10,7 +10,11 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
 
 ## Gather first
 
-- **PRD → What it must do:** every `M` line must be covered by at least one step.
+- **PRD → What it must do:** every `M` line must be covered by at least one step. For a [development](develop.md),
+  cover each new line and each `(changes)` line in a building step. Cover every `(works today)` line in
+  Step 1 and in the checks at the end.
+  Include every health finding the person chose to fix now in a building step and cite its `M` line
+  or its TRD, Data or Security rule in **Covers**.
 - **Every open `TBD`**, in any document: a step that needs it is blocked. A back end (anything under the
   TRD's **Brain** that is not `None`) adds one step of its own, after the steps that build the back end:
   write the API guide, `docs/api.md` (written during the build, never up front).
@@ -22,10 +26,15 @@ Gather first · How to make the steps · Delivery steps · The status of a step 
 
 ## How to make the steps
 
-- **Step 1 is the thinnest version that works end to end**: one real path from start to finish, even if
-  plain (one doctor, one day, one booking that really saves and really shows up). When the meeting form
-  says what the client wants to try first, that is the path. Put the core path before the steps that
-  depend on it, including translations, guides and tests of those parts.
+- **For a development, Step 1 changes nothing.** The builder makes a safe copy to work on and keeps
+  the owner's working version. Before making any change, run every `(works today)` Check on the
+  untouched copy and record each real result under **How we know it works**. Tell the person about
+  any failure found before the change. It was already present, so the person sorts it like any other gap.
+- **The first building step is the thinnest version that works end to end.** This is Step 2 for a
+  development and normally Step 1 for a new project. Start with one real path from start to finish,
+  even if plain (one doctor, one day, one booking that really saves and really shows up). When the
+  meeting form says what the client wants to try first, that is the path. Put the core path before the
+  steps that depend on it, including translations, guides and tests of those parts.
 - **Each step finishes in one sitting** and ends with something the person can **try**, not just "code
   written".
 - **Each step names what it covers:** the PRD lines (`M1, M4`), or the TRD rule (`TRD: Languages`).
@@ -94,23 +103,26 @@ starts with its fixed name, exactly as written here, and may add a few words aft
 
 | Step | Where | Covers | Its check |
 |---|---|---|---|
-| **Prototype** | right after step 1, only when the project has screens | PRD: Who decides | the person who approves the prototype tries step 1's path and says go on, or what to change |
-| **Functional test** | after the building steps | every `M` line | every step's check run again in one go, plus every link to another system the TRD names |
+| **Prototype** | right after step 1 for a new project or right after the first step that builds the change for a development, only when the project has screens | PRD: Who decides | the person who approves the prototype tries the first path and says go on, or what to change |
+| **Functional test** | after the building steps | every `M` line | every step's check run again in one go, including every `(works today)` Check on the finished build, plus every link to another system the TRD names |
 | **Security test** | next | Security | every line of the Security page tried, ideally by someone who did not build it; every "only their own" try refused |
-| **Acceptance test (UAT)** | next | PRD: How we know it worked | on a test copy the testers can reach (a test server at the client, or the builder's computer), the tester the PRD names runs every `M` line's Check and every "How we know it worked" check that can be tried now, with real users; the one who signs, signs it off |
+| **Acceptance test (UAT)** | next | PRD: How we know it worked | on a test copy the testers can reach (a test server at the client, or the builder's computer), the tester the PRD names runs every `M` line's Check, including every `(works today)` Check, and every "How we know it worked" check that can be tried now, with real users. The person who accepts it signs it off |
 | **Guides and training** | next | Handover | the guides the Handover document lists are written, and the training is held |
 | **Install** | next | TRD: Where it lives | installed on the place the TRD names (the client's network or servers), with its secrets in place |
 | **Live test** | next | TRD: Where it lives | the main checks run again there, on the real network, by the client |
 | **Go-live** | next | Handover | the announcement goes out, people start using it, the old way stops as the Handover says; a "How we know it worked" check that needs time is looked at when its time comes |
 | **Handover** | last | Handover | everything under "What is handed over" is delivered, and the person who receives it signs |
 
+A solo owner's development starts with the same Step 1 and repeats every `(works today)` Check at
+the end of the plan.
+
 If the `checkflow` skill is installed, offer to run it after the Security test and before the Acceptance
 test. It is not a plan step of its own, and a plan without these steps offers it before the handover.
 
-**A prototype can run before the database.** When the first real step waits for a `TBD` the screens do
-not need, the Prototype can come first as step 1, including on a solo project with screens. It shows the
-same path on the builder's computer, using made-up data kept only in the screens. A Prototype that follows
-the first real step uses an isolated test copy. Its made-up data and screens never grow into the product.
+**A prototype can run before the database.** On a new project, when the first real step waits for a
+`TBD` the screens do not need, the Prototype can come first as step 1, including on a solo project with
+screens. It shows the same path on the builder's computer, using made-up data kept only in the screens.
+A Prototype that follows the first real step uses an isolated test copy. Its made-up data and screens never grow into the product.
 Real steps start from the approved documents. The Prototype's check confirms it stays separate and that
 its made-up data and screens stay out of the real build. The same [Ready to build](#ready-to-build) gate
 applies to the documents and choices the Prototype itself needs.
@@ -321,6 +333,20 @@ Steps run in order. Status: not started · ⛔ waits for a TBD choice · ◐ bui
 When the person asks for Arabic, write the same document in Arabic with these headings, these exact
 statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 
+عند [تطوير مشروع قائم](develop.md)، تغطي خطوات البناء كل بند `M` جديد وكل بند موسوم بـ`(يتغير)`.
+تغطي الخطوة الأولى وفحوص نهاية الخطة كل بند موسوم بـ`(يعمل اليوم)`.
+أدرج كل ملاحظة من فحص سلامة المشروع اختار الشخص إصلاحها الآن في خطوة بناء، واذكر تحت **تغطي**
+بندها `M` أو القاعدة المعنية من TRD أو البيانات أو الأمان.
+
+**لا تغيّر الخطوة الأولى شيئًا.** يُعدّ المطوّر نسخة آمنة للعمل عليها، ويحتفظ المالك بنسخته العاملة.
+يُجري المطوّر كل فحص لبند موسوم بـ`(يعمل اليوم)` على النسخة كما هي قبل أي تعديل، ويسجّل النتيجة الفعلية
+لكل فحص تحت **كيف نعرف أنها تعمل**. إذا فشل فحص قبل التعديل، فأبلغ الشخص بأن الفشل سبق التعديل ودعه
+يقرر ما يفعل به كما يفعل مع أي ثغرة. في الخطوة الثانية، ابنِ أبسط مسار يحقق التغيير من البداية إلى النهاية.
+
+عند تطوير مشروع ذي شاشات لعميل، يأتي **النموذج الأولي** مباشرةً بعد أول خطوة تبني التغيير. بعد البناء، يعيد
+**الاختبار الوظيفي** و**اختبار القبول (UAT)** فحوص كل البنود الموسومة بـ`(يعمل اليوم)`. في تطوير مشروع
+فردي، ابدأ بالخطوة الأولى نفسها وأعد فحوص هذه البنود في نهاية الخطة.
+
 ضع المسار الأساسي قبل ما يعتمد عليه من ترجمة أو أدلة أو اختبارات. إذا توقفت خطوة بسبب قرار لم يُحسم،
 تنتظر الخطوة التي تعتمد عليها القرار نفسه، ولو كان الاعتماد غير مباشر. عند وجود أكثر من قرار مفتوح،
 اكتب الأول حسب ترتيب الوثائق (PRD، ثم TRD، ثم التصميم، ثم البيانات، ثم الأمان، ثم التسليم) وترتيب الأسطر
@@ -342,7 +368,7 @@ statuses and these delivery step names. Keep `M1`, `M4` and `TRD` as they are.
 ولا يوقفها قرار مفتوح. قد تحتوي الوثيقة المعتمدة على قرار لم يُحسم. راجع أيضًا الخطوات التي تعتمد عليها.
 إذا غاب شرط، قل ما الذي ينقص ولا تبنِ شيئًا. سمِّ القرار المفتوح ومن يحسمه واعرض حسمه في وثيقته.
 
-يمكن أن يكون النموذج الأولي أول خطوة لمشروع ذي شاشات، حتى لو كان مشروعًا فرديًا، إذا تعذّر بدء العمل
+في المشروع الجديد ذي الشاشات، يمكن أن يكون النموذج الأولي أول خطوة، حتى لو كان المشروع فرديًا، إذا تعذّر بدء العمل
 الفعلي بسبب قرار لا تحتاجه الشاشات. يستخدم بيانات مختلَقة على حاسوب المطوّر وحده. وإذا جاء بعد الخطوة
 الفعلية الأولى، فيستخدم نسخة اختبار منفصلة. تبدأ الخطوات الفعلية من الوثائق المعتمدة، ويؤكد فحص
 النموذج أن شاشاته وبياناته المختلَقة تبقى خارجه. شروط البدء نفسها تسري على ما يحتاجه النموذج.

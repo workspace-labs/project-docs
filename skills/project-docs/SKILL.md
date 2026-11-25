@@ -1,6 +1,6 @@
 ---
 name: project-docs
-description: "Use when someone wants a project's documents: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for four stages before building (the goal, today's work, the needs, approve the scope or stop), with as many meetings as needed. After handover, keeps the maintenance record with visit dates, results and client requests. Also when asked to write, update, continue or approve any of the planning documents, to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md or docs/maintenance.md. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
+description: "Use when someone wants a project's documents: a PRD (what and why), a TRD (what it is built with), a design brief or DESIGN.md (the look), a data or database map, a security page, a handover plan (who receives, runs and maintains it), or a step-by-step build plan with its tests, UAT and handover. Also a blank client meeting form for four stages before building (the goal, today's work, the needs, approve the scope or stop), with as many meetings as needed. After handover, keeps the maintenance record with visit dates, results and client requests. Also when asked to write, update, continue or approve any of the planning documents, to 'plan this project properly before we build', or 'where are we?' on a project that has docs/plan.md or docs/maintenance.md. Also to develop, extend or change a project that is already built. It asks first, reads back, and never picks the technology by itself. Not for drawing the screens (frameflow), a process workflow or swimlane (workflow-project), or building the project itself."
 ---
 
 # project-docs
@@ -12,7 +12,7 @@ read back the answers and record approval. After the project is handed over, kee
 
 | # | Document | File | When | Read first |
 |---|---|---|---|---|
-| 1 | **PRD**: what we build and why | `docs/prd.md` | always | [references/prd.md](references/prd.md) |
+| 1 | **PRD**: what we build and why | `docs/prd.md` | always | [references/prd.md](references/prd.md), plus [references/develop.md](references/develop.md) for development |
 | 2 | **TRD**: what it is built with | `docs/trd.md` | always, after an approved PRD | [references/trd.md](references/trd.md) |
 | – | *Offer the app flow* | *(frameflow)* | when it has screens | see below |
 | 3 | **Design brief**: the look | `DESIGN.md` (project root) | when it has screens | [references/design.md](references/design.md) |
@@ -21,7 +21,7 @@ read back the answers and record approval. After the project is handed over, kee
 | 6 | **Handover**: after it is built | `docs/handover.md` | when handed to someone, or for a solo owner's requested maintenance record | [references/handover.md](references/handover.md) |
 | 7 | **Plan**: small steps, then delivery | `docs/plan.md` | always, last | [references/plan.md](references/plan.md) |
 
-Load **only** the reference file of the document you are writing: its questions and its exact headings.
+Load **only** the reference file for the document you are writing (its questions and exact headings) and any case reference that applies.
 
 ## Start: where are we?
 
@@ -45,8 +45,8 @@ Load **only** the reference file of the document you are writing: its questions 
    lines; reuse what another document already answers; ask only for the missing parts, or write `TBD`. Never
    invent an approver, a check or an approval. Then raise the version, set it to `Draft`, and approve it the
    normal way, before writing anything that needs the new parts (the Handover, the delivery steps).
-4. A project that already has code: write what you find and mark it `(found in code)`. Ask only about the
-   gaps. Nothing found in code is approved until the person confirms it.
+4. A project that already has code: write what you find and mark it `(found in code)`. Ask only about the gaps. Nothing found in code is approved until the person confirms it.
+   To **develop** it (a new feature or a change to how it works), read [references/develop.md](references/develop.md) first.
 5. A project with a `docs/scope.md`: start the PRD from it. Once `docs/prd.md` exists it is the project's
    scope. Never delete `scope.md`: the person decides what to do with it.
 6. **Language:** English by default. For Arabic, use the headings and fixed words from **In Arabic** in each
@@ -165,7 +165,7 @@ After Plan approval, name step 2. If a skill in the chain is missing, say so and
 
 | File | What it is |
 |---|---|
-| `references/prd.md` … `references/plan.md` | one per document: its questions and its exact headings |
+| `references/prd.md` … `references/plan.md` · [`references/develop.md`](references/develop.md) | questions and exact headings for each document, plus the guide to developing a built project |
 | `references/meeting-form.md` | the client meeting form, its four stages and how its answers start the PRD |
 | `assets/preview/` | the Design preview page: shows 2 or 3 looks side by side, checks contrast, fonts inside |
 | `scripts/plan-page.js` | makes `docs/plan.html` from `docs/plan.md`: the plan as a board whose cards open (Node.js, no packages); `scripts/markdown-blocks.js` reads the plan's Markdown for it |

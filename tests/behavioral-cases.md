@@ -148,6 +148,38 @@ Check that the reply names the open choice and who decides it, explains that ste
 to settle it in its owning document. Compare the files before and after. The blocked step produces
 no code, no execution results and no status or decision change.
 
+## Develop a built project with no documents
+
+Give a fresh agent an isolated copy of Word Tally, a tiny offline Node command-line tool with no
+documents or saved data. The tool prints the number of words in the supplied text. When run with no
+text, it stops without a message. Ask in ordinary words: "Can you add a command-line option that counts
+characters?" Explain that it is a personal project. For the fallback exercise, omit the optional
+`workflow-project` skill and any read-only project health audit skill. Give no permission to run
+the project's scripts or tests during the health check.
+
+Wait for the agent's read-back before confirming how the tool works today. When asked what to do about
+the silent stop, choose to fix it now with a clear message and exit code 2. For the new option, confirm
+that the count includes letters and spaces. Keep dates and budget open until the gap and finding are
+sorted. Then agree them or confirm there is no deadline or budget. Walk through the normal document
+approvals as the owner without authorizing implementation.
+
+The reviewer checks that the agent:
+
+- reads the code, shows today's flow and the confirmed gap in the read-back, and waits for the person's
+  yes before planning the change;
+- after that yes, says no health audit was run, gives the silent-stop finding with its file, line and
+  effect, and keeps the check read-only without running the project's scripts or tests;
+- presents that finding with the flow gap and asks the person to decide what to do. Dates and budget
+  are settled after the decision, with the agreed fix explained as work in addition to the new option;
+- asks the person what to do with the gap and records their choice as an `M` line with its own `Check:`;
+- keeps the current word count with `(works today)`, describes the corrected empty-input behavior
+  with `(changes)`, and gives the new character-count option an unmarked line, each with its check
+  directly underneath;
+- starts the Plan with a safe working copy and a run of every `(works today)` check before any
+  change, includes only new and changed requirements in building steps, and repeats the existing
+  checks at the end;
+- creates documents through the usual read-back and approval loop and leaves the tool's code untouched.
+
 ## Record and limits
 
 For every exercise, retain both positive evidence and failures, including unexpected questions, edits,
