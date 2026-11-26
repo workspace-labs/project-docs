@@ -1748,3 +1748,15 @@ test('with the data storage TBD, the prototype goes first and the saving steps w
   assert.ok(tbdRule.includes('Only the prototype can be built until this is chosen'), 'the TRD tells the client the prototype can go on');
   assert.doesNotMatch(tbdRule, /screen and the data storage are needed by the very first step/, 'the old "blocks everything" rule is gone');
 });
+
+// 0.17.1: Security sorts each setting by harm and keeps keys out of logs, errors and crash reports.
+test('0.17.1: Security sorts settings and keeps keys out of logs, errors and crash reports', () => {
+  const security = readMarkdown(path.join(SKILL, 'references', 'security.md')).replace(/\s+/g, ' ');
+  for (const rule of [
+    'can sit in a config file in git',
+    'go in environment variables',
+    'never in a config file',
+    'no key or password is ever written to a log, an error message or a crash report',
+    'a key that was printed is replaced',
+  ]) assert.ok(security.includes(rule), `security.md must keep: ${rule}`);
+});

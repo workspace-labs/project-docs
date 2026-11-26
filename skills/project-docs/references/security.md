@@ -36,6 +36,12 @@ Gather first · The questions · How it's protected · The read-back · The docu
 2. **Secrets:** the keys and passwords the project needs (a database password, a service key). Where will
    they live? Suggest the default: never in the code and never in git; in environment variables or the
    host's secret store, with `.env` files listed in `.gitignore`. Who can see them, and how is one replaced?
+   Sort each setting by how much harm it does if seen: ordinary settings (a port, a page address, a public
+   client ID) can sit in a config file in git; settings that differ per computer or per copy (test or live)
+   go in environment variables; keys and passwords go in environment variables or the secret store, never
+   in a config file. A key kept safely can still leak when it is printed: suggest the default that no key or
+   password is ever written to a log, an error message or a crash report, and that a key that was printed
+   is replaced.
 3. **If something goes wrong** (a leak, a break-in, a lost laptop): who is told first, what is done first
    (turn it off, change the keys), and who tells the people whose data was involved? If the owner is the
    only user, ask what they do first. Ask who else needs to be told only if other people or their data
@@ -76,7 +82,7 @@ needed. A fully offline tool with no saved data keeps its short **None** lines.
 ## The read-back
 
 > Staff sign in with Microsoft 365; patients with a code by text and see only their own visits. Keys live in
-> the server's environment, never in git. Personal data: patient names and phones, staff emails. If
+> the server's environment, never in git, and are never printed in a log or error. Personal data: patient names and phones, staff emails. If
 > something goes wrong, tell the IT lead first and change every key; the clinic manager tells patients.
 > Is that it?
 

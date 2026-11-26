@@ -1,7 +1,12 @@
 # How project-docs was tested
 
-**Last verified 2026-11-25 · version 0.17.0.** All 307 automated tests passed on macOS arm64 with
-Node.js 20.20.2, with zero skips. The builder reported the same result on Node.js 22.14.0.
+**Last verified 2026-11-26 · version 0.17.1.** All 308 automated tests passed on macOS arm64 with
+Node.js 20.20.2, with zero skips.
+
+## 0.17.1 — Keys stay out of logs
+
+- **Automated checks.** `node --test` passed 308/308. The new test fails on the 0.17.0 wording of
+  `references/security.md` and passes on 0.17.1.
 
 ## 0.17.0 — Develop a built project
 

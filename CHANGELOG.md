@@ -2,6 +2,16 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.17.1] - 2026-11-26
+
+- Security's secrets question now sorts each setting by how much harm it does if seen: ordinary
+  settings in a config file, per-computer settings in environment variables, keys and passwords never
+  in a config file. Why: a key kept in the right place still leaks when it is printed, so the
+  suggested default also says no key or password is ever written to a log, an error message or a crash
+  report, and a printed key is replaced.
+
+See [the 0.17.1 checks](TESTING.md#0171--keys-stay-out-of-logs).
+
 ## [0.17.0] - 2026-11-25
 
 - Develop a built project from a confirmed account of how it works today. Mark PRD lines that work
