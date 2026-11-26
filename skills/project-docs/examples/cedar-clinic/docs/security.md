@@ -11,7 +11,8 @@
 - **Database:** every query uses placeholders; nothing a patient types is glued into a query.
 - **Sign-in:** text-code sends and tries are limited (a 15-minute pause after 5 wrong codes). Staff sign-in checks Microsoft's signed answer before trusting it, and knows each staff member by their Microsoft account ID, never their email.
 - **Connections:** all website/API and Microsoft/text-service connections use HTTPS/TLS with certificate validation; certificate checks are never disabled.
-- **Audit:** when staff open, move or cancel a patient's visit, save the necessary staff/visit IDs, time, action and outcome in `audit_events`. Never copy names, phones, message text, codes or keys into it. Public doctor-list viewing is not audited.
+- **Audit:** when staff open, move or cancel a patient's visit, save the necessary staff/visit IDs, time, action and outcome in `audit_events`. No part of the app can change an event; events are removed only through Data's routes: the IT lead's 90-day cleanup, the retention cleanup removing an expired visit, removing a visit after the front desk verifies a patient's request, or the IT lead removing a departed staff member. The IT lead can search it by staff member, visit and time. Never copy names, phones, message text, codes or keys into it. Public doctor-list viewing is not audited.
+- TBD: where a request came from. Decided when the IT lead confirms what the server can reliably know; any new field for it goes through Data's approval first.
 
 Worth protecting: patient contact details and visits, sign-in codes and service keys. Not trusted: signed-out visitors and a patient asking for another patient's records.
 Can go wrong: a patient guesses another visit ID → Records checks and the Plan's two-account refusal check. Someone intercepts a network reply → Connections and the Plan's encrypted-connection check. Staff misuse access → Audit and its Plan check.

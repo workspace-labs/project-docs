@@ -470,7 +470,8 @@ for (const { folder, lang, showcase, staffProviderIdentity, network = false, aud
       [en ? 'Connections' : 'الاتصالات']: network,
       [en ? 'Audit' : 'التدقيق']: audit,
     };
-    const lines = section(doc('docs/security.md'), en ? "How it's protected" : 'كيف يُحمى').split('\n').filter((l) => l.startsWith('- '));
+    // An open decision (a TBD line) may sit under the protections; it is not a sixth protection.
+    const lines = section(doc('docs/security.md'), en ? "How it's protected" : 'كيف يُحمى').split('\n').filter((l) => l.startsWith('- ') && !L.tbd.test(l));
     assert.deepStrictEqual(lines.map((l) => (l.match(/^- \*\*(.+?):\*\* /) || [])[1]), Object.keys(applies));
     for (const [label, yes] of Object.entries(applies)) {
       const none = lines.find((l) => l.startsWith(`- **${label}:**`)).includes(`:** ${en ? 'None:' : 'لا ينطبق:'}`);
@@ -1759,4 +1760,95 @@ test('0.17.1: Security sorts settings and keeps keys out of logs, errors and cra
     'no key or password is ever written to a log, an error message or a crash report',
     'a key that was printed is replaced',
   ]) assert.ok(security.includes(rule), `security.md must keep: ${rule}`);
+});
+
+// 0.18.0: the audit record cannot be changed and can be searched; customers' records are kept apart.
+// Each rule is looked for in its own section and language, so removing any one of them fails.
+test('0.18.0: Security asks about several client companies and hardens the audit record', () => {
+  const flat = (t) => t.replace(/\s+/g, ' ');
+  const ref = readMarkdown(path.join(SKILL, 'references', 'security.md'));
+  const between = (text, from, to) => {
+    const a = text.indexOf(from);
+    assert.ok(a >= 0, `missing section start: ${from}`);
+    const b = text.indexOf(to, a + from.length);
+    return flat(text.slice(a, b < 0 ? undefined : b));
+  };
+  const sections = {
+    'question 1': between(ref, '1. **Who can get in, and how?**', '2. **Secrets:**'),
+    Records: between(ref, '- **Records:**', '- **Database:**'),
+    Audit: between(ref, '- **Audit:**', '## The read-back'),
+    Arabic: between(ref, '## In Arabic', '```markdown'),
+  };
+  const rules = [
+    ['question 1', 'Will one copy of the product serve more than one client company'],
+    ['question 1', 'is decided before building'],
+    ['question 1', 'changing it later may mean moving the records already saved or changing how the app saves and reads them'],
+    ['question 1', "It is the person's choice, recorded in the TRD; never pick it."],
+    ['Records', 'every protected record belongs to exactly one company'],
+    ['Records', 'every request for one checks the company as well as the person'],
+    ['Records', 'such as a shared list anyone may view signed out, stay public and need neither check'],
+    ['Audit', 'where it came from when the project can know it'],
+    ['Audit', 'No part of the app (its screens, background jobs or anything else) can change an event'],
+    ['Audit', 'events are removed only through the removal and retention routes agreed in Data'],
+    ['Audit', 'apart from the records it describes'],
+    ['Audit', 'searched by person, record and time'],
+    ['Audit', 'where a request came from, can themselves be personal'],
+    ['Arabic', 'ومن أين جاء الطلب إن أمكن معرفته'],
+    ['Arabic', 'لا يستطيع أي جزء من التطبيق (شاشاته أو مهامه الخلفية أو غيرها) تغيير حدث في سجل التدقيق'],
+    ['Arabic', 'ولا تُحذف الأحداث إلا بطرق الحذف ومدة الحفظ المتفق عليها في البيانات'],
+    ['Arabic', 'لأن تغييرها لاحقًا قد يعني نقل السجلات المحفوظة أو تغيير طريقة حفظ التطبيق لها وقراءتها'],
+    ['Arabic', 'منفصلًا عن السجلات التي يصفها'],
+    ['Arabic', 'ويمكن البحث فيه حسب الشخص والسجل والوقت'],
+    ['Arabic', 'فكل سجل محمي يخص شركة واحدة فقط، وكل طلب له يتحقق من الشركة ومن الشخص'],
+    ['Arabic', 'تبقى عامة ولا تحتاج إلى أي من التحققين'],
+    ['Arabic', 'طريقة الفصل بين الشركات يختارها الشخص قبل البناء'],
+    ['Arabic', 'وتُسجّل في وثيقة التقنية'],
+    ['Arabic', 'المعرّفات ومصدر الطلب قد تكون شخصية أيضًا'],
+  ];
+  for (const [where, rule] of rules) assert.ok(sections[where].includes(rule), `security.md ${where} must keep: ${rule}`);
+  const auditLine = (folder) => flat(read(`${folder}/docs/security.md`).split('\n').find((l) => /^- \*\*(Audit|التدقيق):\*\*/.test(l)));
+  const examples = {
+    'cedar-clinic': {
+      L: LANGS.en,
+      musts: [
+        'No part of the app can change an event',
+        "events are removed only through Data's routes",
+        "the IT lead's 90-day cleanup",
+        'the retention cleanup removing an expired visit',
+        "removing a visit after the front desk verifies a patient's request",
+        'the IT lead removing a departed staff member',
+        'The IT lead can search it by staff member, visit and time.',
+      ],
+      origin: 'where a request came from',
+      originMusts: ['the IT lead confirms what the server can reliably know', "any new field for it goes through Data's approval first"],
+      status: '- **Status:** ⛔ waits for TBD: where a request came from',
+    },
+    'cedar-clinic-ar': {
+      L: LANGS.ar,
+      musts: [
+        'لا يستطيع أي جزء من التطبيق تغيير حدث فيه',
+        'ولا تُحذف الأحداث إلا بطرق البيانات',
+        'إزالة مسؤول تقنية المعلومات للأحداث الأقدم من 90 يومًا',
+        'أو إزالة موعد انتهت مدة حفظه',
+        'حذف موعد بعد أن يتحقق الاستقبال من طلب المريض',
+        'حذف مسؤول تقنية المعلومات لموظف غادر',
+        'يبحث فيه مسؤول تقنية المعلومات حسب الموظف والموعد والوقت.',
+      ],
+      origin: 'من أين جاء الطلب',
+      originMusts: ['يؤكد مسؤول تقنية المعلومات ما يستطيع الخادم معرفته بثقة', 'وأي حقل جديد له يمر بموافقة البيانات أولًا'],
+      status: '- **الحالة:** ⛔ تنتظر ما لم يُحسم: من أين جاء الطلب',
+    },
+  };
+  for (const [folder, ex] of Object.entries(examples)) {
+    const line = auditLine(folder);
+    for (const rule of ex.musts) assert.ok(line.includes(rule), `${folder}'s Audit line must keep: ${rule}`);
+    // Where a request came from is an open decision in the skill's own TBD format, under the protections,
+    // and a Plan step can wait for it by name.
+    const securityText = read(`${folder}/docs/security.md`);
+    const open = openTbds(section(securityText, ex.L === LANGS.en ? "How it's protected" : 'كيف يُحمى'), ex.L);
+    const origin = open.find((t) => t.name === ex.origin);
+    assert.ok(origin, `${folder}: "${ex.origin}" is an open TBD under the protections`);
+    for (const rule of ex.originMusts) assert.ok(origin.line.includes(rule), `${folder}'s origin decision must keep: ${rule}`);
+    assert.deepStrictEqual(waitingProblems(ex.status, [securityText], ex.L), [], `${folder}: a Plan step can wait for the origin decision`);
+  }
 });

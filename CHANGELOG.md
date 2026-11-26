@@ -2,6 +2,22 @@
 
 All notable changes to this project. The version is the one named in `README.md`.
 
+## [0.18.0] - 2026-11-26
+
+- Security asks whether one copy of the product will serve more than one client company. If it will, how
+  their records are kept apart is the person's choice, made before building and recorded in the TRD.
+  Every request for a protected record then checks the company as well as the person; records agreed to
+  be public, such as a list anyone may view signed out, stay public.
+- No part of the app can change an audit event, and events are removed only through the removal and
+  retention routes agreed in Data. The record is kept apart from the records it describes, can be searched
+  by person, record and time, and notes where a request came from when the project can know it. The
+  Cedar Clinic examples follow, with where a request came from left as an open decision for the IT lead.
+- Why: a business client's security review asks these questions first, and both cost more later:
+  separating companies afterwards may mean moving the records already saved or changing how the app
+  saves and reads them, and a new audit record cannot supply earlier events it never captured.
+
+See [the 0.18.0 checks](TESTING.md#0180--audit-record-and-client-companies-kept-apart).
+
 ## [0.17.1] - 2026-11-26
 
 - Security's secrets question now sorts each setting by how much harm it does if seen: ordinary

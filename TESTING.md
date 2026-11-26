@@ -1,7 +1,12 @@
 # How project-docs was tested
 
-**Last verified 2026-11-26 · version 0.17.1.** All 308 automated tests passed on macOS arm64 with
+**Last verified 2026-11-26 · version 0.18.0.** All 309 automated tests passed on macOS arm64 with
 Node.js 20.20.2, with zero skips.
+
+## 0.18.0 — Audit record and client companies kept apart
+
+- **Automated checks.** `node --test` passed 309/309. The new test fails on the 0.17.1 wording of
+  `references/security.md` and passes on 0.18.0.
 
 ## 0.17.1 — Keys stay out of logs
 
